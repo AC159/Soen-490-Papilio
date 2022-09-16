@@ -21,12 +21,12 @@ jobs:
         cache: gradle
 
     - name: Creating google-services.json file
-      run: cat /home/runner/work/Papilio/Papilio/app/google-services.json | base64
+      run: cat ${GITHUB_WORKSPACE}/google-services.json | base64
 
     - name: Adding content to the google-services.json file
       env:
         GOOGLE_SERVICES_FILE: ${{ secrets.GOOGLE_SERVICES_JSON }}
-      run: echo GOOGLE_SERVICES_FILE > /home/runner/work/Papilio/Papilio/app/google-services.json
+      run: echo $GOOGLE_SERVICES_FILE > ${GITHUB_WORKSPACE}/google-services.json
 
     - name: Run linter
       run: ./gradlew lint

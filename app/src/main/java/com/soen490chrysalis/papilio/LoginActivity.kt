@@ -1,15 +1,18 @@
 package com.soen490chrysalis.papilio
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.GoogleAuthProvider
+import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.FirebaseUser
 import com.soen490chrysalis.papilio.databinding.ActivityLoginBinding
 
 class LoginActivity : AppCompatActivity() {
@@ -17,9 +20,9 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var binding : ActivityLoginBinding
 
     private val RC_SIGN_IN = 9001
-    private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var googleSignInClient: GoogleSignInClient
 
+    private lateinit var loginViewModel : LoginViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,10 +37,26 @@ class LoginActivity : AppCompatActivity() {
             .requestEmail()
             .build()
 
+        // We cannot place this code in the LoginViewModel because it requires the activity object
         googleSignInClient = GoogleSignIn.getClient(this, gso)
 
-        // Initialize Firebase Auth
-        firebaseAuth = FirebaseAuth.getInstance()
+        loginViewModel = ViewModelProvider(this)[LoginViewModel::class.java]
+        loginViewModel.initialize(googleSignInClient)
+
+        val hasUserAuthenticatedObserver = Observer<Boolean> { isUserLoggedIn ->
+            // The user has successfully logged in. We can now move to the next page/activity
+            Log.d(Log.DEBUG.toString(), "Auth observer has detected changes $isUserLoggedIn")
+            if ( isUserLoggedIn )
+            {
+                // Go to main page
+                val homePage = Intent(this, MainActivity::class.java)
+                startActivity(homePage)
+                finish()
+            }
+        }
+
+        // Register the observer we create above
+        loginViewModel.loginSuccessful.observe(this, hasUserAuthenticatedObserver)
 
         binding.llSignInWithGoogleBtn.setOnClickListener {
             val intent = googleSignInClient.signInIntent
@@ -49,7 +68,7 @@ class LoginActivity : AppCompatActivity() {
         super.onStart()
 
         // Check if user is signed in (non-null) and update UI accordingly.
-        val currentUser = firebaseAuth.currentUser
+        val currentUser : FirebaseUser? = loginViewModel.getUser()
 
         if ( currentUser != null )
         {
@@ -65,39 +84,17 @@ class LoginActivity : AppCompatActivity() {
 
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
-            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            val task : Task<GoogleSignInAccount> = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
                 // Google Sign In was successful, authenticate with Firebase
-                val account = task.getResult(ApiException::class.java)
+                val account : GoogleSignInAccount = task.result
                 Log.d(Log.DEBUG.toString(), "firebaseAuthWithGoogle: " + account.id)
-                firebaseAuthWithGoogle(account.idToken!!)
+                loginViewModel.firebaseAuthWithGoogle(account.idToken!!)
             } catch (e: ApiException) {
                 // Google Sign In failed, update UI appropriately
                 Log.w(Log.DEBUG.toString(), "Google sign in failed", e)
             }
         }
-    }
-
-    private fun firebaseAuthWithGoogle(idToken: String) {
-        val credential = GoogleAuthProvider.getCredential(idToken, null)
-        firebaseAuth.signInWithCredential(credential)
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
-                    Log.d(Log.DEBUG.toString(), "signInWithCredential:success")
-                    val user = firebaseAuth.currentUser
-                    Log.d(Log.DEBUG.toString(), "Current user: $user")
-
-                    // Go to main page
-                    val homePage = Intent(this, MainActivity::class.java)
-                    startActivity(homePage)
-                    finish()
-
-                } else {
-                    // If sign in fails, display a message to the user.
-                    Log.w(Log.DEBUG.toString(), "signInWithCredential:failure", task.exception)
-                }
-            }
     }
 
 }

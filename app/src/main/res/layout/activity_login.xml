@@ -8,6 +8,7 @@
     >
 
     <LinearLayout
+        android:id="@+id/ll_sign_in_with_google_btn"
         android:layout_width="282dp"
         android:layout_height="48dp"
         android:padding="10dp"

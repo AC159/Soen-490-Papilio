@@ -15,17 +15,25 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
-
+        supportActionBar?.hide() //Hiding the action title bar for UI debugging purposes
         // Initialize Firebase Auth
         firebaseAuth = FirebaseAuth.getInstance()
 
         // the user should be already signed in
         firebaseUser = firebaseAuth.currentUser!!
 
+        binding.button2.setOnClickListener(){
+            binding.tvMessage.text = "You are now logged out!"
+            firebaseAuth.signOut()
+        }
         binding.tvMessage.text = "Hello ${firebaseUser.displayName}!"
+
+
+
 
     }
 }

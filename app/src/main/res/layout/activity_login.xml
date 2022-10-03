@@ -4,41 +4,72 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LoginActivity"
-    >
+    android:background="@drawable/pappilio_background_app"
+    tools:context=".LoginActivity">
 
     <LinearLayout
         android:id="@+id/ll_sign_in_with_google_btn"
-        android:layout_width="282dp"
-        android:layout_height="48dp"
-        android:padding="10dp"
-        android:gravity="center"
-        android:elevation="5dp"
-        android:background="@drawable/rounded_button"
+        android:layout_width="300dp"
+        android:layout_height="60dp"
         android:clickable="true"
+        android:elevation="5dp"
+        android:focusable="true"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.481"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.857"
-        android:focusable="true">
+        app:layout_constraintVertical_bias="0.857">
+
 
         <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="54dp"
+            android:layout_height="match_parent"
             android:layout_gravity="start"
             android:layout_marginEnd="5dp"
             android:contentDescription="Sign in with Google button"
             android:src="@drawable/google_logo" />
 
-        <TextView
-            android:layout_width="149dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/sign_in_with_google"
-            android:textSize="16sp" />
+        <Button
+            android:id="@+id/button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginTop="-5dp"
+            android:layout_marginBottom="-5dp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/orange"
+            android:clickable="true"
+            android:text="SIGN IN WITH GOOGLE"
+            android:textColor="@color/black"
+            app:iconTint="@color/orange"
+            app:rippleColor="@color/yellow" />
+
 
     </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="362dp"
+        android:layout_height="152dp"
+        android:orientation="horizontal"
+        android:paddingLeft="10dp"
+        android:paddingTop="10dp"
+        android:paddingRight="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/ll_sign_in_with_google_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.56"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.194">
+
+
+        <ImageView
+            android:id="@+id/imageView8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/pappilio_logo_app_notransparent" />
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

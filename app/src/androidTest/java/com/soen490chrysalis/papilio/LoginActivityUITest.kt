@@ -1,6 +1,5 @@
 package com.soen490chrysalis.papilio
 
-import android.text.Html
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
@@ -33,6 +32,6 @@ class LoginActivityUITest {
          onView(isRoot()).inRoot(isDialog()).check(matches(isDisplayed()))
 
         // Check that the dialog has an 'ACCEPT' button
-        onView(withText("ABC")).check(matches(isCompletelyDisplayed()))
+        onView(withText(R.string.alert_dialog_accept)).check(matches(isCompletelyDisplayed()))
     }
 }

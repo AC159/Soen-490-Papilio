@@ -28,17 +28,34 @@ jobs:
         GOOGLE_SERVICES_FILE: ${{ secrets.GOOGLE_SERVICES_JSON }}
       run: echo $GOOGLE_SERVICES_FILE > $GITHUB_WORKSPACE/app/google-services.json
 
-    - name: Run linter
-      run: ./gradlew lint
+  test:
+    needs: build
+    runs-on: macos-latest
+    steps:
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
+    - name: Run linter
+      run: ./gradlew lint
+
     - name: Build with Gradle
       run: ./gradlew build
 
-    - name: Test with Gradle
+    - name: Run unit tests with Gradle
       run: ./gradlew test
+
+    - name: run tests
+      uses: reactivecircus/android-emulator-runner@v2
+      with:
+        api-level: 33
+        script: ./gradlew connectedCheck
+
+    - name: Run UI tests with Gradle
+      uses: reactivecircus/android-emulator-runner@v2
+      with:
+        api-level: 33
+        script: ./gradlew connectedAndroidTest
 
     - name: Build debug APK
       run: bash ./gradlew assembleDebug --stacktrace

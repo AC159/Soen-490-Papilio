@@ -1,11 +1,14 @@
 package com.soen490chrysalis.papilio
 
 import android.app.AlertDialog
+import android.app.Dialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.text.Html
 import android.util.Log
-import android.widget.Button
+import android.view.View
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -17,7 +20,6 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseUser
 import com.soen490chrysalis.papilio.databinding.ActivityLoginBinding
-import android.content.DialogInterface
 
 
 class LoginActivity : AppCompatActivity() {
@@ -69,13 +71,13 @@ class LoginActivity : AppCompatActivity() {
             // Creating an alert ox to display the EULA
             val builder = AlertDialog.Builder(this)
             builder.setTitle("Papilio - EULA") // Give a title to the alert box
-            val eula_html = getString(R.string.papilio_eula) // fetch the EULA text in HTML form
-            val htmlAsSpanned = Html.fromHtml(eula_html) // Convert the EULA from HTML form to String
+            val eulaHtml = getString(R.string.papilio_eula) // fetch the EULA text in HTML form
+            val htmlAsSpanned = Html.fromHtml(eulaHtml) // Convert the EULA from HTML form to String
             builder.setMessage(htmlAsSpanned) // Put the huge ass EULA text into the alert box
 
             // Create a button at the bottom of the alert box called "ACCEPT".
             // This also includes the code that will run when the "ACCEPT" button is pressed.
-            builder.setPositiveButton("ACCEPT", DialogInterface.OnClickListener { dialog: DialogInterface, which: Int ->
+            builder.setPositiveButton(R.string.alert_dialog_accept, DialogInterface.OnClickListener { _: DialogInterface, _: Int ->
                 run {
                     // When the "Accept button is pressed, it will initiate the whole Google Sign In procedure
                     val intent = googleSignInClient.signInIntent

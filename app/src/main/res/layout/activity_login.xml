@@ -5,7 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/papilio_background_app"
-    tools:context=".LoginActivity">
+    android:visibility="visible"
+    tools:context=".LoginActivity"
+    tools:visibility="visible">
 
     <LinearLayout
         android:id="@+id/ll_sign_in_with_google_btn"
@@ -35,14 +37,14 @@
 
         <Button
             android:id="@+id/button"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_width="240dp"
+            android:layout_height="38dp"
             android:layout_marginTop="-5dp"
             android:layout_marginBottom="-5dp"
             android:layout_weight="1"
             android:backgroundTint="@color/orange"
             android:clickable="true"
-            android:text="SIGN IN WITH GOOGLE"
+            android:text="@string/sign_in_with_google"
             android:textColor="@color/black"
             app:iconTint="@color/orange"
             app:rippleColor="@color/yellow" />

@@ -33,6 +33,6 @@ class LoginActivityUITest {
          onView(isRoot()).inRoot(isDialog()).check(matches(isDisplayed()))
 
         // Check that the dialog has an 'ACCEPT' button
-        onView(withText(R.string.alert_dialog_accept)).check(matches(isCompletelyDisplayed()))
+        onView(withText("ABC")).check(matches(isCompletelyDisplayed()))
     }
 }

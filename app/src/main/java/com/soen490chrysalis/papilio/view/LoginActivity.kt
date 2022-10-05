@@ -19,9 +19,11 @@ import com.google.firebase.auth.FirebaseUser
 import com.soen490chrysalis.papilio.viewModel.LoginViewModel
 import com.soen490chrysalis.papilio.R
 import com.soen490chrysalis.papilio.databinding.ActivityLoginBinding
+import com.soen490chrysalis.papilio.viewModel.LoginViewModelFactory
 
 
-class LoginActivity : AppCompatActivity() {
+class LoginActivity : AppCompatActivity()
+{
 
     private lateinit var binding : ActivityLoginBinding
 
@@ -30,7 +32,8 @@ class LoginActivity : AppCompatActivity() {
 
     private lateinit var loginViewModel : LoginViewModel
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
         super.onCreate(savedInstanceState)
 
         binding = ActivityLoginBinding.inflate(layoutInflater)
@@ -47,7 +50,8 @@ class LoginActivity : AppCompatActivity() {
         // We cannot place this code in the LoginViewModel because it requires the activity object
         googleSignInClient = GoogleSignIn.getClient(this, gso)
 
-        loginViewModel = ViewModelProvider(this)[LoginViewModel::class.java]
+        val loginFactory = LoginViewModelFactory()
+        loginViewModel = ViewModelProvider(this, loginFactory)[LoginViewModel::class.java]
         loginViewModel.initialize(googleSignInClient)
 
         val hasUserAuthenticatedObserver = Observer<Boolean> { isUserLoggedIn ->
@@ -87,7 +91,8 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    override fun onStart() {
+    override fun onStart()
+    {
         super.onStart()
 
         // Check if user is signed in (non-null) and update UI accordingly.
@@ -102,18 +107,23 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
+    {
         super.onActivityResult(requestCode, resultCode, data)
 
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-        if (requestCode == RC_SIGN_IN) {
+        if (requestCode == RC_SIGN_IN)
+        {
             val task : Task<GoogleSignInAccount> = GoogleSignIn.getSignedInAccountFromIntent(data)
-            try {
+            try
+            {
                 // Google Sign In was successful, authenticate with Firebase
                 val account : GoogleSignInAccount = task.result
                 Log.d(Log.DEBUG.toString(), "firebaseAuthWithGoogle: " + account.id)
                 loginViewModel.firebaseAuthWithGoogle(account.idToken!!)
-            } catch (e: ApiException) {
+            }
+            catch (e: ApiException)
+            {
                 // Google Sign In failed, update UI appropriately
                 Log.w(Log.DEBUG.toString(), "Google sign in failed", e)
             }

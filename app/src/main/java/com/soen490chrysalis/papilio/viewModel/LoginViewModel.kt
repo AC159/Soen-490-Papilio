@@ -1,61 +1,41 @@
 package com.soen490chrysalis.papilio.viewModel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.firebase.auth.FirebaseAuth
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.GoogleAuthProvider
+import com.soen490chrysalis.papilio.repository.users.IUserRepository
 
-class LoginViewModel : ViewModel()
+/*
+    DESCRIPTION:
+    Class that handles the logic related to the data of the corresponding view (i.e. activity).
+    It is important to pass a repository that implements an interface such as IUserRepository
+    to allow for dependency injection in our unit tests.
+
+    Author: Anastassy Cap
+    Date: October 5, 2022
+*/
+class LoginViewModel(private val userRepository: IUserRepository) : ViewModel()
 {
     var loginSuccessful : MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
 
-    private lateinit var firebaseAuth: FirebaseAuth
-    private lateinit var googleSignInClient: GoogleSignInClient
-
     fun initialize(googleSignInClient : GoogleSignInClient)
     {
-        this.googleSignInClient = googleSignInClient
-
-        // Initialize Firebase Auth
-        firebaseAuth = FirebaseAuth.getInstance()
+        userRepository.initialize(googleSignInClient)
     }
 
     fun getUser() : FirebaseUser?
     {
-        return firebaseAuth.currentUser
+        return userRepository.getUser()
     }
 
     fun firebaseAuthWithGoogle(idToken: String) {
-        val credential = GoogleAuthProvider.getCredential(idToken, null)
-        val authTask : Task<AuthResult> = firebaseAuth.signInWithCredential(credential)
-
-        authTask.addOnCompleteListener { task ->
-            Log.d(Log.DEBUG.toString(), "Auth task has finished: $task")
-
-            if (task.isSuccessful)
-            {
-                // Sign in success, update UI with the signed-in user's information
-                Log.d(Log.DEBUG.toString(), "signInWithCredential:success")
-                val user = firebaseAuth.currentUser
-                if (user != null) {
-                    Log.d(Log.DEBUG.toString(), "Current user: ${user.email}")
-                }
-
-                /* This will trigger the observer in the LoginActivity which will redirect the user
-                  to a new page */
-                loginSuccessful.value = true
-
-            }
-            else
-            {
-                // If sign in fails, display a message to the user.
-                Log.w(Log.DEBUG.toString(), "signInWithCredential:failure", task.exception)
-            }
+        userRepository.firebaseAuthWithGoogle(idToken) { authResult: Boolean ->
+            /* This will trigger the observer in the LoginActivity which will redirect the
+            user to a new page */
+            loginSuccessful.value = authResult
+            Log.d(Log.DEBUG.toString(), "Return value from userRepository $authResult")
         }
     }
 

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/papilio_background_app"
     android:visibility="visible"
-    tools:context=".LoginActivity"
+    tools:context=".view.LoginActivity"
     tools:visibility="visible">
 
     <LinearLayout

@@ -1,4 +1,4 @@
-package com.soen490chrysalis.papilio
+package com.soen490chrysalis.papilio.viewModel
 
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignInClient

@@ -1,4 +1,4 @@
-package com.soen490chrysalis.papilio
+package com.soen490chrysalis.papilio.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

@@ -89,7 +89,7 @@
                 android:layout_width="255dp"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/dark_blue"
-                android:drawableStart="@drawable/google_logo"
+                android:drawableLeft="@drawable/google_icon"
                 android:elevation="5dp"
                 android:text="@string/sign_in_with_google"
                 android:textColor="@color/white"

@@ -10,7 +10,7 @@
         android:theme="@style/Theme.Papilio">
 
         <activity
-            android:name=".view.InitialPage"
+            android:name=".view.InitialActivity"
             android:exported="true"
             android:label="@string/title_activity_initial_page"
             android:theme="@style/Theme.Papilio.NoActionBar">

@@ -24,7 +24,6 @@ import com.soen490chrysalis.papilio.viewModel.LoginViewModelFactory
 
 class LoginActivity : AppCompatActivity()
 {
-
     private lateinit var binding : ActivityLoginBinding
 
     private val RC_SIGN_IN = 9001
@@ -40,6 +39,11 @@ class LoginActivity : AppCompatActivity()
         val view = binding.root
         setContentView(view)
         supportActionBar?.hide() //Hiding the action title bar for UI debugging purposes
+
+        binding.tvSignUpNoAccount.setOnClickListener {
+            val intent = Intent(this, SignUpActivity::class.java)
+            startActivity(intent)
+        }
 
         // Configure Google Sign In
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)

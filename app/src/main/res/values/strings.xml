@@ -6,6 +6,11 @@
     <string name="alert_dialog_accept">Accept</string>
     <string name="papilio_slogan">Activities at your Fingertips</string>
 
+    <string name="title_activity_initial_page">InitialPage</string>
+    <string name="login_activity_greeting_message">Welcome Back!</string>
+    <string name="login_activity_login_to_your_account">Log into your account</string>
+    <string name="login_activity_login_no_have_account">Don\'t have an account?</string>
+
     <string name="papilio_eula">
         <![CDATA[
         <h1>End-User License Agreement (&quot;Agreement&quot;)</h1>

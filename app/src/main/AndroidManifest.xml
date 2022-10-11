@@ -7,13 +7,13 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_papilio_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Papilio"
-        >
+        android:theme="@style/Theme.Papilio">
 
         <activity
-            android:name=".view.LoginActivity"
+            android:name=".view.InitialPage"
             android:exported="true"
-            >
+            android:label="@string/title_activity_initial_page"
+            android:theme="@style/Theme.Papilio.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -21,9 +21,13 @@
         </activity>
 
         <activity
+            android:name=".view.LoginActivity"
+            android:exported="true" />
+
+        <activity
             android:name=".view.MainActivity"
-            android:exported="true">
-        </activity>
+            android:exported="true" />
+
     </application>
 
 </manifest>

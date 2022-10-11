@@ -85,6 +85,7 @@
             app:layout_constraintVertical_bias="0.695">
 
             <Button
+                android:id="@+id/sign_in_with_google_button"
                 android:layout_width="255dp"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/dark_blue"

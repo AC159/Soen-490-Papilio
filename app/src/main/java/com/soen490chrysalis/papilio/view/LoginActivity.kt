@@ -4,7 +4,6 @@ import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
-import android.text.Html
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -73,25 +72,11 @@ class LoginActivity : AppCompatActivity()
         // Register the observer we create above
         loginViewModel.loginSuccessful.observe(this, hasUserAuthenticatedObserver)
 
-//        binding.signUpButton.setOnClickListener {
-//            // Creating an alert ox to display the EULA
-//            val builder = AlertDialog.Builder(this)
-//            builder.setTitle("Papilio - EULA") // Give a title to the alert box
-//            val eulaHtml = getString(R.string.papilio_eula) // fetch the EULA text in HTML form
-//            val htmlAsSpanned = Html.fromHtml(eulaHtml) // Convert the EULA from HTML form to String
-//            builder.setMessage(htmlAsSpanned) // Put the huge ass EULA text into the alert box
-//
-//            // Create a button at the bottom of the alert box called "ACCEPT".
-//            // This also includes the code that will run when the "ACCEPT" button is pressed.
-//            builder.setPositiveButton(R.string.alert_dialog_accept, DialogInterface.OnClickListener { _: DialogInterface, _: Int ->
-//                run {
-//                    // When the "Accept button is pressed, it will initiate the whole Google Sign In procedure
-//                    val intent = googleSignInClient.signInIntent
-//                    startActivityForResult(intent, RC_SIGN_IN)
-//                }
-//            })
-//            builder.show() //When the alert box is set up, finally display it on screen.
-//        }
+        binding.signInWithGoogleButton.setOnClickListener {
+            // Initiate the whole Google Sign In procedure
+            val intent = googleSignInClient.signInIntent
+            startActivityForResult(intent, RC_SIGN_IN)
+        }
     }
 
     override fun onStart()

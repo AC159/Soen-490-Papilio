@@ -9,69 +9,124 @@
     tools:context=".view.LoginActivity"
     tools:visibility="visible">
 
-    <LinearLayout
-        android:id="@+id/ll_sign_in_with_google_btn"
-        android:layout_width="300dp"
-        android:layout_height="60dp"
-        android:clickable="true"
-        android:elevation="5dp"
-        android:focusable="true"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:padding="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.481"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.857">
-
-
-        <ImageView
-            android:layout_width="54dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="start"
-            android:layout_marginEnd="5dp"
-            android:contentDescription="Sign in with Google button"
-            android:src="@drawable/google_logo" />
-
-        <Button
-            android:id="@+id/button"
-            android:layout_width="240dp"
-            android:layout_height="38dp"
-            android:layout_marginTop="-5dp"
-            android:layout_marginBottom="-5dp"
-            android:layout_weight="1"
-            android:backgroundTint="@color/orange"
-            android:clickable="true"
-            android:text="@string/sign_in_with_google"
-            android:textColor="@color/black"
-            app:iconTint="@color/orange"
-            app:rippleColor="@color/yellow" />
-
-
-    </LinearLayout>
-
     <FrameLayout
-        android:layout_width="362dp"
-        android:layout_height="152dp"
+        android:layout_width="337dp"
+        android:layout_height="290dp"
         android:orientation="horizontal"
         android:paddingLeft="10dp"
         android:paddingTop="10dp"
         android:paddingRight="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/ll_sign_in_with_google_btn"
+        app:layout_constraintBottom_toTopOf="@+id/ll_sign_up_and_register_buttons"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.56"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.194">
+        app:layout_constraintVertical_bias="0.046">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="381dp"
+            android:orientation="vertical"
+            android:gravity="center"
+            tools:ignore="UselessParent">
 
-        <ImageView
-            android:id="@+id/imageView8"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/papilio_logo_app_notransparent" />
+            <ImageView
+                android:id="@+id/iv_papilio_logo"
+                android:layout_width="wrap_content"
+                android:layout_height="74dp"
+                android:contentDescription="Papilio logo"
+                app:srcCompat="@drawable/papilio_logo_app_notransparent" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="210dp"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="113dp"
+                    android:gravity="center"
+                    android:text="@string/papilio_slogan"
+                    android:textColor="@color/white"
+                    android:textSize="35sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
     </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_sign_up_and_register_buttons"
+        android:layout_width="303dp"
+        android:layout_height="154dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.74">
+
+        <LinearLayout
+            android:id="@+id/ll_sign_up_button"
+            android:layout_width="match_parent"
+            android:layout_height="83dp"
+            android:clickable="true"
+            android:elevation="5dp"
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.513"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.695">
+
+            <Button
+                android:id="@+id/sign_up_button"
+                android:layout_width="192dp"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/white"
+                android:elevation="5dp"
+                android:text="@string/sign_up"
+                android:textColor="@color/black"
+                android:visibility="visible"
+                app:cornerRadius="100dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_login_button"
+            android:layout_width="match_parent"
+            android:layout_height="83dp"
+            android:clickable="true"
+            android:elevation="5dp"
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.513"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.695">
+
+            <Button
+                android:id="@+id/login_button"
+                android:layout_width="192dp"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/orange"
+                android:elevation="5dp"
+                android:text="@string/login"
+                android:textColor="@color/white"
+                android:visibility="visible"
+                app:cornerRadius="100dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,7 +1,10 @@
 <resources>
     <string name="app_name">Papilio</string>
     <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="login">Login</string>
     <string name="alert_dialog_accept">Accept</string>
+    <string name="papilio_slogan">Activities at your Fingertips</string>
 
     <string name="papilio_eula">
         <![CDATA[

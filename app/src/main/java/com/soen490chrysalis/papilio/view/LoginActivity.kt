@@ -69,8 +69,7 @@ class LoginActivity : AppCompatActivity()
         // Register the observer we create above
         loginViewModel.loginSuccessful.observe(this, hasUserAuthenticatedObserver)
 
-        binding.button.setOnClickListener {
-
+        binding.signUpButton.setOnClickListener {
             // Creating an alert ox to display the EULA
             val builder = AlertDialog.Builder(this)
             builder.setTitle("Papilio - EULA") // Give a title to the alert box

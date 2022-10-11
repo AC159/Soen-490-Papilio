@@ -37,7 +37,6 @@ class LoginActivity : AppCompatActivity()
         binding = ActivityLoginBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
-        supportActionBar?.hide() //Hiding the action title bar for UI debugging purposes
 
         binding.tvSignUpNoAccount.setOnClickListener {
             val intent = Intent(this, SignUpActivity::class.java)

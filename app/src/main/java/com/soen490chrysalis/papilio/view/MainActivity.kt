@@ -3,11 +3,24 @@ package com.soen490chrysalis.papilio.view
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.navigation.NavigationBarView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.soen490chrysalis.papilio.databinding.ActivityMainBinding
+import kotlinx.android.synthetic.main.activity_main.view.*
 
-class MainActivity : AppCompatActivity() {
+import com.soen490chrysalis.papilio.ActivitiesFragment
+import com.soen490chrysalis.papilio.EventsFragment
+import com.soen490chrysalis.papilio.UserProfileFragment
+
+import com.soen490chrysalis.papilio.R
+
+
+class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListener{
+    var bottomNavigationView: NavigationBarView? = null
 
     private lateinit var binding : ActivityMainBinding
     private lateinit var firebaseAuth: FirebaseAuth
@@ -35,5 +48,21 @@ class MainActivity : AppCompatActivity() {
         }
         binding.tvMessage.text = "Hello ${firebaseUser.email}!"
 
+        //Setting the listener to detect when we press one of the button on the navigation bar
+        bottomNavigationView = findViewById(R.id.bottonnav)
+        bottomNavigationView?.setOnItemSelectedListener(this)
+
+    }
+
+
+    //Function that loads in a page/fragment on the navigation bar when you tap the respective button
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when(item.itemId)
+        {
+            R.id.activities -> supportFragmentManager.beginTransaction().replace(R.id.relativelayout, ActivitiesFragment()).commit()
+            R.id.events -> supportFragmentManager.beginTransaction().replace(R.id.relativelayout, EventsFragment()).commit()
+            R.id.profile -> supportFragmentManager.beginTransaction().replace(R.id.relativelayout, UserProfileFragment()).commit()
+        }
+        return true
     }
 }

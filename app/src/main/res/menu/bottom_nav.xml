@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:title="Activities"
+        android:id="@+id/activities"
+        android:icon="@drawable/papilio_logo_app"/>
+    <item
+        android:title="Events"
+        android:id="@+id/events"
+        android:icon="@drawable/papilio_logo_app"/>
+    <item
+        android:title="Profile"
+        android:id="@+id/profile"
+        android:icon="@drawable/papilio_logo_app"/>
+
+
+
+</menu>

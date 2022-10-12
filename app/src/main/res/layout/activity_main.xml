@@ -12,12 +12,10 @@
         android:layout_width="410dp"
         android:layout_height="358dp"
         android:text="TextView"
-        android:textAlignment="center" />
+        android:textAlignment="center"
+        tools:ignore="MissingConstraints" />
 
     <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".Activities.HomeActivity">
@@ -32,12 +30,13 @@
         </RelativeLayout>
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottonnav"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:menu="@menu/bottom_nav"
             android:layout_alignParentBottom="true"
-            android:id="@+id/bottonnav"
-            >
+            android:layout_marginBottom="0dp"
+            app:menu="@menu/bottom_nav">
+
         </com.google.android.material.bottomnavigation.BottomNavigationView>
     </RelativeLayout>
 

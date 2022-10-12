@@ -4,12 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ActivitiesFragment">
+    tools:context=".BrowseFragment">
 
+    <!-- TODO: Update blank fragment layout -->
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:cardBackgroundColor="@color/light_blue">
+        app:cardBackgroundColor="@color/blue">
 
         <TextView
             android:id="@+id/textView2"
@@ -18,4 +19,5 @@
             android:text="Activities!"
             android:textAlignment="center" />
     </androidx.cardview.widget.CardView>
+
 </FrameLayout>

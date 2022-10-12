@@ -30,7 +30,7 @@ class LoginActivityUITest {
         onView(withText(R.string.sign_in_with_google)).check(matches(isCompletelyDisplayed())).perform(click())
 
         // Check that dialog is displayed
-         onView(isRoot()).inRoot(isDialog()).check(matches(isDisplayed()))
+        onView(isRoot()).inRoot(isDialog()).check(matches(isDisplayed()))
 
         // Check that the dialog has an 'ACCEPT' button
         onView(withText(R.string.alert_dialog_accept)).check(matches(isCompletelyDisplayed()))

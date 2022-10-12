@@ -39,6 +39,12 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
         // the user should be already signed in
         firebaseUser = firebaseAuth.currentUser!!
 
+        binding.button2.setOnClickListener(){
+            binding.tvMessage.text = "You are now logged out!"
+            firebaseAuth.signOut()
+        }
+        binding.tvMessage.text = "Hello ${firebaseUser.displayName}!"
+
         //Setting the listener to detect when we press one of the button on the navigation bar
         bottomNavigationView = findViewById(R.id.bottonnav)
         bottomNavigationView?.setOnItemSelectedListener(this)

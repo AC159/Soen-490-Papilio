@@ -13,7 +13,8 @@ import com.soen490chrysalis.papilio.databinding.ActivityMainBinding
 import kotlinx.android.synthetic.main.activity_main.view.*
 
 import com.soen490chrysalis.papilio.ActivitiesFragment
-import com.soen490chrysalis.papilio.EventsFragment
+import com.soen490chrysalis.papilio.BrowseFragment
+import com.soen490chrysalis.papilio.HomeFragment
 import com.soen490chrysalis.papilio.UserProfileFragment
 
 import com.soen490chrysalis.papilio.R
@@ -52,6 +53,7 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
         bottomNavigationView = findViewById(R.id.bottonnav)
         bottomNavigationView?.setOnItemSelectedListener(this)
 
+
     }
 
 
@@ -59,9 +61,10 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when(item.itemId)
         {
+            R.id.home -> supportFragmentManager.beginTransaction().replace(R.id.relativelayout, HomeFragment()).commit()
+            R.id.browse -> supportFragmentManager.beginTransaction().replace(R.id.relativelayout, BrowseFragment()).commit()
             R.id.activities -> supportFragmentManager.beginTransaction().replace(R.id.relativelayout, ActivitiesFragment()).commit()
-            R.id.events -> supportFragmentManager.beginTransaction().replace(R.id.relativelayout, EventsFragment()).commit()
-            R.id.profile -> supportFragmentManager.beginTransaction().replace(R.id.relativelayout, UserProfileFragment()).commit()
+            R.id.account -> supportFragmentManager.beginTransaction().replace(R.id.relativelayout, UserProfileFragment()).commit()
         }
         return true
     }

@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import com.soen490chrysalis.papilio.view.LoginActivity
+import com.soen490chrysalis.papilio.view.InitialActivity
 
 class SplashScreen : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -16,7 +16,7 @@ class SplashScreen : AppCompatActivity() {
 
         val handler = Handler(Looper.getMainLooper())
         handler.postDelayed({
-            val intent = Intent (this, LoginActivity::class.java)
+            val intent = Intent (this, InitialActivity::class.java)
             startActivity(intent)
             finish()
         }, 3000)

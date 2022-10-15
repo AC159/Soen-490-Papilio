@@ -1,6 +1,7 @@
 package com.soen490chrysalis.papilio.viewModel
 
 import android.util.Log
+import androidx.core.util.PatternsCompat
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import androidx.lifecycle.MutableLiveData
@@ -51,7 +52,7 @@ class LoginViewModel(private val userRepository: IUserRepository) : ViewModel()
 
     fun validateEmailAddress( emailAddress : String ) : String?
     {
-        if ( emailAddress.isNotEmpty() && android.util.Patterns.EMAIL_ADDRESS.matcher(emailAddress).matches() )
+        if ( emailAddress.isNotEmpty() && PatternsCompat.EMAIL_ADDRESS.matcher(emailAddress).matches() )
         {
             return null
         }

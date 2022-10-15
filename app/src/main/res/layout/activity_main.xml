@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".view.MainActivity">
 
+
     <TextView
         android:id="@+id/tv_message"
         android:layout_width="wrap_content"
@@ -39,5 +40,33 @@
             android:layout_weight="1"
             android:text="LOG OUT" />
     </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".Activities.HomeActivity">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/relativelayout"
+            android:layout_marginBottom="65dp"
+            android:padding="5dp">
+
+        </RelativeLayout>
+
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottonnav"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="0dp"
+            app:menu="@menu/bottom_nav">
+
+        </com.google.android.material.bottomnavigation.BottomNavigationView>
+    </RelativeLayout>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

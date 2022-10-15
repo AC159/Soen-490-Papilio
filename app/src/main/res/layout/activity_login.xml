@@ -99,7 +99,9 @@
                     android:text="@string/sign_in_with_google"
                     android:textColor="@color/white"
                     android:visibility="visible"
-                    app:cornerRadius="10dp" />
+                    android:clickable="true"
+                    app:cornerRadius="10dp"
+                    android:focusable="true" />
             </LinearLayout>
 
             <LinearLayout

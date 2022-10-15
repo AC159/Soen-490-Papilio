@@ -89,6 +89,36 @@ class SignUpActivity : AppCompatActivity() {
 
             builder.show() //When the alert box is set up, finally display it on screen.
         }
+
+        // Register listeners for the sign up button
+        binding.loginButton.setOnClickListener {
+            // Take the user input from all the input fields and validate them
+            val firstNameValidation = loginViewModel.validateFirstName(binding.userFirstName.text.toString())
+            if ( firstNameValidation != null )
+            {
+                binding.userFirstName.error = firstNameValidation
+            }
+
+            val lastNameValidation = loginViewModel.validateLastName(binding.userLastName.text.toString())
+            if ( lastNameValidation != null )
+            {
+                binding.userLastName.error = lastNameValidation
+            }
+
+            val emailValidation = loginViewModel.validateEmailAddress(binding.userEmailAddress.text.toString())
+            if ( emailValidation != null )
+            {
+                binding.userEmailAddress.error = emailValidation
+            }
+
+            val passwordValidation = loginViewModel.validatePassword(binding.userPassword.text.toString())
+            if ( passwordValidation != null )
+            {
+                binding.userPassword.error = passwordValidation
+            }
+
+        }
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)

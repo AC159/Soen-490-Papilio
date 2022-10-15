@@ -59,13 +59,14 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.navigation:navigation-fragment-ktx:2.4.1'
     implementation 'androidx.navigation:navigation-ui-ktx:2.4.1'
-    implementation 'androidx.test:monitor:1.5.0'
+    //implementation 'androidx.test:monitor:1.5.0'
     testImplementation 'junit:junit:4.13.2'
 
     // Libraries only used for testing which are not included in the final APK file
     androidTestImplementation('androidx.test.espresso:espresso-core:3.4.0')
     androidTestImplementation('androidx.test:runner:1.4.0')
     androidTestImplementation('androidx.test:rules:1.4.0')
+    androidTestImplementation('androidx.test:monitor:1.5.0')
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     testImplementation "org.mockito:mockito-core:3.+"
     testImplementation "org.mockito.kotlin:mockito-kotlin:4.0.0"

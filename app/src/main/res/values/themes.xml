@@ -2,7 +2,7 @@
     <!-- Base application theme. -->
     <style name="Theme.Papilio" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/dark_blue</item>
+        <item name="colorPrimary">@color/black</item>
         <item name="colorPrimaryVariant">@color/blue</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
@@ -14,4 +14,13 @@
         <!-- Customize your theme here. -->
         <item name="android:windowNoTitle">true</item>
     </style>
+
+    <style name="Theme.Papilio.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.Papilio.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.Papilio.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

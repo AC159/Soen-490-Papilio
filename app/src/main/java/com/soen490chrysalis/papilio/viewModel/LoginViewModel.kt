@@ -19,7 +19,7 @@ import java.util.regex.Pattern
 */
 class LoginViewModel(private val userRepository: IUserRepository) : ViewModel()
 {
-    var loginSuccessful : MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
+    var signUpSuccessful : MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
 
     fun initialize(googleSignInClient : GoogleSignInClient)
     {
@@ -80,11 +80,30 @@ class LoginViewModel(private val userRepository: IUserRepository) : ViewModel()
 
     fun firebaseAuthWithGoogle(idToken: String) {
         userRepository.firebaseAuthWithGoogle(idToken) { authResult: Boolean ->
-            /* This will trigger the observer in the LoginActivity which will redirect the
+            /* This will trigger the observer in the activity that listens to changes which will redirect the
             user to a new page */
-            loginSuccessful.value = authResult
+            signUpSuccessful.value = authResult
             Log.d(Log.DEBUG.toString(), "Return value from userRepository $authResult")
         }
     }
 
+    fun firebaseCreateAccountWithEmailAndPassword( emailAddress: String, password: String )
+    {
+        userRepository.firebaseCreateAccountWithEmailAndPassword(emailAddress, password) { authResult : Boolean ->
+            /* This will trigger the observer in the activity that listens to changes which will redirect the
+            user to a new page */
+            signUpSuccessful.value = authResult
+            Log.d(Log.DEBUG.toString(), "Return value from userRepository $authResult")
+        }
+    }
+
+    fun firebaseLoginWithEmailAndPassword( emailAddress: String, password: String )
+    {
+        userRepository.firebaseLoginWithEmailAndPassword(emailAddress, password) { authResult : Boolean ->
+            /* This will trigger the observer in the activity that listens to changes which will redirect the
+            user to a new page */
+            signUpSuccessful.value = authResult
+            Log.d(Log.DEBUG.toString(), "Return value from userRepository $authResult")
+        }
+    }
 }

@@ -69,13 +69,38 @@ class LoginActivity : AppCompatActivity()
         }
 
         // Register the observer we create above
-        loginViewModel.loginSuccessful.observe(this, hasUserAuthenticatedObserver)
+        loginViewModel.signUpSuccessful.observe(this, hasUserAuthenticatedObserver)
 
         binding.signInWithGoogleButton.setOnClickListener {
             // Initiate the whole Google Sign In procedure
             val intent = googleSignInClient.signInIntent
             startActivityForResult(intent, RC_SIGN_IN)
         }
+
+        binding.loginButton.setOnClickListener {
+            // Extract the email and password from the input fields
+            val email : String = binding.userEmailAddress.text.toString()
+            val password : String = binding.userPassword.text.toString()
+
+            val emailValidation = loginViewModel.validateEmailAddress(email)
+            if ( emailValidation != null )
+            {
+                binding.userEmailAddress.error = emailValidation
+            }
+
+            val passwordValidation = loginViewModel.validatePassword(password)
+            if ( passwordValidation != null )
+            {
+                binding.userPassword.error = passwordValidation
+            }
+
+            if ( emailValidation == null && passwordValidation == null )
+            {
+                // The email and password
+                loginViewModel.firebaseLoginWithEmailAndPassword(email, password)
+            }
+        }
+
     }
 
     override fun onStart()

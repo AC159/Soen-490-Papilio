@@ -59,8 +59,8 @@ class SignUpActivity : AppCompatActivity() {
             }
         }
 
-        // Register the observer we create above
-        loginViewModel.loginSuccessful.observe(this, hasUserAuthenticatedObserver)
+        // Register the observer we create above on the two variables
+        loginViewModel.signUpSuccessful.observe(this, hasUserAuthenticatedObserver)
 
         // Register the login with google listener
         binding.continueWithGoogleButton.setOnClickListener {
@@ -92,31 +92,41 @@ class SignUpActivity : AppCompatActivity() {
 
         // Register listeners for the sign up button
         binding.loginButton.setOnClickListener {
+
+            val firstName : String = binding.userFirstName.text.toString()
+            val lastName : String = binding.userLastName.text.toString()
+            val email : String = binding.userEmailAddress.text.toString()
+            val password : String = binding.userPassword.text.toString()
+
             // Take the user input from all the input fields and validate them
-            val firstNameValidation = loginViewModel.validateFirstName(binding.userFirstName.text.toString())
+            val firstNameValidation = loginViewModel.validateFirstName(firstName)
             if ( firstNameValidation != null )
             {
                 binding.userFirstName.error = firstNameValidation
             }
 
-            val lastNameValidation = loginViewModel.validateLastName(binding.userLastName.text.toString())
+            val lastNameValidation = loginViewModel.validateLastName(lastName)
             if ( lastNameValidation != null )
             {
                 binding.userLastName.error = lastNameValidation
             }
 
-            val emailValidation = loginViewModel.validateEmailAddress(binding.userEmailAddress.text.toString())
+            val emailValidation = loginViewModel.validateEmailAddress(email)
             if ( emailValidation != null )
             {
                 binding.userEmailAddress.error = emailValidation
             }
 
-            val passwordValidation = loginViewModel.validatePassword(binding.userPassword.text.toString())
+            val passwordValidation = loginViewModel.validatePassword(password)
             if ( passwordValidation != null )
             {
                 binding.userPassword.error = passwordValidation
             }
 
+            if ( firstNameValidation == null && lastNameValidation == null && emailValidation == null && passwordValidation == null )
+            {
+                loginViewModel.firebaseCreateAccountWithEmailAndPassword(email, password)
+            }
         }
 
     }

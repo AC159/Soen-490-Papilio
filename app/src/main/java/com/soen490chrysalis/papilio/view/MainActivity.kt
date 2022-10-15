@@ -1,5 +1,6 @@
 package com.soen490chrysalis.papilio.view
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.google.firebase.auth.FirebaseAuth
@@ -27,13 +28,12 @@ class MainActivity : AppCompatActivity() {
         firebaseUser = firebaseAuth.currentUser!!
 
         binding.button2.setOnClickListener(){
-            binding.tvMessage.text = "You are now logged out!"
             firebaseAuth.signOut()
+            val initialActivity = Intent(this, InitialActivity::class.java)
+            startActivity(initialActivity)
+            finish()
         }
-        binding.tvMessage.text = "Hello ${firebaseUser.displayName}!"
-
-
-
+        binding.tvMessage.text = "Hello ${firebaseUser.email}!"
 
     }
 }

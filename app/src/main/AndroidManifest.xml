@@ -10,7 +10,7 @@
         android:theme="@style/Theme.Papilio">
 
         <activity
-            android:name=".SplashScreen"
+            android:name=".view.SplashScreen"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

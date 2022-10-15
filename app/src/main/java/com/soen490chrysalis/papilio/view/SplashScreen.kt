@@ -1,11 +1,11 @@
-package com.soen490chrysalis.papilio
+package com.soen490chrysalis.papilio.view
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import com.soen490chrysalis.papilio.view.InitialActivity
+import com.soen490chrysalis.papilio.R
 
 class SplashScreen : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

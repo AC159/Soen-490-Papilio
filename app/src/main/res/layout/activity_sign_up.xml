@@ -311,7 +311,7 @@
                 app:layout_constraintVertical_bias="0.695">
 
                 <Button
-                    android:id="@+id/login_button"
+                    android:id="@+id/sign_up_button"
                     android:layout_width="192dp"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/orange"

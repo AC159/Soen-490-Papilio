@@ -91,7 +91,7 @@ class SignUpActivity : AppCompatActivity() {
         }
 
         // Register listeners for the sign up button
-        binding.loginButton.setOnClickListener {
+        binding.signUpButton.setOnClickListener {
 
             val firstName : String = binding.userFirstName.text.toString()
             val lastName : String = binding.userLastName.text.toString()

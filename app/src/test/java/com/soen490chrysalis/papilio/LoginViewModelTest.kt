@@ -1,7 +1,14 @@
 package com.soen490chrysalis.papilio
 
+import android.util.Log
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.firebase.auth.FirebaseUser
 import com.soen490chrysalis.papilio.viewModel.LoginViewModel
+import io.mockk.every
+import io.mockk.mockkStatic
+import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito
 
@@ -19,6 +26,19 @@ class LoginViewModelTest
     private val mockUserRepository = MockUserRepository()
     private val loginViewModel = LoginViewModel(mockUserRepository)
 
+    @get:Rule
+    val rule = InstantTaskExecutorRule()
+
+    @Before
+    fun setUp()
+    {
+        mockkStatic(Log::class)
+        every { Log.v(any(), any()) } returns 0
+        every { Log.d(any(), any()) } returns 0
+        every { Log.i(any(), any()) } returns 0
+        every { Log.e(any(), any()) } returns 0
+    }
+
     @Test
     fun authenticateWithGoogle()
     {
@@ -26,27 +46,28 @@ class LoginViewModelTest
         loginViewModel.initialize(googleSignIn)
 
         val mockIdToken = "some random id token for Google to be happy"
-        mockUserRepository.firebaseAuthWithGoogle(mockIdToken) { authResult: Boolean ->
-            assert(authResult)
-        }
+        loginViewModel.firebaseAuthWithGoogle(mockIdToken)
+        assert(loginViewModel.signUpSuccessful.value!!)
     }
 
     @Test
-    fun failGoogleAuthentication()
+    fun createAccountWithEmailAndPassword()
     {
-        val googleSignIn : GoogleSignInClient = Mockito.mock(GoogleSignInClient::class.java)
-        loginViewModel.initialize(googleSignIn)
+        loginViewModel.firebaseCreateAccountWithEmailAndPassword("some email", "password")
+        assert(loginViewModel.signUpSuccessful.value!!)
+    }
 
-        val mockIdToken = "some random id token for Google to be happy"
-        mockUserRepository.failFirebaseAuthWithGoogle(mockIdToken) { authResult: Boolean ->
-            assert(!authResult)
-        }
+    @Test
+    fun loginWithEmailAndPassword()
+    {
+        loginViewModel.firebaseLoginWithEmailAndPassword("some email", "password")
+        assert(loginViewModel.signUpSuccessful.value!!)
     }
 
     @Test
     fun getCurrentUser()
     {
-        assert(mockUserRepository.getUser() != null)
+        assert(loginViewModel.getUser() is FirebaseUser)
     }
 
     @Test

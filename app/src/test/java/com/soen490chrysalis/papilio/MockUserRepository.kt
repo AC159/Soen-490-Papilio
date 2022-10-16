@@ -46,9 +46,4 @@ class MockUserRepository : IUserRepository {
     {
         authResultCallBack(true) // authentication is successful
     }
-
-    fun failFirebaseAuthWithGoogle(idToken: String, authResultCallBack : (authResult : Boolean) -> Unit)
-    {
-        authResultCallBack(false) // authentication is successful
-    }
 }

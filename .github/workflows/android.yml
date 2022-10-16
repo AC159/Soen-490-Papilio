@@ -28,17 +28,53 @@ jobs:
         GOOGLE_SERVICES_FILE: ${{ secrets.GOOGLE_SERVICES_JSON }}
       run: echo $GOOGLE_SERVICES_FILE > $GITHUB_WORKSPACE/app/google-services.json
 
-    - name: Run linter
-      run: ./gradlew lint
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+
+#    - name: Build debug APK
+#      run: bash ./gradlew assembleDebug --stacktrace
+
+  test:
+    needs: build
+    runs-on: macos-latest
+    steps:
+
+    - uses: actions/checkout@v3
+    - name: set up JDK 11
+      uses: actions/setup-java@v3
+      with:
+        java-version: '11'
+        distribution: 'temurin'
+        cache: gradle
+
+    - name: Creating google-services.json file
+      run: touch $GITHUB_WORKSPACE/app/google-services.json | base64
+
+    - name: Adding content to the google-services.json file
+      env:
+        GOOGLE_SERVICES_FILE: ${{ secrets.GOOGLE_SERVICES_JSON }}
+      run: echo $GOOGLE_SERVICES_FILE > $GITHUB_WORKSPACE/app/google-services.json
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
-    - name: Build with Gradle
-      run: ./gradlew build
+    - name: Run linter
+      run: ./gradlew lint
 
-    - name: Test with Gradle
+#    - name: Build with Gradle
+#      run: ./gradlew build
+
+    - name: Run unit tests with Gradle
       run: ./gradlew test
 
-    - name: Build debug APK
-      run: bash ./gradlew assembleDebug --stacktrace
+    - name: run tests
+      uses: reactivecircus/android-emulator-runner@v2
+      with:
+        api-level: 29
+        script: ./gradlew connectedCheck
+
+    - name: Run UI tests with Gradle
+      uses: reactivecircus/android-emulator-runner@v2
+      with:
+        api-level: 29
+        script: ./gradlew connectedAndroidTest

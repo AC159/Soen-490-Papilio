@@ -81,43 +81,37 @@ class LoginViewModel(private val userRepository: IUserRepository) : ViewModel()
                 "1 uppercase character, 1 special character, no white spaces & a minimum of 6 characters!"
     }
 
-    private fun handleAuthResult(authResult: Boolean)
+    private fun handleAuthResult(authResult: Boolean, errorMessage : String)
     {
         if ( !authResult )
         {
             // authentication was not successful, so we set an error message
-            authResponse.value = AuthResponse(false, "Oops! Something went wrong")
+            authResponse.value = AuthResponse(false, errorMessage)
         }
         else
         {
-            authResponse.value = AuthResponse(true, "")
+            authResponse.value = AuthResponse(true, errorMessage)
         }
         Log.d(Log.DEBUG.toString(), "Return value from userRepository $authResult")
     }
 
     fun firebaseAuthWithGoogle(idToken: String) {
-        userRepository.firebaseAuthWithGoogle(idToken) { authResult: Boolean ->
-            /* This will trigger the observer in the activity that listens to changes which will redirect the
+        /* Calling the handleAuthResult function will trigger the observer in the activity that listens to changes which will redirect the
             user to a new page */
-            handleAuthResult(authResult)
-        }
+        userRepository.firebaseAuthWithGoogle(idToken, ::handleAuthResult)
     }
 
     fun firebaseCreateAccountWithEmailAndPassword( emailAddress: String, password: String )
     {
-        userRepository.firebaseCreateAccountWithEmailAndPassword(emailAddress, password) { authResult : Boolean ->
-            /* This will trigger the observer in the activity that listens to changes which will redirect the
+        /* Calling the handleAuthResult function will trigger the observer in the activity that listens to changes which will redirect the
             user to a new page */
-            handleAuthResult(authResult)
-        }
+        userRepository.firebaseCreateAccountWithEmailAndPassword(emailAddress, password, ::handleAuthResult)
     }
 
     fun firebaseLoginWithEmailAndPassword( emailAddress: String, password: String )
     {
-        userRepository.firebaseLoginWithEmailAndPassword(emailAddress, password) { authResult : Boolean ->
-            /* This will trigger the observer in the activity that listens to changes which will redirect the
+        /* Calling the handleAuthResult function will trigger the observer in the activity that listens to changes which will redirect the
             user to a new page */
-            handleAuthResult(authResult)
-        }
+        userRepository.firebaseLoginWithEmailAndPassword(emailAddress, password, ::handleAuthResult)
     }
 }

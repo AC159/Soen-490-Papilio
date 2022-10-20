@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.text.Html
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -14,6 +15,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.RuntimeExecutionException
 import com.google.android.gms.tasks.Task
 import com.google.android.material.snackbar.Snackbar
 import com.soen490chrysalis.papilio.R
@@ -51,7 +53,8 @@ class SignUpActivity : AppCompatActivity() {
 
         val hasUserAuthenticatedObserver = Observer<AuthResponse> { authResponse_ ->
             // The user has successfully logged in. We can now move to the next page/activity
-            Log.d(Log.DEBUG.toString(), "Auth observer has detected changes: \nauth response: ${authResponse_.authSuccessful}")
+            Log.d(Log.DEBUG.toString(), "Auth observer has detected changes: \nauth response: ${authResponse_.authSuccessful}" +
+                    "\nerror message: ${authResponse_.errorMessage}")
             if ( authResponse_.authSuccessful )
             {
                 // Go to main page
@@ -63,8 +66,7 @@ class SignUpActivity : AppCompatActivity() {
             {
                 // Display a snackbar with the error message
                 val coordinatorLayout = binding.coordinatorLayoutSignUp
-                val snackbar = Snackbar.make(coordinatorLayout, authResponse_.errorMessage, Snackbar.LENGTH_LONG)
-                snackbar.show()
+                displaySnackBar(coordinatorLayout, authResponse_.errorMessage)
             }
         }
 
@@ -140,6 +142,11 @@ class SignUpActivity : AppCompatActivity() {
 
     }
 
+    private fun displaySnackBar(coordinatorLayout: CoordinatorLayout, errorMessage : String)
+    {
+        Snackbar.make(coordinatorLayout, errorMessage, Snackbar.LENGTH_LONG).show()
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
     {
         super.onActivityResult(requestCode, resultCode, data)
@@ -147,18 +154,22 @@ class SignUpActivity : AppCompatActivity() {
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN)
         {
-            val task : Task<GoogleSignInAccount> = GoogleSignIn.getSignedInAccountFromIntent(data)
             try
             {
+                val task : Task<GoogleSignInAccount> = GoogleSignIn.getSignedInAccountFromIntent(data)
+
                 // Google Sign In was successful, authenticate with Firebase
                 val account : GoogleSignInAccount = task.result
                 Log.d(Log.DEBUG.toString(), "firebaseAuthWithGoogle: " + account.id)
                 loginViewModel.firebaseAuthWithGoogle(account.idToken!!)
             }
-            catch (e: ApiException)
+            catch (e : Exception)
             {
                 // Google Sign In failed, update UI appropriately
-                Log.w(Log.DEBUG.toString(), "Google sign in failed", e)
+                Log.d(Log.DEBUG.toString(), "Google sign in failed: \n" + e.message.toString())
+
+                // Show snackbar with error message
+                displaySnackBar(binding.coordinatorLayoutSignUp, e.message.toString())
             }
         }
     }

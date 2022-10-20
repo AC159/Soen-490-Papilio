@@ -46,10 +46,9 @@ class UserRepository : IUserRepository
         return firebaseAuth!!.currentUser
     }
 
-    private fun authTaskCompletedCallback( authTask: Task<AuthResult>, viewCallBack : (authResult : Boolean) -> Unit )
+    private fun authTaskCompletedCallback( authTask: Task<AuthResult>, viewCallBack : (authResult : Boolean, errorMessage: String) -> Unit )
     {
         Log.d(Log.DEBUG.toString(), "Auth task has finished: $authTask")
-
         if (authTask.isSuccessful)
         {
             // Sign in success, update UI with the signed-in user's information
@@ -59,18 +58,18 @@ class UserRepository : IUserRepository
                 Log.d(Log.DEBUG.toString(), "Current user: ${user.email}")
                 /* Calling the callback function passed as a parameter will trigger the
                 observer in the LoginActivity which will redirect the user to a new page */
-                viewCallBack(true)
+                viewCallBack(true, "")
             }
         }
         else
         {
             // If sign in fails, display a message to the user.
             Log.w(Log.DEBUG.toString(), "signInWithCredential:failure", authTask.exception)
-            viewCallBack(false)
+            viewCallBack(false, authTask.exception?.message.toString())
         }
     }
 
-    override fun firebaseAuthWithGoogle(idToken: String, authResultCallBack : (authResult : Boolean) -> Unit)
+    override fun firebaseAuthWithGoogle(idToken: String, authResultCallBack : (authResult : Boolean, errorMessage: String) -> Unit)
     {
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         val authTask : Task<AuthResult> = firebaseAuth!!.signInWithCredential(credential)
@@ -83,7 +82,7 @@ class UserRepository : IUserRepository
     override fun firebaseCreateAccountWithEmailAndPassword(
         emailAddress: String,
         password: String,
-        authResultCallBack: (authResult: Boolean) -> Unit
+        authResultCallBack: (authResult: Boolean, errorMessage: String) -> Unit
     )
     {
         val authTask : Task<AuthResult> = firebaseAuth!!.createUserWithEmailAndPassword(emailAddress, password)
@@ -95,7 +94,7 @@ class UserRepository : IUserRepository
     override fun firebaseLoginWithEmailAndPassword(
         emailAddress: String,
         password: String,
-        authResultCallBack: (authResult: Boolean) -> Unit
+        authResultCallBack: (authResult: Boolean, errorMessage: String) -> Unit
     ) {
         val authTask : Task<AuthResult> = firebaseAuth!!.signInWithEmailAndPassword(emailAddress, password)
         authTask.addOnCompleteListener { task ->

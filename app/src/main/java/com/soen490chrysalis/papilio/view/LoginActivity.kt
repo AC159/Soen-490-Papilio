@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -72,8 +73,7 @@ class LoginActivity : AppCompatActivity()
             {
                 // Display a snackbar with the error message
                 val coordinatorLayout = binding.coordinatorLayoutLogin
-                val snackbar = Snackbar.make(coordinatorLayout, authResponse_.errorMessage, Snackbar.LENGTH_LONG)
-                snackbar.show()
+                displaySnackBar(coordinatorLayout, authResponse_.errorMessage)
             }
         }
 
@@ -105,7 +105,7 @@ class LoginActivity : AppCompatActivity()
 
             if ( emailValidation == null && passwordValidation == null )
             {
-                // The email and password
+                // Valid email and password
                 loginViewModel.firebaseLoginWithEmailAndPassword(email, password)
             }
         }
@@ -128,6 +128,11 @@ class LoginActivity : AppCompatActivity()
         }
     }
 
+    private fun displaySnackBar(coordinatorLayout: CoordinatorLayout, errorMessage : String)
+    {
+        Snackbar.make(coordinatorLayout, errorMessage, Snackbar.LENGTH_LONG).show()
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
     {
         super.onActivityResult(requestCode, resultCode, data)
@@ -135,18 +140,22 @@ class LoginActivity : AppCompatActivity()
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN)
         {
-            val task : Task<GoogleSignInAccount> = GoogleSignIn.getSignedInAccountFromIntent(data)
             try
             {
+                val task : Task<GoogleSignInAccount> = GoogleSignIn.getSignedInAccountFromIntent(data)
+
                 // Google Sign In was successful, authenticate with Firebase
                 val account : GoogleSignInAccount = task.result
                 Log.d(Log.DEBUG.toString(), "firebaseAuthWithGoogle: " + account.id)
                 loginViewModel.firebaseAuthWithGoogle(account.idToken!!)
             }
-            catch (e: ApiException)
+            catch (e : Exception)
             {
                 // Google Sign In failed, update UI appropriately
-                Log.w(Log.DEBUG.toString(), "Google sign in failed", e)
+                Log.d(Log.DEBUG.toString(), "Google sign in failed: \n" + e.message.toString())
+
+                // Show snackbar with error message
+                displaySnackBar(binding.coordinatorLayoutLogin, "Oops, something went wrong!")
             }
         }
     }

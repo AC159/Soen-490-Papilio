@@ -169,7 +169,7 @@ class SignUpActivity : AppCompatActivity() {
                 Log.d(Log.DEBUG.toString(), "Google sign in failed: \n" + e.message.toString())
 
                 // Show snackbar with error message
-                displaySnackBar(binding.coordinatorLayoutSignUp, e.message.toString())
+                displaySnackBar(binding.coordinatorLayoutSignUp, "Oops, something went wrong!")
             }
         }
     }

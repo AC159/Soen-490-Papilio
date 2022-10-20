@@ -15,8 +15,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
+import com.google.android.material.snackbar.Snackbar
 import com.soen490chrysalis.papilio.R
 import com.soen490chrysalis.papilio.databinding.ActivitySignUpBinding
+import com.soen490chrysalis.papilio.viewModel.AuthResponse
 import com.soen490chrysalis.papilio.viewModel.LoginViewModel
 import com.soen490chrysalis.papilio.viewModel.LoginViewModelFactory
 
@@ -47,20 +49,27 @@ class SignUpActivity : AppCompatActivity() {
         loginViewModel = ViewModelProvider(this, loginFactory)[LoginViewModel::class.java]
         loginViewModel.initialize(googleSignInClient)
 
-        val hasUserAuthenticatedObserver = Observer<Boolean> { isUserLoggedIn ->
+        val hasUserAuthenticatedObserver = Observer<AuthResponse> { authResponse_ ->
             // The user has successfully logged in. We can now move to the next page/activity
-            Log.d(Log.DEBUG.toString(), "Auth observer has detected changes $isUserLoggedIn")
-            if ( isUserLoggedIn )
+            Log.d(Log.DEBUG.toString(), "Auth observer has detected changes: \nauth response: ${authResponse_.authSuccessful}")
+            if ( authResponse_.authSuccessful )
             {
                 // Go to main page
                 val homePage = Intent(this, MainActivity::class.java)
                 startActivity(homePage)
                 finish()
             }
+            else
+            {
+                // Display a snackbar with the error message
+                val coordinatorLayout = binding.coordinatorLayoutSignUp
+                val snackbar = Snackbar.make(coordinatorLayout, authResponse_.errorMessage, Snackbar.LENGTH_LONG)
+                snackbar.show()
+            }
         }
 
         // Register the observer we create above on the two variables
-        loginViewModel.signUpSuccessful.observe(this, hasUserAuthenticatedObserver)
+        loginViewModel.authResponse.observe(this, hasUserAuthenticatedObserver)
 
         // Register the login with google listener
         binding.continueWithGoogleButton.setOnClickListener {

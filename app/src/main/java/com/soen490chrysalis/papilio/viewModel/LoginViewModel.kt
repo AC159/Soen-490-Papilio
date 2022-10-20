@@ -18,9 +18,11 @@ import java.util.regex.Pattern
     Author: Anastassy Cap
     Date: October 5, 2022
 */
+data class AuthResponse(var authSuccessful : Boolean, var errorMessage : String )
+
 class LoginViewModel(private val userRepository: IUserRepository) : ViewModel()
 {
-    var signUpSuccessful : MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
+    var authResponse : MutableLiveData<AuthResponse> = MutableLiveData<AuthResponse>()
 
     fun initialize(googleSignInClient : GoogleSignInClient)
     {
@@ -79,12 +81,25 @@ class LoginViewModel(private val userRepository: IUserRepository) : ViewModel()
                 "1 uppercase character, 1 special character, no white spaces & a minimum of 6 characters!"
     }
 
+    private fun handleAuthResult(authResult: Boolean)
+    {
+        if ( !authResult )
+        {
+            // authentication was not successful, so we set an error message
+            authResponse.value = AuthResponse(false, "Oops! Something went wrong")
+        }
+        else
+        {
+            authResponse.value = AuthResponse(true, "")
+        }
+        Log.d(Log.DEBUG.toString(), "Return value from userRepository $authResult")
+    }
+
     fun firebaseAuthWithGoogle(idToken: String) {
         userRepository.firebaseAuthWithGoogle(idToken) { authResult: Boolean ->
             /* This will trigger the observer in the activity that listens to changes which will redirect the
             user to a new page */
-            signUpSuccessful.value = authResult
-            Log.d(Log.DEBUG.toString(), "Return value from userRepository $authResult")
+            handleAuthResult(authResult)
         }
     }
 
@@ -93,8 +108,7 @@ class LoginViewModel(private val userRepository: IUserRepository) : ViewModel()
         userRepository.firebaseCreateAccountWithEmailAndPassword(emailAddress, password) { authResult : Boolean ->
             /* This will trigger the observer in the activity that listens to changes which will redirect the
             user to a new page */
-            signUpSuccessful.value = authResult
-            Log.d(Log.DEBUG.toString(), "Return value from userRepository $authResult")
+            handleAuthResult(authResult)
         }
     }
 
@@ -103,8 +117,7 @@ class LoginViewModel(private val userRepository: IUserRepository) : ViewModel()
         userRepository.firebaseLoginWithEmailAndPassword(emailAddress, password) { authResult : Boolean ->
             /* This will trigger the observer in the activity that listens to changes which will redirect the
             user to a new page */
-            signUpSuccessful.value = authResult
-            Log.d(Log.DEBUG.toString(), "Return value from userRepository $authResult")
+            handleAuthResult(authResult)
         }
     }
 }

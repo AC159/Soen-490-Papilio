@@ -47,21 +47,21 @@ class LoginViewModelTest
 
         val mockIdToken = "some random id token for Google to be happy"
         loginViewModel.firebaseAuthWithGoogle(mockIdToken)
-        assert(loginViewModel.signUpSuccessful.value!!)
+        assert(loginViewModel.authResponse.value!!.authSuccessful)
     }
 
     @Test
     fun createAccountWithEmailAndPassword()
     {
         loginViewModel.firebaseCreateAccountWithEmailAndPassword("some email", "password")
-        assert(loginViewModel.signUpSuccessful.value!!)
+        assert(loginViewModel.authResponse.value!!.authSuccessful)
     }
 
     @Test
     fun loginWithEmailAndPassword()
     {
         loginViewModel.firebaseLoginWithEmailAndPassword("some email", "password")
-        assert(loginViewModel.signUpSuccessful.value!!)
+        assert(loginViewModel.authResponse.value!!.authSuccessful)
     }
 
     @Test

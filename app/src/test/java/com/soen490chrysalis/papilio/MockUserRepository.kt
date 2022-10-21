@@ -24,26 +24,26 @@ class MockUserRepository : IUserRepository {
         return firebaseUserMock
     }
 
-    override fun firebaseAuthWithGoogle(idToken: String, authResultCallBack : (authResult : Boolean) -> Unit)
+    override fun firebaseAuthWithGoogle(idToken: String, authResultCallBack: (authResult: Boolean, errorMessage: String) -> Unit)
     {
-        authResultCallBack(true) // authentication is successful
+        authResultCallBack(true, "") // authentication is successful
     }
 
     override fun firebaseCreateAccountWithEmailAndPassword(
         emailAddress: String,
         password: String,
-        authResultCallBack: (authResult: Boolean) -> Unit
+        authResultCallBack: (authResult: Boolean, errorMessage: String) -> Unit
     )
     {
-        authResultCallBack(true) // authentication is successful
+        authResultCallBack(true, "") // authentication is successful
     }
 
     override fun firebaseLoginWithEmailAndPassword(
         emailAddress: String,
         password: String,
-        authResultCallBack: (authResult: Boolean) -> Unit
+        authResultCallBack: (authResult: Boolean, errorMessage: String) -> Unit
     )
     {
-        authResultCallBack(true) // authentication is successful
+        authResultCallBack(true, "") // authentication is successful
     }
 }

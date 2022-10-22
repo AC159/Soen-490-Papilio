@@ -2,22 +2,21 @@ package com.soen490chrysalis.papilio.view
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
+import android.accounts.Account
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.soen490chrysalis.papilio.*
 import com.soen490chrysalis.papilio.databinding.ActivityMainBinding
+import kotlinx.android.synthetic.main.activity_account_menu.view.*
 import kotlinx.android.synthetic.main.activity_main.view.*
-
-import com.soen490chrysalis.papilio.ActivitiesFragment
-import com.soen490chrysalis.papilio.BrowseFragment
-import com.soen490chrysalis.papilio.HomeFragment
-import com.soen490chrysalis.papilio.UserProfileFragment
-
-import com.soen490chrysalis.papilio.R
 
 
 class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListener{
@@ -26,6 +25,7 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
     private lateinit var binding : ActivityMainBinding
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var firebaseUser : FirebaseUser
+    private var currentFragmentID : String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,11 +61,35 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when(item.itemId)
         {
-            R.id.home -> supportFragmentManager.beginTransaction().replace(R.id.relativelayout, HomeFragment()).commit()
-            R.id.browse -> supportFragmentManager.beginTransaction().replace(R.id.relativelayout, BrowseFragment()).commit()
-            R.id.activities -> supportFragmentManager.beginTransaction().replace(R.id.relativelayout, ActivitiesFragment()).commit()
-            R.id.account -> supportFragmentManager.beginTransaction().replace(R.id.relativelayout, UserProfileFragment()).commit()
+            R.id.home -> {
+                // Getting the current active fragment
+                var fm = supportFragmentManager.findFragmentByTag(currentFragmentID)
+
+                //Removing the current active fragment from view when pressing the home button on the nav bar
+                if (fm != null) {
+                    supportFragmentManager.beginTransaction().remove(fm).commit()
+                }
+            }
+            R.id.browse -> {
+                supportFragmentManager.beginTransaction().replace(R.id.relativelayout, BrowseFragment(), "BROWSE").commit()
+                currentFragmentID = "BROWSE"
+            }
+            R.id.activities -> {
+                supportFragmentManager.beginTransaction().replace(R.id.relativelayout, ActivitiesFragment(), "ACTIVITIES").commit()
+                currentFragmentID = "ACTIVITIES"
+            }
+            R.id.account -> {
+                supportFragmentManager.beginTransaction().replace(R.id.relativelayout, AccountMenuFragment(), "ACCOUNT MENU").commit()
+                currentFragmentID = "ACCOUNT MENU"
+            }
+
+            R.id.account_user_profile -> {
+                supportFragmentManager.beginTransaction().replace(R.id.relativelayout, UserProfileFragment(), "USER PROFILE")
+                currentFragmentID = "USER PROFILE"
+            }
+
         }
+
         return true
     }
 }

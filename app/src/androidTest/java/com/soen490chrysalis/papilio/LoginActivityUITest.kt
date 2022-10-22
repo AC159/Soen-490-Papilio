@@ -1,38 +1,54 @@
 package com.soen490chrysalis.papilio
 
-import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.RootMatchers.isDialog
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.Espresso
+import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.ext.junit.rules.ActivityScenarioRule
-import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.filters.LargeTest
 import com.soen490chrysalis.papilio.view.LoginActivity
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
 
-@RunWith(AndroidJUnit4::class)
-@LargeTest
 class LoginActivityUITest {
-
     @get:Rule
     val activityRule = ActivityScenarioRule(LoginActivity::class.java)
 
     @Test
-    fun activityDisplaysASignInWithGoogleButton() {
-        onView(withText(R.string.sign_in_with_google)).check(matches(isCompletelyDisplayed()))
+    fun activityDisplaysExpectedText()
+    {
+        Espresso.onView(ViewMatchers.withText(R.string.login_activity_greeting_message)).check(
+            ViewAssertions.matches(ViewMatchers.isDisplayed()))
+
+        Espresso.onView(ViewMatchers.withText(R.string.login_activity_login_to_your_account)).check(
+            ViewAssertions.matches(ViewMatchers.isDisplayed()))
+
+        Espresso.onView(ViewMatchers.withText(R.string.sign_in_with_google)).check(
+            ViewAssertions.matches(ViewMatchers.isDisplayed()))
+
+        Espresso.onView(ViewMatchers.withText(R.string.login)).check(
+            ViewAssertions.matches(ViewMatchers.isDisplayed()))
+
+        Espresso.onView(ViewMatchers.withText(R.string.login_activity_login_no_have_account)).check(
+            ViewAssertions.matches(ViewMatchers.isDisplayed()))
+
+        Espresso.onView(ViewMatchers.withText(R.string.sign_up)).check(
+            ViewAssertions.matches(ViewMatchers.isDisplayed()))
     }
 
     @Test
-    fun clickingGoogleSignInButtonShouldDisplayDialogWithUserAgreements() {
-        onView(withText(R.string.sign_in_with_google)).check(matches(isCompletelyDisplayed())).perform(click())
+    fun verifyClickableElements()
+    {
+        Espresso.onView(ViewMatchers.withText(R.string.sign_in_with_google)).check(ViewAssertions.matches(ViewMatchers.isClickable()))
+        Espresso.onView(ViewMatchers.withText(R.string.login)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        Espresso.onView(ViewMatchers.withText(R.string.sign_up)).check(ViewAssertions.matches(ViewMatchers.isClickable()))
+    }
 
-        // Check that dialog is displayed
-        onView(isRoot()).inRoot(isDialog()).check(matches(isDisplayed()))
+    @Test
+    fun verifyRedirectionToSignUpActivity()
+    {
+        Espresso.onView(ViewMatchers.withText(R.string.sign_up)).perform(ViewActions.click())
 
-        // Check that the dialog has an 'ACCEPT' button
-        onView(withText(R.string.alert_dialog_accept)).check(matches(isCompletelyDisplayed()))
+        // Check that we are on the sign up activity
+        Espresso.onView(ViewMatchers.withText(R.string.signup_activity_greeting_message)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
     }
 }

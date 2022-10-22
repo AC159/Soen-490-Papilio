@@ -1,21 +1,25 @@
 package com.soen490chrysalis.papilio.view
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.navigation.NavigationBarView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.soen490chrysalis.papilio.*
 import com.soen490chrysalis.papilio.databinding.ActivityMainBinding
-import com.soen490chrysalis.papilio.ActivitiesFragment
-import com.soen490chrysalis.papilio.BrowseFragment
-import com.soen490chrysalis.papilio.HomeFragment
-import com.soen490chrysalis.papilio.UserProfileFragment
-import com.soen490chrysalis.papilio.R
+import kotlinx.android.synthetic.main.activity_account_menu.view.*
+import kotlinx.android.synthetic.main.activity_main.view.*
 
 
 class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListener
 {
     var bottomNavigationView: NavigationBarView? = null
     private lateinit var binding : ActivityMainBinding
+    private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var firebaseUser : FirebaseUser
+    private var currentFragmentID : String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,6 +27,20 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+        supportActionBar?.hide() //Hiding the action title bar for UI debugging purposes
+        // Initialize Firebase Auth
+        firebaseAuth = FirebaseAuth.getInstance()
+
+        // the user should be already signed in
+        firebaseUser = firebaseAuth.currentUser!!
+
+        binding.button2.setOnClickListener(){
+            firebaseAuth.signOut()
+            val initialActivity = Intent(this, InitialActivity::class.java)
+            startActivity(initialActivity)
+            finish()
+        }
+        binding.tvMessage.text = "Hello ${firebaseUser.email}!"
 
         //Setting the listener to detect when we press one of the button on the navigation bar
         bottomNavigationView = binding.bottonnav
@@ -34,11 +52,35 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
     {
         when(item.itemId)
         {
-            R.id.home -> supportFragmentManager.beginTransaction().replace(binding.fragmentContainerView.id, HomeFragment()).commit()
-            R.id.browse -> supportFragmentManager.beginTransaction().replace(binding.fragmentContainerView.id, BrowseFragment()).commit()
-            R.id.activities -> supportFragmentManager.beginTransaction().replace(binding.fragmentContainerView.id, ActivitiesFragment()).commit()
-            R.id.account -> supportFragmentManager.beginTransaction().replace(binding.fragmentContainerView.id, UserProfileFragment()).commit()
+            R.id.home -> {
+                // Getting the current active fragment
+                var fm = supportFragmentManager.findFragmentByTag(currentFragmentID)
+
+                //Removing the current active fragment from view when pressing the home button on the nav bar
+                if (fm != null) {
+                    supportFragmentManager.beginTransaction().remove(fm).commit()
+                }
+            }
+            R.id.browse -> {
+                supportFragmentManager.beginTransaction().replace(R.id.relativelayout, BrowseFragment(), "BROWSE").commit()
+                currentFragmentID = "BROWSE"
+            }
+            R.id.activities -> {
+                supportFragmentManager.beginTransaction().replace(R.id.relativelayout, ActivitiesFragment(), "ACTIVITIES").commit()
+                currentFragmentID = "ACTIVITIES"
+            }
+            R.id.account -> {
+                supportFragmentManager.beginTransaction().replace(R.id.relativelayout, AccountMenuFragment(), "ACCOUNT MENU").commit()
+                currentFragmentID = "ACCOUNT MENU"
+            }
+
+            R.id.account_user_profile -> {
+                supportFragmentManager.beginTransaction().replace(R.id.relativelayout, UserProfileFragment(), "USER PROFILE")
+                currentFragmentID = "USER PROFILE"
+            }
+
         }
+
         return true
     }
 }

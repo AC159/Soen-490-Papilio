@@ -5,8 +5,10 @@ import androidx.core.util.PatternsCompat
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseUser
 import com.soen490chrysalis.papilio.repository.users.IUserRepository
+import kotlinx.coroutines.launch
 import java.util.regex.Pattern
 
 /*
@@ -98,20 +100,29 @@ class LoginViewModel(private val userRepository: IUserRepository) : ViewModel()
     fun firebaseAuthWithGoogle(idToken: String) {
         /* Calling the handleAuthResult function will trigger the observer in the activity that listens to changes which will redirect the
             user to a new page */
-        userRepository.firebaseAuthWithGoogle(idToken, ::handleAuthResult)
+        // create a coroutine that will run in the UI thread
+        viewModelScope.launch {
+            userRepository.firebaseAuthWithGoogle(idToken, ::handleAuthResult)
+        }
     }
 
     fun firebaseCreateAccountWithEmailAndPassword( emailAddress: String, password: String )
     {
         /* Calling the handleAuthResult function will trigger the observer in the activity that listens to changes which will redirect the
             user to a new page */
-        userRepository.firebaseCreateAccountWithEmailAndPassword(emailAddress, password, ::handleAuthResult)
+        // create a coroutine that will run in the UI thread
+        viewModelScope.launch {
+            userRepository.firebaseCreateAccountWithEmailAndPassword(emailAddress, password, ::handleAuthResult)
+        }
     }
 
     fun firebaseLoginWithEmailAndPassword( emailAddress: String, password: String )
     {
         /* Calling the handleAuthResult function will trigger the observer in the activity that listens to changes which will redirect the
             user to a new page */
-        userRepository.firebaseLoginWithEmailAndPassword(emailAddress, password, ::handleAuthResult)
+        // create a coroutine that will run in the UI thread
+        viewModelScope.launch {
+            userRepository.firebaseLoginWithEmailAndPassword(emailAddress, password, ::handleAuthResult)
+        }
     }
 }

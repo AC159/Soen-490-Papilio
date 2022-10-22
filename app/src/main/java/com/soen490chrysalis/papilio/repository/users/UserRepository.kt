@@ -7,6 +7,9 @@ import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 /*
     DESCRIPTION:
@@ -22,7 +25,7 @@ import com.google.firebase.auth.GoogleAuthProvider
     Author: Anastassy Cap
     Date: October 5, 2022
 */
-class UserRepository : IUserRepository
+class UserRepository( private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO ) : IUserRepository
 {
     private var firebaseAuth : FirebaseAuth? = null
     private var googleSignInClient : GoogleSignInClient? = null
@@ -69,17 +72,20 @@ class UserRepository : IUserRepository
         }
     }
 
-    override fun firebaseAuthWithGoogle(idToken: String, authResultCallBack : (authResult : Boolean, errorMessage: String) -> Unit)
+    override suspend fun firebaseAuthWithGoogle(idToken: String, authResultCallBack : (authResult : Boolean, errorMessage: String) -> Unit)
     {
-        val credential = GoogleAuthProvider.getCredential(idToken, null)
-        val authTask : Task<AuthResult> = firebaseAuth!!.signInWithCredential(credential)
+        withContext(coroutineDispatcher)
+        {
+            val credential = GoogleAuthProvider.getCredential(idToken, null)
+            val authTask : Task<AuthResult> = firebaseAuth!!.signInWithCredential(credential)
 
-        authTask.addOnCompleteListener { task ->
-            authTaskCompletedCallback(task, authResultCallBack)
+            authTask.addOnCompleteListener { task ->
+                authTaskCompletedCallback(task, authResultCallBack)
+            }
         }
     }
 
-    override fun firebaseCreateAccountWithEmailAndPassword(
+    override suspend fun firebaseCreateAccountWithEmailAndPassword(
         emailAddress: String,
         password: String,
         authResultCallBack: (authResult: Boolean, errorMessage: String) -> Unit
@@ -91,7 +97,7 @@ class UserRepository : IUserRepository
         }
     }
 
-    override fun firebaseLoginWithEmailAndPassword(
+    override suspend fun firebaseLoginWithEmailAndPassword(
         emailAddress: String,
         password: String,
         authResultCallBack: (authResult: Boolean, errorMessage: String) -> Unit

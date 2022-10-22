@@ -1,4 +1,4 @@
-package com.soen490chrysalis.papilio.TestUtils
+package com.soen490chrysalis.papilio.testUtils
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi

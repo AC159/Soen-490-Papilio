@@ -2,7 +2,6 @@ package com.soen490chrysalis.papilio.view
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.soen490chrysalis.papilio.databinding.ActivityInitialBinding
 
@@ -24,8 +23,6 @@ class InitialActivity : AppCompatActivity() {
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
         }
-
-
 
     }
 

@@ -43,7 +43,6 @@ class LoginActivityUITest {
         Espresso.onView(ViewMatchers.withText(R.string.sign_up)).check(ViewAssertions.matches(ViewMatchers.isClickable()))
     }
 
-
     @Test
     fun verifyRedirectionToSignUpActivity()
     {

@@ -11,6 +11,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
+
 /*
     DESCRIPTION:
     UserRepository class that handles the logic to authenticate the user with firebase.
@@ -27,6 +28,8 @@ import kotlinx.coroutines.withContext
 */
 class UserRepository( private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO ) : IUserRepository
 {
+    private val logTag = UserRepository::class.java.simpleName
+
     private var firebaseAuth : FirebaseAuth? = null
     private var googleSignInClient : GoogleSignInClient? = null
 
@@ -51,7 +54,7 @@ class UserRepository( private val coroutineDispatcher: CoroutineDispatcher = Dis
 
     private fun authTaskCompletedCallback( authTask: Task<AuthResult>, viewCallBack : (authResult : Boolean, errorMessage: String) -> Unit )
     {
-        Log.d(Log.DEBUG.toString(), "Auth task has finished: $authTask")
+        Log.d(logTag, "Auth task has finished: $authTask")
         if (authTask.isSuccessful)
         {
             // Sign in success, update UI with the signed-in user's information
@@ -67,7 +70,7 @@ class UserRepository( private val coroutineDispatcher: CoroutineDispatcher = Dis
         else
         {
             // If sign in fails, display a message to the user.
-            Log.w(Log.DEBUG.toString(), "signInWithCredential:failure", authTask.exception)
+            Log.w(logTag, "signInWithCredential:failure", authTask.exception)
             viewCallBack(false, authTask.exception?.message.toString())
         }
     }

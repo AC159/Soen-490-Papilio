@@ -1,7 +1,5 @@
 package com.soen490chrysalis.papilio.view
 
-import android.app.AlertDialog
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -13,7 +11,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseUser
@@ -26,6 +23,8 @@ import com.soen490chrysalis.papilio.viewModel.LoginViewModelFactory
 
 class LoginActivity : AppCompatActivity()
 {
+
+    private val logTag = SignUpActivity::class.java.simpleName
     private lateinit var binding : ActivityLoginBinding
 
     private val RC_SIGN_IN = 9001
@@ -61,7 +60,7 @@ class LoginActivity : AppCompatActivity()
 
         val hasUserAuthenticatedObserver = Observer<AuthResponse> { authResponse_ ->
             // The user has successfully logged in. We can now move to the next page/activity
-            Log.d(Log.DEBUG.toString(), "Auth observer has detected changes: \nauth response: ${authResponse_.authSuccessful}")
+            Log.d(logTag, "Auth observer has detected changes: \nauth response: ${authResponse_.authSuccessful}")
             if ( authResponse_.authSuccessful )
             {
                 // Go to main page
@@ -121,7 +120,7 @@ class LoginActivity : AppCompatActivity()
 
         if ( currentUser != null )
         {
-            Log.d(Log.DEBUG.toString(), "Current user: ${currentUser.displayName}")
+            Log.d(logTag, "Current user: ${currentUser.displayName}")
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish()
@@ -146,13 +145,13 @@ class LoginActivity : AppCompatActivity()
 
                 // Google Sign In was successful, authenticate with Firebase
                 val account : GoogleSignInAccount = task.result
-                Log.d(Log.DEBUG.toString(), "firebaseAuthWithGoogle: " + account.id)
+                Log.d(logTag, "firebaseAuthWithGoogle: " + account.id)
                 loginViewModel.firebaseAuthWithGoogle(account.idToken!!)
             }
             catch (e : Exception)
             {
                 // Google Sign In failed, update UI appropriately
-                Log.d(Log.DEBUG.toString(), "Google sign in failed: \n" + e.message.toString())
+                Log.d(logTag, "Google sign in failed: \n" + e.message.toString())
 
                 // Show snackbar with error message
                 displaySnackBar(binding.coordinatorLayoutLogin, "Oops, something went wrong!")

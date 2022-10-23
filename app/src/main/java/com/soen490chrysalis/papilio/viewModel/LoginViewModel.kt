@@ -24,6 +24,7 @@ data class AuthResponse(var authSuccessful : Boolean, var errorMessage : String 
 
 class LoginViewModel(private val userRepository: IUserRepository) : ViewModel()
 {
+    private val logTag = LoginViewModel::class.java.simpleName
     var authResponse : MutableLiveData<AuthResponse> = MutableLiveData<AuthResponse>()
 
     fun initialize(googleSignInClient : GoogleSignInClient)
@@ -94,7 +95,7 @@ class LoginViewModel(private val userRepository: IUserRepository) : ViewModel()
         {
             authResponse.value = AuthResponse(true, errorMessage)
         }
-        Log.d(Log.DEBUG.toString(), "Return value from userRepository $authResult")
+        Log.d(logTag, "Return value from userRepository $authResult")
     }
 
     fun firebaseAuthWithGoogle(idToken: String) {

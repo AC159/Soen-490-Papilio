@@ -3,22 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent">
+
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="visible"
-        tools:context=".view.LoginActivity"
+        android:layout_height="match_parent"
         android:layout_gravity="center"
+        android:visibility="visible"
         tools:visibility="visible">
 
         <LinearLayout
             android:id="@+id/ll_main_body"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="710dp"
             android:gravity="center"
+            android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -26,9 +26,14 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="207dp"
+                android:layout_height="212dp"
                 android:background="@drawable/cityscape_masked"
+                android:clickable="true"
+                android:elevation="5dp"
+                android:focusable="true"
+                android:gravity="center"
                 android:orientation="horizontal"
+                android:padding="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.513"
@@ -40,7 +45,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="83dp"
+                android:layout_height="wrap_content"
                 android:clickable="true"
                 android:elevation="5dp"
                 android:focusable="true"
@@ -58,8 +63,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/login_activity_greeting_message"
-                    android:textColor="@color/black"
+                    android:textColor="@color/orange"
                     android:textSize="40sp" />
+
 
             </LinearLayout>
 
@@ -88,7 +94,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="70dp"
+                android:layout_height="wrap_content"
                 android:clickable="true"
                 android:elevation="5dp"
                 android:focusable="true"
@@ -165,7 +171,7 @@
                 app:layout_constraintHorizontal_bias="0.513"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.695" >
+                app:layout_constraintVertical_bias="0.695">
 
                 <EditText
                     android:id="@+id/user_email_address"
@@ -195,17 +201,17 @@
                 app:layout_constraintHorizontal_bias="0.513"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/ll_email_address_input"
-                app:layout_constraintVertical_bias="0.695" >
+                app:layout_constraintVertical_bias="0.695">
 
                 <EditText
                     android:id="@+id/user_password"
                     android:layout_width="339dp"
                     android:layout_height="70dp"
-                    android:padding="15dp"
-                    android:background="@drawable/edit_text_shape"
                     android:autofillHints="password"
+                    android:background="@drawable/edit_text_shape"
                     android:hint="Password"
                     android:inputType="textPassword"
+                    android:padding="15dp"
                     android:visibility="visible" />
 
             </LinearLayout>
@@ -213,7 +219,7 @@
             <LinearLayout
                 android:id="@+id/ll_login_button"
                 android:layout_width="match_parent"
-                android:layout_height="83dp"
+                android:layout_height="55dp"
                 android:clickable="true"
                 android:elevation="5dp"
                 android:focusable="true"
@@ -242,7 +248,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="70dp"
+                android:layout_height="75dp"
                 android:clickable="true"
                 android:elevation="5dp"
                 android:focusable="true"
@@ -267,9 +273,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
                     android:clickable="true"
-                    android:textStyle="bold"
+                    android:focusable="true"
                     android:text="@string/sign_up"
-                    android:focusable="true" />
+                    android:textStyle="bold" />
 
             </LinearLayout>
 

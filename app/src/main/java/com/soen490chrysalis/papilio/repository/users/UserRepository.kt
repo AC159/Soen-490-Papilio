@@ -7,6 +7,10 @@ import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+
 
 /*
     DESCRIPTION:
@@ -22,8 +26,10 @@ import com.google.firebase.auth.GoogleAuthProvider
     Author: Anastassy Cap
     Date: October 5, 2022
 */
-class UserRepository : IUserRepository
+class UserRepository( private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO ) : IUserRepository
 {
+    private val logTag = UserRepository::class.java.simpleName
+
     private var firebaseAuth : FirebaseAuth? = null
     private var googleSignInClient : GoogleSignInClient? = null
 
@@ -46,10 +52,9 @@ class UserRepository : IUserRepository
         return firebaseAuth!!.currentUser
     }
 
-    private fun authTaskCompletedCallback( authTask: Task<AuthResult>, viewCallBack : (authResult : Boolean) -> Unit )
+    private fun authTaskCompletedCallback( authTask: Task<AuthResult>, viewCallBack : (authResult : Boolean, errorMessage: String) -> Unit )
     {
-        Log.d(Log.DEBUG.toString(), "Auth task has finished: $authTask")
-
+        Log.d(logTag, "Auth task has finished: $authTask")
         if (authTask.isSuccessful)
         {
             // Sign in success, update UI with the signed-in user's information
@@ -59,31 +64,34 @@ class UserRepository : IUserRepository
                 Log.d(Log.DEBUG.toString(), "Current user: ${user.email}")
                 /* Calling the callback function passed as a parameter will trigger the
                 observer in the LoginActivity which will redirect the user to a new page */
-                viewCallBack(true)
+                viewCallBack(true, "")
             }
         }
         else
         {
             // If sign in fails, display a message to the user.
-            Log.w(Log.DEBUG.toString(), "signInWithCredential:failure", authTask.exception)
-            viewCallBack(false)
+            Log.w(logTag, "signInWithCredential:failure", authTask.exception)
+            viewCallBack(false, authTask.exception?.message.toString())
         }
     }
 
-    override fun firebaseAuthWithGoogle(idToken: String, authResultCallBack : (authResult : Boolean) -> Unit)
+    override suspend fun firebaseAuthWithGoogle(idToken: String, authResultCallBack : (authResult : Boolean, errorMessage: String) -> Unit)
     {
-        val credential = GoogleAuthProvider.getCredential(idToken, null)
-        val authTask : Task<AuthResult> = firebaseAuth!!.signInWithCredential(credential)
+        withContext(coroutineDispatcher)
+        {
+            val credential = GoogleAuthProvider.getCredential(idToken, null)
+            val authTask : Task<AuthResult> = firebaseAuth!!.signInWithCredential(credential)
 
-        authTask.addOnCompleteListener { task ->
-            authTaskCompletedCallback(task, authResultCallBack)
+            authTask.addOnCompleteListener { task ->
+                authTaskCompletedCallback(task, authResultCallBack)
+            }
         }
     }
 
-    override fun firebaseCreateAccountWithEmailAndPassword(
+    override suspend fun firebaseCreateAccountWithEmailAndPassword(
         emailAddress: String,
         password: String,
-        authResultCallBack: (authResult: Boolean) -> Unit
+        authResultCallBack: (authResult: Boolean, errorMessage: String) -> Unit
     )
     {
         val authTask : Task<AuthResult> = firebaseAuth!!.createUserWithEmailAndPassword(emailAddress, password)
@@ -92,10 +100,10 @@ class UserRepository : IUserRepository
         }
     }
 
-    override fun firebaseLoginWithEmailAndPassword(
+    override suspend fun firebaseLoginWithEmailAndPassword(
         emailAddress: String,
         password: String,
-        authResultCallBack: (authResult: Boolean) -> Unit
+        authResultCallBack: (authResult: Boolean, errorMessage: String) -> Unit
     ) {
         val authTask : Task<AuthResult> = firebaseAuth!!.signInWithEmailAndPassword(emailAddress, password)
         authTask.addOnCompleteListener { task ->

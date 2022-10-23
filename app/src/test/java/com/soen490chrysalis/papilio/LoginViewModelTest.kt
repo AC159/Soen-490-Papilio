@@ -4,9 +4,12 @@ import android.util.Log
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.FirebaseUser
+import com.soen490chrysalis.papilio.testUtils.MainCoroutineRule
 import com.soen490chrysalis.papilio.viewModel.LoginViewModel
 import io.mockk.every
 import io.mockk.mockkStatic
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -29,6 +32,10 @@ class LoginViewModelTest
     @get:Rule
     val rule = InstantTaskExecutorRule()
 
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @get:Rule
+    val coroutineRule = MainCoroutineRule()
+
     @Before
     fun setUp()
     {
@@ -39,29 +46,34 @@ class LoginViewModelTest
         every { Log.e(any(), any()) } returns 0
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun authenticateWithGoogle()
-    {
+    fun authenticateWithGoogle() = runTest {
         val googleSignIn : GoogleSignInClient = Mockito.mock(GoogleSignInClient::class.java)
         loginViewModel.initialize(googleSignIn)
 
         val mockIdToken = "some random id token for Google to be happy"
         loginViewModel.firebaseAuthWithGoogle(mockIdToken)
-        assert(loginViewModel.signUpSuccessful.value!!)
+
+        advanceUntilIdle()
+
+        assert(loginViewModel.authResponse.value!!.authSuccessful)
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun createAccountWithEmailAndPassword()
-    {
+    fun createAccountWithEmailAndPassword() = runTest {
         loginViewModel.firebaseCreateAccountWithEmailAndPassword("some email", "password")
-        assert(loginViewModel.signUpSuccessful.value!!)
+        advanceUntilIdle()
+        assert(loginViewModel.authResponse.value!!.authSuccessful)
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun loginWithEmailAndPassword()
-    {
+    fun loginWithEmailAndPassword() = runTest {
         loginViewModel.firebaseLoginWithEmailAndPassword("some email", "password")
-        assert(loginViewModel.signUpSuccessful.value!!)
+        advanceUntilIdle()
+        assert(loginViewModel.authResponse.value!!.authSuccessful)
     }
 
     @Test

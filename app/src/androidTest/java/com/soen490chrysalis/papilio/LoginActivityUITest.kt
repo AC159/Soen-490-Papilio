@@ -46,6 +46,7 @@ class LoginActivityUITest {
     @Test
     fun verifyRedirectionToSignUpActivity()
     {
+        ViewActions.closeSoftKeyboard()
         Espresso.onView(ViewMatchers.withText(R.string.sign_up)).perform(ViewActions.click())
 
         // Check that we are on the sign up activity

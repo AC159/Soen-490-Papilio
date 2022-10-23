@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.navigation.NavigationBarView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.soen490chrysalis.papilio.*
 import com.soen490chrysalis.papilio.databinding.ActivityMainBinding
 
@@ -12,6 +14,8 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
 {
     var bottomNavigationView: NavigationBarView? = null
     private lateinit var binding : ActivityMainBinding
+    private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var firebaseUser : FirebaseUser
     private var currentFragmentID : String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {

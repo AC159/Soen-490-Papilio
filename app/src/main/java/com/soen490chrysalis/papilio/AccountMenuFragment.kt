@@ -1,10 +1,10 @@
 package com.soen490chrysalis.papilio
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.soen490chrysalis.papilio.databinding.ActivityAccountMenuBinding
 
 
@@ -25,6 +25,7 @@ class AccountMenuFragment : Fragment()
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
+        binding = ActivityAccountMenuBinding.inflate(layoutInflater)
     }
 
     override fun onCreateView(
@@ -33,9 +34,15 @@ class AccountMenuFragment : Fragment()
     ) : View?
     {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.activity_account_menu, container, false)
-    }
+        val view = inflater.inflate(R.layout.activity_account_menu, container, false)
+        val profileButton = view.findViewById<androidx.appcompat.widget.AppCompatButton>(R.id.account_user_profile)
 
+        profileButton?.setOnClickListener {
+            parentFragmentManager.beginTransaction().replace(R.id.relativelayout, UserProfileFragment(),"USER_PROFILE").commit()
+        }
+
+        return view
+    }
 
     companion object
     {

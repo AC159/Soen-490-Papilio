@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
     private lateinit var binding : ActivityMainBinding
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var firebaseUser : FirebaseUser
-    private var currentFragmentID : String = ""
+    public var currentFragmentID : String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

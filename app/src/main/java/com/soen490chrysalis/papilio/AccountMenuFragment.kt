@@ -7,7 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.soen490chrysalis.papilio.databinding.ActivityAccountMenuBinding
-import com.soen490chrysalis.papilio.view.UserProfileActivity
+import com.soen490chrysalis.papilio.view.MainActivity
+import kotlinx.android.synthetic.main.activity_account_menu.*
+import kotlinx.android.synthetic.main.activity_account_menu.view.*
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -24,8 +26,8 @@ class AccountMenuFragment : Fragment()
 {
     private lateinit var binding : ActivityAccountMenuBinding
 
-    override fun onCreate(savedInstanceState: Bundle?)
-    {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAccountMenuBinding.inflate(layoutInflater)
     }
@@ -40,9 +42,8 @@ class AccountMenuFragment : Fragment()
         val profileButton = view.findViewById<androidx.appcompat.widget.AppCompatButton>(R.id.account_user_profile)
 
         profileButton?.setOnClickListener {
-            // parentFragmentManager.beginTransaction().replace(R.id.relativelayout, UserProfileFragment(),"USER_PROFILE").commit()
-            val intent = Intent(activity, UserProfileActivity::class.java)
-            startActivity(intent)
+            parentFragmentManager.beginTransaction().replace(R.id.relativelayout, UserProfileFragment(),"USER_PROFILE").commit()
+            (activity as MainActivity).currentFragmentID = "USER_PROFILE"
         }
 
         return view

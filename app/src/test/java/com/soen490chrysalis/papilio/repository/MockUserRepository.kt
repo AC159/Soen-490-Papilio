@@ -1,4 +1,4 @@
-package com.soen490chrysalis.papilio
+package com.soen490chrysalis.papilio.repository
 
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.FirebaseUser

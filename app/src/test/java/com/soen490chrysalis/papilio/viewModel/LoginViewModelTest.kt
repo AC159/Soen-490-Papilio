@@ -1,11 +1,11 @@
-package com.soen490chrysalis.papilio
+package com.soen490chrysalis.papilio.viewModel
 
 import android.util.Log
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.FirebaseUser
+import com.soen490chrysalis.papilio.repository.MockUserRepository
 import com.soen490chrysalis.papilio.testUtils.MainCoroutineRule
-import com.soen490chrysalis.papilio.viewModel.LoginViewModel
 import io.mockk.every
 import io.mockk.mockkStatic
 import kotlinx.coroutines.ExperimentalCoroutinesApi

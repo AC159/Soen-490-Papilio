@@ -80,6 +80,16 @@ class LoginViewModelTest
     }
 
     @Test
+    fun handleAuthResult()
+    {
+        loginViewModel.handleAuthResult(true, "")
+        assert(loginViewModel.authResponse.value!!.authSuccessful && loginViewModel.authResponse.value!!.errorMessage == "")
+
+        loginViewModel.handleAuthResult(false, "Something went wrong!")
+        assert(!loginViewModel.authResponse.value!!.authSuccessful && loginViewModel.authResponse.value!!.errorMessage == "Something went wrong!")
+    }
+
+    @Test
     fun getCurrentUser()
     {
         assert(loginViewModel.getUser() is FirebaseUser)

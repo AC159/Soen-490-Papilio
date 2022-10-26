@@ -84,7 +84,7 @@ class LoginViewModel(private val userRepository: IUserRepository) : ViewModel()
                 "1 uppercase character, 1 special character, no white spaces & a minimum of 6 characters!"
     }
 
-    private fun handleAuthResult(authResult: Boolean, errorMessage : String)
+    fun handleAuthResult(authResult: Boolean, errorMessage : String)
     {
         if ( !authResult )
         {

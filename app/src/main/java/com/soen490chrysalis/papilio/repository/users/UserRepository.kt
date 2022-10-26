@@ -43,7 +43,7 @@ class UserRepository( private var firebaseAuth : FirebaseAuth, private val corou
         return firebaseAuth.currentUser
     }
 
-    private fun authTaskCompletedCallback( authTask: Task<AuthResult>, viewCallBack : (authResult : Boolean, errorMessage: String) -> Unit )
+    fun authTaskCompletedCallback( authTask: Task<AuthResult>, viewCallBack : (authResult : Boolean, errorMessage: String) -> Unit )
     {
         Log.d(logTag, "Auth task has finished: $authTask")
         if (authTask.isSuccessful)
@@ -61,7 +61,7 @@ class UserRepository( private var firebaseAuth : FirebaseAuth, private val corou
         else
         {
             // If sign in fails, display a message to the user.
-            Log.w(logTag, "signInWithCredential:failure", authTask.exception)
+            Log.d(logTag, "signInWithCredential:failure", authTask.exception)
             viewCallBack(false, authTask.exception?.message.toString())
         }
     }
@@ -85,9 +85,12 @@ class UserRepository( private var firebaseAuth : FirebaseAuth, private val corou
         authResultCallBack: (authResult: Boolean, errorMessage: String) -> Unit
     )
     {
-        val authTask : Task<AuthResult> = firebaseAuth.createUserWithEmailAndPassword(emailAddress, password)
-        authTask.addOnCompleteListener { task ->
-            authTaskCompletedCallback(task, authResultCallBack)
+        withContext(coroutineDispatcher)
+        {
+            val authTask : Task<AuthResult> = firebaseAuth.createUserWithEmailAndPassword(emailAddress, password)
+            authTask.addOnCompleteListener { task ->
+                authTaskCompletedCallback(task, authResultCallBack)
+            }
         }
     }
 
@@ -96,9 +99,12 @@ class UserRepository( private var firebaseAuth : FirebaseAuth, private val corou
         password: String,
         authResultCallBack: (authResult: Boolean, errorMessage: String) -> Unit
     ) {
-        val authTask : Task<AuthResult> = firebaseAuth.signInWithEmailAndPassword(emailAddress, password)
-        authTask.addOnCompleteListener { task ->
-            authTaskCompletedCallback(task, authResultCallBack)
+        withContext(coroutineDispatcher)
+        {
+            val authTask : Task<AuthResult> = firebaseAuth.signInWithEmailAndPassword(emailAddress, password)
+            authTask.addOnCompleteListener { task ->
+                authTaskCompletedCallback(task, authResultCallBack)
+            }
         }
     }
 }

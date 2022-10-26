@@ -13,6 +13,8 @@ import kotlinx.coroutines.test.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.junit.runners.JUnit4
 import org.mockito.Mockito
 
 /*
@@ -24,6 +26,7 @@ import org.mockito.Mockito
 
     Date: October 15, 2022 -> [Added tests for input form validation (first/last names, email, password)]
 */
+@RunWith(JUnit4::class)
 class LoginViewModelTest
 {
     private val mockUserRepository = MockUserRepository()

@@ -3,6 +3,7 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-android-extensions'
     id 'com.google.gms.google-services' // google services gradle plugin
+    id 'jacoco'
 }
 
 android {
@@ -41,6 +42,29 @@ android {
     namespace 'com.soen490chrysalis.papilio'
 }
 
+task jacocoUnifiedTestReport(type: JacocoReport, dependsOn: ['connectedAndroidTest', 'test']) {
+
+    reports {
+        html.enabled = true
+    }
+
+    def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
+
+    // java compiled classes
+    def javaTree = fileTree(dir: "$project.buildDir/intermediates/javac/debug/classes", excludes: fileFilter)
+
+    // kotlin compiled classes
+    def kotlinTree = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/debug", excludes: fileFilter)
+    def mainSrc = "${project.projectDir}/src/main/java"
+
+    getSourceDirectories().from(files([mainSrc]))
+    getClassDirectories().setFrom(files([javaTree, kotlinTree]))
+    getExecutionData().setFrom(fileTree(dir: "$buildDir", includes: [
+            "jacoco/testReleaseUnitTest.exec",
+            "outputs/code_coverage/debugAndroidTest/connected/*/coverage.ec"
+    ]))
+}
+
 dependencies {
 
     // firebase configuration
@@ -67,6 +91,7 @@ dependencies {
     // Libraries only used for testing which are not included in the final APK file
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4"
     androidTestImplementation('androidx.test.espresso:espresso-core:3.4.0')
+    androidTestImplementation('androidx.test.espresso:espresso-intents:3.4.0')
     androidTestImplementation('androidx.test:runner:1.4.0')
     androidTestImplementation('androidx.test:rules:1.4.0')
     androidTestImplementation('androidx.test.ext:junit:1.1.3')

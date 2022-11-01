@@ -1,22 +1,47 @@
 package com.soen490chrysalis.papilio
 
+import android.app.Activity
+import android.app.Instrumentation
+import android.content.Intent
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.matcher.IntentMatchers
+import androidx.test.espresso.intent.rule.IntentsTestRule
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.soen490chrysalis.papilio.view.LoginActivity
+import com.soen490chrysalis.papilio.view.MainActivity
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 @LargeTest
-class LoginActivityUITest {
+class LoginActivityUITest
+{
     @get:Rule
     val activityRule = ActivityScenarioRule(LoginActivity::class.java)
+
+    @get:Rule
+    val intentsTestRule = IntentsTestRule(LoginActivity::class.java)
+
+    private val validEmail = "validEmail@gmail.com"
+    private val validPassword = "validPassword123#$"
+
+    @Before
+    fun setUp()
+    {
+        // Stub the Main activity intent
+        val intentResult = Instrumentation.ActivityResult(Activity.RESULT_OK, null)
+
+        // Verify that the activity is going to redirect towards the MainActivity
+        Intents.intending(IntentMatchers.hasComponent(MainActivity::class.java.name)).respondWith(intentResult)
+    }
 
     @Test
     fun activityDisplaysExpectedText()
@@ -143,5 +168,80 @@ class LoginActivityUITest {
 
         // There should be no errors displayed
         Espresso.onView(ViewMatchers.withId(R.id.user_password)).check(ViewAssertions.matches(hasNoErrorText()))
+    }
+
+    @Test
+    fun verifyRedirectionOnLoginWithEmail()
+    {
+        // Let's start by filling the input fields with correct information
+        // Fill a valid email
+        Espresso.onView(ViewMatchers.withId(R.id.user_email_address)).perform(
+            ViewActions.clearText(),
+            ViewActions.typeText(
+                validEmail
+            ),
+            ViewActions.closeSoftKeyboard() // important to close the keyboard otherwise the login button is not visible!
+        )
+
+        // Fill a valid password
+        Espresso.onView(ViewMatchers.withId(R.id.user_password)).perform(
+            ViewActions.clearText(),
+            ViewActions.typeText(
+                validPassword
+            ),
+            ViewActions.closeSoftKeyboard() // important to close the keyboard otherwise the login button is not visible!
+        )
+
+        // Stub the Main activity intent
+        val intentResult = Instrumentation.ActivityResult(Activity.RESULT_OK, null)
+
+        // Verify that the activity is going to redirect towards the MainActivity
+        Intents.intending(IntentMatchers.hasComponent(MainActivity::class.java.name)).respondWith(intentResult)
+
+        Espresso.onView(ViewMatchers.withText(R.string.login)).perform(ViewActions.click())
+    }
+
+    @Test
+    fun continueWithGoogleCanceledIntent()
+    {
+        // Stub the google sign in intent to mock a canceled intent
+        val intentResult = Instrumentation.ActivityResult(Activity.RESULT_CANCELED, null)
+
+        // Verify that we have the proper google intent, if so, respond with the stub
+        Intents.intending(IntentMatchers.toPackage("com.google.android.gms")).respondWith(intentResult)
+
+        Espresso.onView(ViewMatchers.withText(R.string.sign_in_with_google)).perform(ViewActions.click())
+
+        // Check if there is a snackbar with an error message
+        Espresso.onView(ViewMatchers.withText("Oops, something went wrong!")).check(
+            ViewAssertions.matches(
+                ViewMatchers.isDisplayed()
+            )
+        )
+    }
+
+    @Test
+    fun verifyStartActivityForResult()
+    {
+        // Stub the Main activity intent
+        val intentResult = Instrumentation.ActivityResult(Activity.RESULT_OK, null)
+
+        // Verify that the activity is going to redirect towards the MainActivity
+        Intents.intending(IntentMatchers.hasComponent(MainActivity::class.java.name)).respondWith(intentResult)
+
+        activityRule.scenario.onActivity { activity ->
+            activity.startActivityForResult(Intent(activity, MainActivity::class.java), 9001) // the request code is the same as in the signup activity
+        }
+
+        /* Delay the thread for 1 second so that the snackbar has time to appear.
+           Otherwise, the test will just stop without letting the view show the snackbar */
+        Thread.sleep(1000)
+
+        // Check if there is a snackbar
+        Espresso.onView(ViewMatchers.withText("Oops, something went wrong!")).check(
+            ViewAssertions.matches(
+                ViewMatchers.isDisplayed()
+            )
+        )
     }
 }

@@ -320,7 +320,7 @@ class SignUpActivityUITest {
         Espresso.onView(withId(R.id.user_email_address)).perform(
             clearText(),
             typeText(
-                "someOtherValidEmail@gmail.com"
+                validEmail
             ),
             closeSoftKeyboard() // important to close the keyboard otherwise the sign up button is not visible!
         )
@@ -334,13 +334,13 @@ class SignUpActivityUITest {
             closeSoftKeyboard() // important to close the keyboard otherwise the sign up button is not visible!
         )
 
-        Espresso.onView(withText(R.string.sign_up)).perform(click())
-
         // Stub the Main activity intent
         val intentResult = Instrumentation.ActivityResult(Activity.RESULT_OK, null)
 
         // Verify that the activity is going to redirect towards the MainActivity
         intending(hasComponent(MainActivity::class.java.name)).respondWith(intentResult)
+
+        Espresso.onView(withText(R.string.sign_up)).perform(click())
     }
 
     @Test

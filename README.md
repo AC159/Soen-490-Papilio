@@ -18,4 +18,4 @@ The output file will be located in the **./app/build/reports/coverage/androidTes
 
         ./gradlew jacocoUnifiedTestReport
 
-The output file will be located in the **./app/build/reports/jacoco/jacocoTestReport/html/index.html** directory
+The output file will be located in the **./app/build/reports/jacoco/jacocoUnifiedTestReport/html/index.html** directory

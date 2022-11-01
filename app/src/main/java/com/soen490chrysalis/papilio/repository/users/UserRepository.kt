@@ -98,7 +98,8 @@ class UserRepository( private var firebaseAuth : FirebaseAuth, private val corou
         emailAddress: String,
         password: String,
         authResultCallBack: (authResult: Boolean, errorMessage: String) -> Unit
-    ) {
+    )
+    {
         withContext(coroutineDispatcher)
         {
             val authTask : Task<AuthResult> = firebaseAuth.signInWithEmailAndPassword(emailAddress, password)

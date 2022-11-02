@@ -1,11 +1,11 @@
-package com.soen490chrysalis.papilio
+package com.soen490chrysalis.papilio.viewModel
 
 import android.util.Log
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.FirebaseUser
+import com.soen490chrysalis.papilio.repository.MockUserRepository
 import com.soen490chrysalis.papilio.testUtils.MainCoroutineRule
-import com.soen490chrysalis.papilio.viewModel.LoginViewModel
 import io.mockk.every
 import io.mockk.mockkStatic
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -13,6 +13,8 @@ import kotlinx.coroutines.test.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.junit.runners.JUnit4
 import org.mockito.Mockito
 
 /*
@@ -24,6 +26,7 @@ import org.mockito.Mockito
 
     Date: October 15, 2022 -> [Added tests for input form validation (first/last names, email, password)]
 */
+@RunWith(JUnit4::class)
 class LoginViewModelTest
 {
     private val mockUserRepository = MockUserRepository()
@@ -74,6 +77,16 @@ class LoginViewModelTest
         loginViewModel.firebaseLoginWithEmailAndPassword("some email", "password")
         advanceUntilIdle()
         assert(loginViewModel.authResponse.value!!.authSuccessful)
+    }
+
+    @Test
+    fun handleAuthResult()
+    {
+        loginViewModel.handleAuthResult(true, "")
+        assert(loginViewModel.authResponse.value!!.authSuccessful && loginViewModel.authResponse.value!!.errorMessage == "")
+
+        loginViewModel.handleAuthResult(false, "Something went wrong!")
+        assert(!loginViewModel.authResponse.value!!.authSuccessful && loginViewModel.authResponse.value!!.errorMessage == "Something went wrong!")
     }
 
     @Test

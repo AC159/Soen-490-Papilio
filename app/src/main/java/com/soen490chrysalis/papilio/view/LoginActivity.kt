@@ -111,22 +111,6 @@ class LoginActivity : AppCompatActivity()
 
     }
 
-    override fun onStart()
-    {
-        super.onStart()
-
-        // Check if user is signed in (non-null) and update UI accordingly.
-        val currentUser : FirebaseUser? = loginViewModel.getUser()
-
-        if ( currentUser != null )
-        {
-            Log.d(logTag, "Current user: ${currentUser.displayName}")
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-            finish()
-        }
-    }
-
     private fun displaySnackBar(coordinatorLayout: CoordinatorLayout, errorMessage : String)
     {
         Snackbar.make(coordinatorLayout, errorMessage, Snackbar.LENGTH_LONG).show()

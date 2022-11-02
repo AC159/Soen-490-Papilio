@@ -26,33 +26,24 @@ import kotlinx.coroutines.withContext
     Author: Anastassy Cap
     Date: October 5, 2022
 */
-class UserRepository( private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO ) : IUserRepository
+class UserRepository( private var firebaseAuth : FirebaseAuth, private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO ) : IUserRepository
 {
     private val logTag = UserRepository::class.java.simpleName
 
-    private var firebaseAuth : FirebaseAuth? = null
     private var googleSignInClient : GoogleSignInClient? = null
 
     // This function must be called if we want to start a sign in flow
     override fun initialize(googleSignInClient : GoogleSignInClient)
     {
         this.googleSignInClient = googleSignInClient
-
-        // Initialize Firebase Auth
-        firebaseAuth = FirebaseAuth.getInstance()
     }
 
     override fun getUser() : FirebaseUser?
     {
-        if ( firebaseAuth == null )
-        {
-            // Initialize Firebase Auth
-            firebaseAuth = FirebaseAuth.getInstance()
-        }
-        return firebaseAuth!!.currentUser
+        return firebaseAuth.currentUser
     }
 
-    private fun authTaskCompletedCallback( authTask: Task<AuthResult>, viewCallBack : (authResult : Boolean, errorMessage: String) -> Unit )
+    fun authTaskCompletedCallback( authTask: Task<AuthResult>, viewCallBack : (authResult : Boolean, errorMessage: String) -> Unit )
     {
         Log.d(logTag, "Auth task has finished: $authTask")
         if (authTask.isSuccessful)
@@ -70,7 +61,7 @@ class UserRepository( private val coroutineDispatcher: CoroutineDispatcher = Dis
         else
         {
             // If sign in fails, display a message to the user.
-            Log.w(logTag, "signInWithCredential:failure", authTask.exception)
+            Log.d(logTag, "signInWithCredential:failure", authTask.exception)
             viewCallBack(false, authTask.exception?.message.toString())
         }
     }
@@ -80,7 +71,7 @@ class UserRepository( private val coroutineDispatcher: CoroutineDispatcher = Dis
         withContext(coroutineDispatcher)
         {
             val credential = GoogleAuthProvider.getCredential(idToken, null)
-            val authTask : Task<AuthResult> = firebaseAuth!!.signInWithCredential(credential)
+            val authTask : Task<AuthResult> = firebaseAuth.signInWithCredential(credential)
 
             authTask.addOnCompleteListener { task ->
                 authTaskCompletedCallback(task, authResultCallBack)
@@ -94,9 +85,12 @@ class UserRepository( private val coroutineDispatcher: CoroutineDispatcher = Dis
         authResultCallBack: (authResult: Boolean, errorMessage: String) -> Unit
     )
     {
-        val authTask : Task<AuthResult> = firebaseAuth!!.createUserWithEmailAndPassword(emailAddress, password)
-        authTask.addOnCompleteListener { task ->
-            authTaskCompletedCallback(task, authResultCallBack)
+        withContext(coroutineDispatcher)
+        {
+            val authTask : Task<AuthResult> = firebaseAuth.createUserWithEmailAndPassword(emailAddress, password)
+            authTask.addOnCompleteListener { task ->
+                authTaskCompletedCallback(task, authResultCallBack)
+            }
         }
     }
 
@@ -104,10 +98,14 @@ class UserRepository( private val coroutineDispatcher: CoroutineDispatcher = Dis
         emailAddress: String,
         password: String,
         authResultCallBack: (authResult: Boolean, errorMessage: String) -> Unit
-    ) {
-        val authTask : Task<AuthResult> = firebaseAuth!!.signInWithEmailAndPassword(emailAddress, password)
-        authTask.addOnCompleteListener { task ->
-            authTaskCompletedCallback(task, authResultCallBack)
+    )
+    {
+        withContext(coroutineDispatcher)
+        {
+            val authTask : Task<AuthResult> = firebaseAuth.signInWithEmailAndPassword(emailAddress, password)
+            authTask.addOnCompleteListener { task ->
+                authTaskCompletedCallback(task, authResultCallBack)
+            }
         }
     }
 }

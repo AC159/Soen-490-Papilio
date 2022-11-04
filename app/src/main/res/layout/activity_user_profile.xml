@@ -19,12 +19,12 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="600dp"
+            android:layout_height="500dp"
             android:background="@color/white">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="600dp"
+                android:layout_height="500dp"
                 android:orientation="vertical"
                 android:background="@drawable/user_profile_background"
                 >
@@ -32,8 +32,8 @@
 
 
                     <ImageView
-                        android:layout_width="175dp"
-                        android:layout_height="175dp"
+                        android:layout_width="125dp"
+                        android:layout_height="125dp"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="35dp"
                         android:foregroundGravity="center_horizontal"
@@ -47,10 +47,9 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:text="John Doe"
-                    android:textSize="28dp"
+                    android:textSize="20dp"
                     android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:layout_marginTop="10dp">
+                    android:textColor="@color/black">
                 </TextView>
 
                 <TextView
@@ -58,11 +57,10 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:text="@string/placeholder_bio"
-                    android:textSize="20dp"
+                    android:textSize="17dp"
                     android:textAlignment="center"
                     android:textColor="@color/black"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
+
                     android:padding="10dp">
                 </TextView>
 
@@ -97,7 +95,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="English, French"
+                                android:text="Eng, Fra"
                                 android:textColor="@color/black"
                                 android:paddingTop="10dp">
 
@@ -166,13 +164,12 @@
 
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
-                    android:layout_height="120dp"
+                    android:layout_height="130dp"
                     app:strokeColor="#52A89F"
                     app:strokeWidth="3dp"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     app:cardCornerRadius="30dp"
-                    android:elevation="@dimen/cardview_default_elevation"
                     >
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -230,7 +227,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:gravity="bottom"
+            android:gravity="center"
             android:background="#52A89F"
             >
 
@@ -239,8 +236,6 @@
                 android:layout_height="wrap_content"
                 android:text="PAST ACTIVITIES"
                 android:textColor="@color/white"
-                android:layout_marginLeft="20dp"
-                android:gravity="bottom"
                 android:textSize="20dp"
                 android:textStyle="bold">
             </TextView>
@@ -248,7 +243,7 @@
             <HorizontalScrollView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
+                android:layout_gravity="center"
                 android:layout_marginBottom="20dp">
 
                 <LinearLayout

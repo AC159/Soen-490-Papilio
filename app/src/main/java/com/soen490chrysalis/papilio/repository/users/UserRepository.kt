@@ -7,6 +7,10 @@ import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+
 
 /*
     DESCRIPTION:
@@ -22,55 +26,85 @@ import com.google.firebase.auth.GoogleAuthProvider
     Author: Anastassy Cap
     Date: October 5, 2022
 */
-class UserRepository : IUserRepository
+class UserRepository( private var firebaseAuth : FirebaseAuth, private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO ) : IUserRepository
 {
-    private var firebaseAuth : FirebaseAuth? = null
+    private val logTag = UserRepository::class.java.simpleName
+
     private var googleSignInClient : GoogleSignInClient? = null
 
     // This function must be called if we want to start a sign in flow
     override fun initialize(googleSignInClient : GoogleSignInClient)
     {
         this.googleSignInClient = googleSignInClient
-
-        // Initialize Firebase Auth
-        firebaseAuth = FirebaseAuth.getInstance()
     }
 
     override fun getUser() : FirebaseUser?
     {
-        if ( firebaseAuth == null )
-        {
-            // Initialize Firebase Auth
-            firebaseAuth = FirebaseAuth.getInstance()
-        }
-        return firebaseAuth!!.currentUser
+        return firebaseAuth.currentUser
     }
 
-    override fun firebaseAuthWithGoogle(idToken: String, authResultCallBack : (authResult : Boolean) -> Unit)
+    fun authTaskCompletedCallback( authTask: Task<AuthResult>, viewCallBack : (authResult : Boolean, errorMessage: String) -> Unit )
     {
-        val credential = GoogleAuthProvider.getCredential(idToken, null)
-        val authTask : Task<AuthResult> = firebaseAuth!!.signInWithCredential(credential)
-
-        authTask.addOnCompleteListener { task ->
-            Log.d(Log.DEBUG.toString(), "Auth task has finished: $task")
-
-            if (task.isSuccessful)
-            {
-                // Sign in success, update UI with the signed-in user's information
-                Log.d(Log.DEBUG.toString(), "signInWithCredential:success")
-                val user = getUser()
-                if (user != null) {
-                    Log.d(Log.DEBUG.toString(), "Current user: ${user.email}")
-                    /* Calling the callback function passed as a parameter will trigger the
-                    observer in the LoginActivity which will redirect the user to a new page */
-                    authResultCallBack(true)
-                }
+        Log.d(logTag, "Auth task has finished: $authTask")
+        if (authTask.isSuccessful)
+        {
+            // Sign in success, update UI with the signed-in user's information
+            Log.d(Log.DEBUG.toString(), "signInWithCredential:success")
+            val user = getUser()
+            if (user != null) {
+                Log.d(Log.DEBUG.toString(), "Current user: ${user.email}")
+                /* Calling the callback function passed as a parameter will trigger the
+                observer in the LoginActivity which will redirect the user to a new page */
+                viewCallBack(true, "")
             }
-            else
-            {
-                // If sign in fails, display a message to the user.
-                Log.w(Log.DEBUG.toString(), "signInWithCredential:failure", task.exception)
-                authResultCallBack(false)
+        }
+        else
+        {
+            // If sign in fails, display a message to the user.
+            Log.d(logTag, "signInWithCredential:failure", authTask.exception)
+            viewCallBack(false, authTask.exception?.message.toString())
+        }
+    }
+
+    override suspend fun firebaseAuthWithGoogle(idToken: String, authResultCallBack : (authResult : Boolean, errorMessage: String) -> Unit)
+    {
+        withContext(coroutineDispatcher)
+        {
+            val credential = GoogleAuthProvider.getCredential(idToken, null)
+            val authTask : Task<AuthResult> = firebaseAuth.signInWithCredential(credential)
+
+            authTask.addOnCompleteListener { task ->
+                authTaskCompletedCallback(task, authResultCallBack)
+            }
+        }
+    }
+
+    override suspend fun firebaseCreateAccountWithEmailAndPassword(
+        emailAddress: String,
+        password: String,
+        authResultCallBack: (authResult: Boolean, errorMessage: String) -> Unit
+    )
+    {
+        withContext(coroutineDispatcher)
+        {
+            val authTask : Task<AuthResult> = firebaseAuth.createUserWithEmailAndPassword(emailAddress, password)
+            authTask.addOnCompleteListener { task ->
+                authTaskCompletedCallback(task, authResultCallBack)
+            }
+        }
+    }
+
+    override suspend fun firebaseLoginWithEmailAndPassword(
+        emailAddress: String,
+        password: String,
+        authResultCallBack: (authResult: Boolean, errorMessage: String) -> Unit
+    )
+    {
+        withContext(coroutineDispatcher)
+        {
+            val authTask : Task<AuthResult> = firebaseAuth.signInWithEmailAndPassword(emailAddress, password)
+            authTask.addOnCompleteListener { task ->
+                authTaskCompletedCallback(task, authResultCallBack)
             }
         }
     }

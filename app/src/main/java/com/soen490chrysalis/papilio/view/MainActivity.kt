@@ -1,5 +1,6 @@
 package com.soen490chrysalis.papilio.view
 
+import android.content.Intent
 import android.accounts.Account
 import android.os.Bundle
 import android.view.MenuItem
@@ -40,10 +41,12 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
         firebaseUser = firebaseAuth.currentUser!!
 
         binding.button2.setOnClickListener(){
-            binding.tvMessage.text = "You are now logged out!"
             firebaseAuth.signOut()
+            val initialActivity = Intent(this, InitialActivity::class.java)
+            startActivity(initialActivity)
+            finish()
         }
-        binding.tvMessage.text = "Hello ${firebaseUser.displayName}!"
+        binding.tvMessage.text = "Hello ${firebaseUser.email}!"
 
         //Setting the listener to detect when we press one of the button on the navigation bar
         bottomNavigationView = findViewById(R.id.bottonnav)

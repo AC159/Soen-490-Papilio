@@ -18,5 +18,9 @@ interface IUserRepository
 
     fun getUser() : FirebaseUser?
 
-    fun firebaseAuthWithGoogle(idToken: String, authResultCallBack : (authResult : Boolean) -> Unit)
+    suspend fun firebaseAuthWithGoogle(idToken: String, authResultCallBack : (authResult : Boolean, errorMessage: String) -> Unit)
+
+    suspend fun firebaseCreateAccountWithEmailAndPassword(emailAddress: String, password: String, authResultCallBack : (authResult : Boolean, errorMessage: String) -> Unit)
+
+    suspend fun firebaseLoginWithEmailAndPassword(emailAddress: String, password: String, authResultCallBack : (authResult : Boolean, errorMessage: String) -> Unit)
 }

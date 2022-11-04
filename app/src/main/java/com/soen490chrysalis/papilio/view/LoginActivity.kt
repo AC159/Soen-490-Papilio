@@ -1,28 +1,30 @@
 package com.soen490chrysalis.papilio.view
 
-import android.app.AlertDialog
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseUser
 import com.soen490chrysalis.papilio.viewModel.LoginViewModel
 import com.soen490chrysalis.papilio.R
 import com.soen490chrysalis.papilio.databinding.ActivityLoginBinding
+import com.soen490chrysalis.papilio.viewModel.AuthResponse
 import com.soen490chrysalis.papilio.viewModel.LoginViewModelFactory
 
 
 class LoginActivity : AppCompatActivity()
 {
+
+    private val logTag = SignUpActivity::class.java.simpleName
     private lateinit var binding : ActivityLoginBinding
 
     private val RC_SIGN_IN = 9001
@@ -56,42 +58,62 @@ class LoginActivity : AppCompatActivity()
         loginViewModel = ViewModelProvider(this, loginFactory)[LoginViewModel::class.java]
         loginViewModel.initialize(googleSignInClient)
 
-        val hasUserAuthenticatedObserver = Observer<Boolean> { isUserLoggedIn ->
+        val hasUserAuthenticatedObserver = Observer<AuthResponse> { authResponse_ ->
             // The user has successfully logged in. We can now move to the next page/activity
-            Log.d(Log.DEBUG.toString(), "Auth observer has detected changes $isUserLoggedIn")
-            if ( isUserLoggedIn )
+            Log.d(logTag, "Auth observer has detected changes: \nauth response: ${authResponse_.authSuccessful}")
+            if ( authResponse_.authSuccessful )
             {
                 // Go to main page
                 val homePage = Intent(this, MainActivity::class.java)
                 startActivity(homePage)
                 finish()
             }
+            else
+            {
+                // Display a snackbar with the error message
+                val coordinatorLayout = binding.coordinatorLayoutLogin
+                displaySnackBar(coordinatorLayout, authResponse_.errorMessage)
+            }
         }
 
         // Register the observer we create above
-        loginViewModel.loginSuccessful.observe(this, hasUserAuthenticatedObserver)
+        loginViewModel.authResponse.observe(this, hasUserAuthenticatedObserver)
 
         binding.signInWithGoogleButton.setOnClickListener {
             // Initiate the whole Google Sign In procedure
             val intent = googleSignInClient.signInIntent
             startActivityForResult(intent, RC_SIGN_IN)
         }
+
+        binding.loginButton.setOnClickListener {
+            // Extract the email and password from the input fields
+            val email : String = binding.userEmailAddress.text.toString()
+            val password : String = binding.userPassword.text.toString()
+
+            val emailValidation = loginViewModel.validateEmailAddress(email)
+            if ( emailValidation != null )
+            {
+                binding.userEmailAddress.error = emailValidation
+            }
+
+            val passwordValidation = loginViewModel.validatePassword(password)
+            if ( passwordValidation != null )
+            {
+                binding.userPassword.error = passwordValidation
+            }
+
+            if ( emailValidation == null && passwordValidation == null )
+            {
+                // Valid email and password
+                loginViewModel.firebaseLoginWithEmailAndPassword(email, password)
+            }
+        }
+
     }
 
-    override fun onStart()
+    private fun displaySnackBar(coordinatorLayout: CoordinatorLayout, errorMessage : String)
     {
-        super.onStart()
-
-        // Check if user is signed in (non-null) and update UI accordingly.
-        val currentUser : FirebaseUser? = loginViewModel.getUser()
-
-        if ( currentUser != null )
-        {
-            Log.d(Log.DEBUG.toString(), "Current user: ${currentUser.displayName}")
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-            finish()
-        }
+        Snackbar.make(coordinatorLayout, errorMessage, Snackbar.LENGTH_LONG).show()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
@@ -101,18 +123,22 @@ class LoginActivity : AppCompatActivity()
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN)
         {
-            val task : Task<GoogleSignInAccount> = GoogleSignIn.getSignedInAccountFromIntent(data)
             try
             {
+                val task : Task<GoogleSignInAccount> = GoogleSignIn.getSignedInAccountFromIntent(data)
+
                 // Google Sign In was successful, authenticate with Firebase
                 val account : GoogleSignInAccount = task.result
-                Log.d(Log.DEBUG.toString(), "firebaseAuthWithGoogle: " + account.id)
+                Log.d(logTag, "firebaseAuthWithGoogle: " + account.id)
                 loginViewModel.firebaseAuthWithGoogle(account.idToken!!)
             }
-            catch (e: ApiException)
+            catch (e : Exception)
             {
                 // Google Sign In failed, update UI appropriately
-                Log.w(Log.DEBUG.toString(), "Google sign in failed", e)
+                Log.d(logTag, "Google sign in failed: \n" + e.message.toString())
+
+                // Show snackbar with error message
+                displaySnackBar(binding.coordinatorLayoutLogin, "Oops, something went wrong!")
             }
         }
     }

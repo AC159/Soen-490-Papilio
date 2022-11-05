@@ -20,10 +20,8 @@ import org.mockito.Mockito
 /*
     DESCRIPTION:
     Test suite for the login view model
-
     Author: Anastassy Cap
     Date: October 5, 2022
-
     Date: October 15, 2022 -> [Added tests for input form validation (first/last names, email, password)]
 */
 @RunWith(JUnit4::class)

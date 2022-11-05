@@ -16,7 +16,6 @@ import java.util.regex.Pattern
     Class that handles the logic related to the data of the corresponding view (i.e. activity).
     It is important to pass a repository that implements an interface such as IUserRepository
     to allow for dependency injection in our unit tests.
-
     Author: Anastassy Cap
     Date: October 5, 2022
 */

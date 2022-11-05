@@ -49,14 +49,14 @@ class LoginActivityUITest {
         Espresso.onView(ViewMatchers.withText(R.string.sign_up)).check(ViewAssertions.matches(ViewMatchers.isClickable()))
     }
 
-    @Test
-    fun verifyRedirectionToSignUpActivity()
-    {
-        Espresso.onView(ViewMatchers.withText(R.string.sign_up)).perform(scrollTo(), ViewActions.click())
-
-        // Check that we are on the sign up activity
-        Espresso.onView(ViewMatchers.withText(R.string.signup_activity_greeting_message)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-    }
+    //@Test
+    //fun verifyRedirectionToSignUpActivity()
+    //{
+    //    Espresso.onView(ViewMatchers.withText(R.string.sign_up)).perform(scrollTo(), ViewActions.click())
+    //
+    //    // Check that we are on the sign up activity
+    //    Espresso.onView(ViewMatchers.withText(R.string.signup_activity_greeting_message)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+    //}
 
     @Test
     fun testEmailInputField()

@@ -70,7 +70,7 @@ class LoginActivityUITest {
         )
 
         // Clicking the sign up button should display an error
-        Espresso.onView(ViewMatchers.withText(R.string.login)).perform(ViewActions.click())
+        Espresso.onView(ViewMatchers.withText(R.string.login)).perform(scrollTo(), ViewActions.click())
 
         Espresso.onView(ViewMatchers.withId(R.id.user_email_address)).check(
             ViewAssertions.matches(

@@ -54,12 +54,14 @@
                     app:layout_constraintHorizontal_bias="0.513"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
+                    android:visibility="visible"
                     app:layout_constraintVertical_bias="0.695">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/login_activity_greeting_message"
+                        android:visibility="visible"
                         android:textColor="@color/black"
                         android:textSize="40sp" />
 
@@ -79,11 +81,13 @@
                     app:layout_constraintHorizontal_bias="0.513"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
+                    android:visibility="visible"
                     app:layout_constraintVertical_bias="0.695">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:visibility="visible"
                         android:text="@string/login_activity_login_to_your_account" />
 
                 </LinearLayout>
@@ -253,6 +257,7 @@
                     android:gravity="center"
                     android:orientation="horizontal"
                     android:padding="10dp"
+                    android:visibility="visible"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.513"
@@ -263,6 +268,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:visibility="visible"
                         android:text="@string/login_activity_login_no_have_account" />
 
                     <TextView
@@ -272,6 +278,7 @@
                         android:layout_marginStart="5dp"
                         android:clickable="true"
                         android:focusable="true"
+                        android:visibility="visible"
                         android:text="@string/sign_up"
                         android:textStyle="bold" />
 

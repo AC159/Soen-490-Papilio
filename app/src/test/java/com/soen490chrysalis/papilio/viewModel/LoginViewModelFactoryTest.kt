@@ -1,6 +1,5 @@
 package com.soen490chrysalis.papilio.viewModel
 
-import android.util.Log
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.firebase.auth.FirebaseAuth
 import io.mockk.every

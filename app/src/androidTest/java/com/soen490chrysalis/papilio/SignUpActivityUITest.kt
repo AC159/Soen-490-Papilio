@@ -240,11 +240,11 @@ class SignUpActivityUITest {
     }
 
     @Test
-            /*
-                IMPORTANT: This test verifies that a snackbar is shown containing an error message.
-                This test relies on a pre-existing account on firebase (the one with "validEmail@gmail.com" email), otherwise
-                the test will fail.
-            */
+    /*
+        IMPORTANT: This test verifies that a snackbar is shown containing an error message.
+        This test relies on a pre-existing account on firebase (the one with "validEmail@gmail.com" email), otherwise
+        the test will fail.
+    */
     fun checkIfSnackbarAppearsWithCreateAccountWithEmailAndPassword()
     {
         // Let's start by filling the input fields with correct information

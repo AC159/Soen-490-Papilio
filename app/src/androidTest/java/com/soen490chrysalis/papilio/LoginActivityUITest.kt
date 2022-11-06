@@ -34,10 +34,14 @@ class LoginActivityUITest {
         Espresso.onView(ViewMatchers.withText(R.string.login)).check(
             ViewAssertions.matches(ViewMatchers.isDisplayed()))
 
-        Espresso.onView(ViewMatchers.withText(R.string.login_activity_login_no_have_account)).check(
+        Espresso.onView(ViewMatchers.withText(R.string.login_activity_login_no_have_account)).perform(
+            scrollTo()
+        ).check(
             ViewAssertions.matches(ViewMatchers.isDisplayed()))
 
-        Espresso.onView(ViewMatchers.withText(R.string.sign_up)).check(
+        Espresso.onView(ViewMatchers.withText(R.string.sign_up)).perform(
+            scrollTo()
+        ).check(
             ViewAssertions.matches(ViewMatchers.isDisplayed()))
     }
 

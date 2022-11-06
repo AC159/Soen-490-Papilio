@@ -13,7 +13,7 @@
             <LinearLayout
                 android:id="@+id/ll_main_body"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
+                android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="vertical"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -22,8 +22,8 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="212dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="174dp"
                     android:background="@drawable/cityscape_masked"
                     android:clickable="true"
                     android:elevation="5dp"
@@ -42,28 +42,28 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="83dp"
+                    android:layout_height="wrap_content"
                     android:clickable="true"
                     android:elevation="5dp"
                     android:focusable="true"
                     android:gravity="center"
                     android:orientation="horizontal"
                     android:padding="10dp"
+                    android:visibility="visible"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.513"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    android:visibility="visible"
                     app:layout_constraintVertical_bias="0.695">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/login_activity_greeting_message"
-                        android:visibility="visible"
                         android:textColor="@color/black"
-                        android:textSize="40sp" />
+                        android:textSize="40sp"
+                        android:visibility="visible" />
 
                 </LinearLayout>
 
@@ -94,7 +94,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="70dp"
+                    android:layout_height="wrap_content"
                     android:clickable="true"
                     android:elevation="5dp"
                     android:focusable="true"

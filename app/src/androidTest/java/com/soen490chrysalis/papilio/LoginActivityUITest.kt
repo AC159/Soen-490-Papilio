@@ -23,22 +23,26 @@ class LoginActivityUITest {
     fun activityDisplaysExpectedText()
     {
         Espresso.onView(ViewMatchers.withText(R.string.login_activity_greeting_message)).check(
-            ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+            ViewAssertions.matches(ViewMatchers.isDisplayed()))
 
         Espresso.onView(ViewMatchers.withText(R.string.login_activity_login_to_your_account)).check(
-            ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+            ViewAssertions.matches(ViewMatchers.isDisplayed()))
 
         Espresso.onView(ViewMatchers.withText(R.string.sign_in_with_google)).check(
-            ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+            ViewAssertions.matches(ViewMatchers.isDisplayed()))
 
         Espresso.onView(ViewMatchers.withText(R.string.login)).check(
-            ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+            ViewAssertions.matches(ViewMatchers.isDisplayed()))
 
-        Espresso.onView(ViewMatchers.withText(R.string.login_activity_login_no_have_account)).check(
-            ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+        Espresso.onView(ViewMatchers.withText(R.string.login_activity_login_no_have_account)).perform(
+            scrollTo()
+        ).check(
+            ViewAssertions.matches(ViewMatchers.isDisplayed()))
 
-        Espresso.onView(ViewMatchers.withText(R.string.sign_up)).check(
-            ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+        Espresso.onView(ViewMatchers.withText(R.string.sign_up)).perform(
+            scrollTo()
+        ).check(
+            ViewAssertions.matches(ViewMatchers.isDisplayed()))
     }
 
     @Test

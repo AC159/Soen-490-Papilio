@@ -25,18 +25,19 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
         setContentView(view)
 
         //Setting the listener to detect when we press one of the button on the navigation bar
-        bottomNavigationView = findViewById(R.id.bottonnav)
+        bottomNavigationView = binding.bottonnav
         bottomNavigationView?.setOnItemSelectedListener(this)
     }
 
     // Function that loads in a page/fragment on the navigation bar when you tap the respective button
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+    override fun onNavigationItemSelected(item: MenuItem): Boolean
+    {
         when(item.itemId)
         {
-            R.id.home -> supportFragmentManager.beginTransaction().replace(R.id.fragment_container_view, HomeFragment()).commit()
-            R.id.browse -> supportFragmentManager.beginTransaction().replace(R.id.fragment_container_view, BrowseFragment()).commit()
-            R.id.activities -> supportFragmentManager.beginTransaction().replace(R.id.fragment_container_view, ActivitiesFragment()).commit()
-            R.id.account -> supportFragmentManager.beginTransaction().replace(R.id.fragment_container_view, UserProfileFragment()).commit()
+            R.id.home -> supportFragmentManager.beginTransaction().replace(binding.fragmentContainerView.id, HomeFragment()).commit()
+            R.id.browse -> supportFragmentManager.beginTransaction().replace(binding.fragmentContainerView.id, BrowseFragment()).commit()
+            R.id.activities -> supportFragmentManager.beginTransaction().replace(binding.fragmentContainerView.id, ActivitiesFragment()).commit()
+            R.id.account -> supportFragmentManager.beginTransaction().replace(binding.fragmentContainerView.id, UserProfileFragment()).commit()
         }
         return true
     }

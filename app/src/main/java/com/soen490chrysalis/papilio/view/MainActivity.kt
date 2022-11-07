@@ -4,13 +4,10 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.soen490chrysalis.papilio.databinding.ActivityMainBinding
-import kotlinx.android.synthetic.main.activity_main.view.*
 
 import com.soen490chrysalis.papilio.ActivitiesFragment
 import com.soen490chrysalis.papilio.EventsFragment

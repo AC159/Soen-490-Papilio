@@ -1,17 +1,11 @@
 package com.soen490chrysalis.papilio
 
-import android.accounts.Account
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import com.soen490chrysalis.papilio.databinding.ActivityAccountMenuBinding
-import kotlinx.android.synthetic.main.activity_account_menu.*
-import kotlinx.android.synthetic.main.activity_account_menu.view.*
-import androidx.fragment.app.FragmentManager
-import com.soen490chrysalis.papilio.databinding.ActivityMainBinding
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -24,29 +18,27 @@ private const val ARG_PARAM2 = "param2"
  * Use the [UserProfileFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class AccountMenuFragment : Fragment() {
+class AccountMenuFragment : Fragment()
+{
     private lateinit var binding : ActivityAccountMenuBinding
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
         super.onCreate(savedInstanceState)
-
-
-        
-
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ) : View?
+    {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.activity_account_menu, container, false)
-
-
     }
 
 
-    companion object {
+    companion object
+    {
         /**
          * Use this factory method to create a new instance of
          * this fragment using the provided parameters.

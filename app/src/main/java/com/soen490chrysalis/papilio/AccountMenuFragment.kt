@@ -1,11 +1,13 @@
 package com.soen490chrysalis.papilio
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.soen490chrysalis.papilio.databinding.ActivityAccountMenuBinding
+import com.soen490chrysalis.papilio.view.UserProfileActivity
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -38,7 +40,9 @@ class AccountMenuFragment : Fragment()
         val profileButton = view.findViewById<androidx.appcompat.widget.AppCompatButton>(R.id.account_user_profile)
 
         profileButton?.setOnClickListener {
-            parentFragmentManager.beginTransaction().replace(R.id.relativelayout, UserProfileFragment(),"USER_PROFILE").commit()
+            // parentFragmentManager.beginTransaction().replace(R.id.relativelayout, UserProfileFragment(),"USER_PROFILE").commit()
+            val intent = Intent(activity, UserProfileActivity::class.java)
+            startActivity(intent)
         }
 
         return view

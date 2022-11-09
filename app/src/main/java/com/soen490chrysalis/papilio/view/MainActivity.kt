@@ -58,12 +58,6 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
                 supportFragmentManager.beginTransaction().replace(binding.fragmentContainerView.id, AccountMenuFragment(), "ACCOUNT MENU").commit()
                 currentFragmentID = "ACCOUNT MENU"
             }
-
-            R.id.account_user_profile ->
-            {
-                supportFragmentManager.beginTransaction().replace(binding.fragmentContainerView.id, UserProfileFragment(), "USER PROFILE")
-                currentFragmentID = "USER PROFILE"
-            }
         }
 
         return true

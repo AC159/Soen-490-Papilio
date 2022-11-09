@@ -34,6 +34,9 @@
             android:name=".view.MainActivity"
             android:theme="@style/Theme.Papilio.NoActionBar"
             android:exported="true" />
+        <activity
+            android:name=".view.UserProfileActivity"
+            android:exported="true" />
     </application>
 
 </manifest>

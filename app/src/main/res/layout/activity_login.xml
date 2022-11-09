@@ -20,9 +20,10 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
+
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="212dp"
+                    android:layout_height="166dp"
                     android:background="@drawable/cityscape_masked"
                     android:clickable="true"
                     android:elevation="5dp"
@@ -35,11 +36,11 @@
                     app:layout_constraintHorizontal_bias="0.513"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.695">
-                </LinearLayout>
+                    app:layout_constraintVertical_bias="0.695"></LinearLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="83dp"
+                    android:layout_height="wrap_content"
                     android:clickable="true"
                     android:elevation="5dp"
                     android:focusable="true"
@@ -52,6 +53,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_bias="0.695">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -192,6 +194,7 @@
                         android:padding="15dp"
                         android:visibility="visible" />
                 </LinearLayout>
+
                 <LinearLayout
                     android:id="@+id/ll_login_button"
                     android:layout_width="match_parent"
@@ -208,6 +211,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_bias="0.695">
+
                     <Button
                         android:id="@+id/login_button"
                         android:layout_width="192dp"

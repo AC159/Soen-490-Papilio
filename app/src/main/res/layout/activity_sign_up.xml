@@ -27,7 +27,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="105dp"
+                android:layout_height="wrap_content"
                 android:clickable="true"
                 android:elevation="5dp"
                 android:focusable="true"
@@ -53,7 +53,7 @@
             <LinearLayout
                 android:id="@+id/ll_create_new_account"
                 android:layout_width="523dp"
-                android:layout_height="53dp"
+                android:layout_height="wrap_content"
                 android:clickable="true"
                 android:elevation="5dp"
                 android:focusable="true"
@@ -263,7 +263,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="76dp"
+                android:layout_height="62dp"
                 android:clickable="true"
                 android:elevation="5dp"
                 android:focusable="true"
@@ -297,7 +297,7 @@
             <LinearLayout
                 android:id="@+id/ll_login_button"
                 android:layout_width="match_parent"
-                android:layout_height="83dp"
+                android:layout_height="67dp"
                 android:clickable="true"
                 android:elevation="5dp"
                 android:focusable="true"

@@ -101,7 +101,7 @@ class SignUpActivityUITest {
         )
 
         // Clicking the sign up button should display an error
-        Espresso.onView(withText(R.string.sign_up)).perform(click())
+        Espresso.onView(withText(R.string.sign_up)).perform(scrollTo(), click())
 
         // All input fields should also display their respective errors
         Espresso.onView(withId(R.id.user_first_name)).check(matches(hasErrorText("First name must be between 1 and 25 characters long!")))
@@ -136,7 +136,7 @@ class SignUpActivityUITest {
         )
 
         // Clicking the sign up button should display an error
-        Espresso.onView(withText(R.string.sign_up)).perform(click())
+        Espresso.onView(withText(R.string.sign_up)).perform(scrollTo(), click())
 
         // All input fields should also display their respective errors
         Espresso.onView(withId(R.id.user_first_name)).check(matches(hasErrorText("First name must be between 1 and 25 characters long!")))

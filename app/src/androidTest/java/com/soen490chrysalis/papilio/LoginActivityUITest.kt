@@ -5,6 +5,7 @@ import android.app.Instrumentation
 import android.content.Intent
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.action.ViewActions.scrollTo
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
@@ -58,10 +59,10 @@ class LoginActivityUITest
         Espresso.onView(ViewMatchers.withText(R.string.login)).check(
             ViewAssertions.matches(ViewMatchers.isDisplayed()))
 
-        Espresso.onView(ViewMatchers.withText(R.string.login_activity_login_no_have_account)).check(
+        Espresso.onView(ViewMatchers.withText(R.string.login_activity_login_no_have_account)).perform(scrollTo()).check(
             ViewAssertions.matches(ViewMatchers.isDisplayed()))
 
-        Espresso.onView(ViewMatchers.withText(R.string.sign_up)).check(
+        Espresso.onView(ViewMatchers.withText(R.string.sign_up)).perform(scrollTo()).check(
             ViewAssertions.matches(ViewMatchers.isDisplayed()))
     }
 
@@ -76,7 +77,7 @@ class LoginActivityUITest
     @Test
     fun verifyRedirectionToSignUpActivity()
     {
-        Espresso.onView(ViewMatchers.withText(R.string.sign_up)).perform(ViewActions.click())
+        Espresso.onView(ViewMatchers.withText(R.string.sign_up)).perform(scrollTo(),  ViewActions.click())
 
         // Check that we are on the sign up activity
         Espresso.onView(ViewMatchers.withText(R.string.signup_activity_greeting_message)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))

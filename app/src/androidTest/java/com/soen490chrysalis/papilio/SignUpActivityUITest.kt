@@ -57,17 +57,11 @@ class SignUpActivityUITest {
     @Test
     fun activityDisplaysExpectedText()
     {
-        Espresso.onView(withText(R.string.signup_activity_greeting_message)).check(
-            matches(
-                isDisplayed()
-            )
-        )
+        Espresso.onView(withText(R.string.signup_activity_greeting_message)).check(matches(isDisplayed()))
         Espresso.onView(withText(R.string.continue_with_google)).check(matches(isDisplayed()))
-        Espresso.onView(withText(R.string.sign_up)).check(matches(isDisplayed()))
-        Espresso.onView(withText(R.string.signup_activity_user_agreement)).check(matches(isDisplayed()))
-        Espresso.onView(withText(R.string.signup_activity_our_terms_of_use_and_privacy_notice)).check(
-            matches(isDisplayed())
-        )
+        Espresso.onView(withText(R.string.sign_up)).perform(scrollTo()).check(matches(isDisplayed()))
+        Espresso.onView(withText(R.string.signup_activity_user_agreement)).perform(scrollTo()).check(matches(isDisplayed()))
+        Espresso.onView(withText(R.string.signup_activity_our_terms_of_use_and_privacy_notice)).perform(scrollTo()).check(matches(isDisplayed()))
     }
 
     @Test
@@ -75,16 +69,13 @@ class SignUpActivityUITest {
     {
         Espresso.onView(withText(R.string.continue_with_google)).check(matches(isClickable()))
         Espresso.onView(withText(R.string.sign_up)).check(matches(isClickable()))
-        Espresso.onView(withText(R.string.signup_activity_our_terms_of_use_and_privacy_notice)).check(
-            matches(isClickable())
-        )
+        Espresso.onView(withText(R.string.signup_activity_our_terms_of_use_and_privacy_notice)).check(matches(isClickable()))
     }
 
     @Test
     fun verifyThatTermsOfUseDialogIsDisplayed()
     {
-        Espresso.onView(withText(R.string.signup_activity_our_terms_of_use_and_privacy_notice))
-            .check(matches(isDisplayed())).perform(click())
+        Espresso.onView(withText(R.string.signup_activity_our_terms_of_use_and_privacy_notice)).check(matches(isDisplayed())).perform(click())
 
         // Check that dialog is displayed
         Espresso.onView(isRoot()).inRoot(isDialog()).check(matches(isDisplayed()))
@@ -110,7 +101,7 @@ class SignUpActivityUITest {
         )
 
         // Clicking the sign up button should display an error
-        Espresso.onView(withText(R.string.sign_up)).perform(click())
+        Espresso.onView(withText(R.string.sign_up)).perform(scrollTo(), click())
 
         // All input fields should also display their respective errors
         Espresso.onView(withId(R.id.user_first_name)).check(matches(hasErrorText("First name must be between 1 and 25 characters long!")))
@@ -128,7 +119,7 @@ class SignUpActivityUITest {
             closeSoftKeyboard() // important to close the keyboard otherwise the sign up button is not visible!
         )
 
-        Espresso.onView(withText(R.string.sign_up)).perform(click())
+        Espresso.onView(withText(R.string.sign_up)).perform(scrollTo(),  click())
 
         // There should be no errors displayed
         Espresso.onView(withId(R.id.user_first_name)).check(matches(hasNoErrorText()))
@@ -145,7 +136,7 @@ class SignUpActivityUITest {
         )
 
         // Clicking the sign up button should display an error
-        Espresso.onView(withText(R.string.sign_up)).perform(click())
+        Espresso.onView(withText(R.string.sign_up)).perform(scrollTo(), click())
 
         // All input fields should also display their respective errors
         Espresso.onView(withId(R.id.user_first_name)).check(matches(hasErrorText("First name must be between 1 and 25 characters long!")))
@@ -163,7 +154,7 @@ class SignUpActivityUITest {
             closeSoftKeyboard() // important to close the keyboard otherwise the sign up button is not visible!
         )
 
-        Espresso.onView(withText(R.string.sign_up)).perform(click())
+        Espresso.onView(withText(R.string.sign_up)).perform(scrollTo(), click())
 
         // There should be no errors displayed
         Espresso.onView(withId(R.id.user_last_name)).check(matches(hasNoErrorText()))

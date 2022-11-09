@@ -77,7 +77,7 @@ class LoginActivityUITest
     @Test
     fun verifyRedirectionToSignUpActivity()
     {
-        Espresso.onView(ViewMatchers.withText(R.string.sign_up)).perform(ViewActions.click())
+        Espresso.onView(ViewMatchers.withText(R.string.sign_up)).perform(scrollTo(),  ViewActions.click())
 
         // Check that we are on the sign up activity
         Espresso.onView(ViewMatchers.withText(R.string.signup_activity_greeting_message)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))

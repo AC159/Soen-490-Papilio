@@ -10,7 +10,7 @@ import com.soen490chrysalis.papilio.services.network.UserApi
 class LoginViewModelFactory : ViewModelProvider.NewInstanceFactory()
 {
     @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel> create(modelClass: Class<T>) : T
+    override fun <T : ViewModel> create(modelClass : Class<T>) : T
     {
 
         // todo: Here we are creating a new UserRepository instance everytime we want to access it.
@@ -19,7 +19,8 @@ class LoginViewModelFactory : ViewModelProvider.NewInstanceFactory()
         // Initialize Firebase Auth and inject it into the user repository
         val firebaseAuth = FirebaseAuth.getInstance()
 
-        val userRepository : IUserRepository = UserRepository(firebaseAuth, userService = UserApi.retrofitService)
+        val userRepository : IUserRepository =
+            UserRepository(firebaseAuth, userService = UserApi.retrofitService)
         return LoginViewModel(userRepository) as T
     }
 }

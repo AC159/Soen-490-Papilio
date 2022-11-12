@@ -14,7 +14,8 @@ import retrofit2.Response
     Author: Anastassy Cap
     Date: October 5, 2022
 */
-class MockUserRepository : IUserRepository {
+class MockUserRepository : IUserRepository
+{
     private var firebaseUserMock = Mockito.mock(FirebaseUser::class.java)
 
     override fun initialize(googleSignInClient : GoogleSignInClient)
@@ -27,33 +28,33 @@ class MockUserRepository : IUserRepository {
     }
 
     override suspend fun createUser(
-        user: FirebaseUser?,
-        updateDisplayName: Boolean,
-        firstName: String?,
-        lastName: String?
-    ): Response<Void>
+        user : FirebaseUser?,
+        updateDisplayName : Boolean,
+        firstName : String?,
+        lastName : String?
+    ) : Response<Void>
     {
         return Response.success(null)
     }
 
-    override suspend fun firebaseAuthWithGoogle(idToken: String): Pair<Boolean, String>
+    override suspend fun firebaseAuthWithGoogle(idToken : String) : Pair<Boolean, String>
     {
         return Pair(true, "")
     }
 
     override suspend fun firebaseCreateAccountWithEmailAndPassword(
-        firstName: String,
-        lastName: String,
-        emailAddress: String,
-        password: String
+        firstName : String,
+        lastName : String,
+        emailAddress : String,
+        password : String
     ) : Pair<Boolean, String>
     {
         return Pair(true, "")
     }
 
     override suspend fun firebaseLoginWithEmailAndPassword(
-        emailAddress: String,
-        password: String
+        emailAddress : String,
+        password : String
     ) : Pair<Boolean, String>
     {
         return Pair(true, "")

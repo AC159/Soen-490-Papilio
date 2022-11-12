@@ -38,7 +38,7 @@ import kotlinx.coroutines.withContext
 class UserRepository(
     private var firebaseAuth : FirebaseAuth,
     private val userService : IUserApiService,
-    private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO
+    private val coroutineDispatcher : CoroutineDispatcher = Dispatchers.IO
 ) : IUserRepository
 {
     private val logTag = UserRepository::class.java.simpleName
@@ -68,12 +68,19 @@ class UserRepository(
        Author: Anastassy Cap
        Date: November 11, 2022
     */
-    override suspend fun createUser( user : FirebaseUser?, updateDisplayName : Boolean, firstName: String?, lastName: String? ) : Response<Void>
+    override suspend fun createUser(
+        user : FirebaseUser?,
+        updateDisplayName : Boolean,
+        firstName : String?,
+        lastName : String?
+    ) : Response<Void>
     {
-        if ( updateDisplayName )
+        if (updateDisplayName)
         {
-            val userProfileChangeRequest = UserProfileChangeRequest.Builder().setDisplayName("$firstName $lastName").build()
-            user?.updateProfile(userProfileChangeRequest)?.await() // wait for the display name update request to finish before proceeding
+            val userProfileChangeRequest =
+                UserProfileChangeRequest.Builder().setDisplayName("$firstName $lastName").build()
+            user?.updateProfile(userProfileChangeRequest)
+                    ?.await() // wait for the display name update request to finish before proceeding
         }
 
         val displayName = user!!.displayName
@@ -91,36 +98,38 @@ class UserRepository(
         return response
     }
 
-    override suspend fun firebaseAuthWithGoogle(idToken: String) : Pair<Boolean, String>
+    override suspend fun firebaseAuthWithGoogle(idToken : String) : Pair<Boolean, String>
     {
         return withContext(coroutineDispatcher)
         {
-            val response : Pair<Boolean, String> = try {
+            val response : Pair<Boolean, String> = try
+            {
                 val credential = GoogleAuthProvider.getCredential(idToken, null)
                 val authResult : AuthResult = firebaseAuth.signInWithCredential(credential).await()
 
                 // Now that we have successfully authenticated, we can create a user in the database
-                val userCreationRes : Response<Void> = createUser( authResult.user, false, null, null)
+                val userCreationRes : Response<Void> =
+                    createUser(authResult.user, false, null, null)
                 Log.d(logTag, "userCreationResponse: $userCreationRes")
 
                 Pair(userCreationRes.isSuccessful, userCreationRes.message())
             }
-            catch ( e : FirebaseAuthInvalidUserException )
+            catch (e : FirebaseAuthInvalidUserException)
             {
                 Log.d(logTag, "FirebaseAuthInvalidUserException: $e")
                 Pair(false, "User has been disabled or does not exist!")
             }
-            catch ( e : FirebaseAuthInvalidCredentialsException )
+            catch (e : FirebaseAuthInvalidCredentialsException)
             {
                 Log.d(logTag, "FirebaseAuthInvalidCredentialsException: $e")
                 Pair(false, "Invalid credentials!")
             }
-            catch ( e : FirebaseAuthUserCollisionException )
+            catch (e : FirebaseAuthUserCollisionException)
             {
                 Log.d(logTag, "FirebaseAuthUserCollisionException: $e")
                 Pair(false, "Email already exists!")
             }
-            catch ( e : Exception )
+            catch (e : Exception)
             {
                 Log.d(logTag, "firebaseAuthWithGoogleError: $e")
                 Pair(false, e.message.toString())
@@ -133,37 +142,40 @@ class UserRepository(
     override suspend fun firebaseCreateAccountWithEmailAndPassword(
         firstName : String,
         lastName : String,
-        emailAddress: String,
-        password: String
+        emailAddress : String,
+        password : String
     ) : Pair<Boolean, String>
     {
         return withContext(coroutineDispatcher)
         {
-            val response : Pair<Boolean, String> = try {
-                val authResult : AuthResult = firebaseAuth.createUserWithEmailAndPassword(emailAddress, password).await()
+            val response : Pair<Boolean, String> = try
+            {
+                val authResult : AuthResult =
+                    firebaseAuth.createUserWithEmailAndPassword(emailAddress, password).await()
 
                 // Now that we have successfully authenticated, we can create a user in the database
-                val userCreationRes : Response<Void> = createUser( authResult.user, true, firstName, lastName )
+                val userCreationRes : Response<Void> =
+                    createUser(authResult.user, true, firstName, lastName)
 
                 Log.d(logTag, "userCreationResponse: $userCreationRes")
                 Pair(userCreationRes.isSuccessful, userCreationRes.message())
             }
-            catch ( e : FirebaseAuthWeakPasswordException )
+            catch (e : FirebaseAuthWeakPasswordException)
             {
                 Log.d(logTag, "FirebaseAuthWeakPasswordException $e")
                 Pair(false, "Password is too weak!")
             }
-            catch ( e : FirebaseAuthInvalidCredentialsException )
+            catch (e : FirebaseAuthInvalidCredentialsException)
             {
                 Log.d(logTag, "FirebaseAuthInvalidCredentialsException $e")
                 Pair(false, "Email address is malformed!")
             }
-            catch ( e : FirebaseAuthUserCollisionException )
+            catch (e : FirebaseAuthUserCollisionException)
             {
                 Log.d(logTag, "FirebaseAuthUserCollisionException $e")
                 Pair(false, "Email already exists!")
             }
-            catch ( e : Exception )
+            catch (e : Exception)
             {
                 Log.d(logTag, "firebaseCreateAccountWithEmail&Password - createUser() error: $e")
                 Pair(false, e.message.toString())
@@ -173,30 +185,36 @@ class UserRepository(
         }
     }
 
-    override suspend fun firebaseLoginWithEmailAndPassword(emailAddress: String, password: String) : Pair<Boolean, String>
+    override suspend fun firebaseLoginWithEmailAndPassword(
+        emailAddress : String,
+        password : String
+    ) : Pair<Boolean, String>
     {
         return withContext(coroutineDispatcher)
         {
-            val response : Pair<Boolean, String> = try {
-                val authResult : AuthResult = firebaseAuth.signInWithEmailAndPassword(emailAddress, password).await()
+            val response : Pair<Boolean, String> = try
+            {
+                val authResult : AuthResult =
+                    firebaseAuth.signInWithEmailAndPassword(emailAddress, password).await()
 
                 // Now that we have successfully authenticated, we can create a user in the database
-                val userCreationRes : Response<Void> = createUser( authResult.user, false, null, null )
+                val userCreationRes : Response<Void> =
+                    createUser(authResult.user, false, null, null)
                 Log.d(logTag, "userCreationResponse: $userCreationRes")
 
                 Pair(userCreationRes.isSuccessful, userCreationRes.message())
             }
-            catch ( e : FirebaseAuthInvalidUserException )
+            catch (e : FirebaseAuthInvalidUserException)
             {
                 Log.d(logTag, "FirebaseAuthInvalidUserException: $e")
                 Pair(false, "User has been disabled or does not exist!")
             }
-            catch ( e : FirebaseAuthInvalidCredentialsException )
+            catch (e : FirebaseAuthInvalidCredentialsException)
             {
                 Log.d(logTag, "FirebaseAuthInvalidCredentialsException: $e")
                 Pair(false, "Wrong password!")
             }
-            catch ( e : Exception )
+            catch (e : Exception)
             {
                 Log.d(logTag, "firebaseSignInWithEmail&PasswordError: $e")
                 Pair(false, e.message.toString())

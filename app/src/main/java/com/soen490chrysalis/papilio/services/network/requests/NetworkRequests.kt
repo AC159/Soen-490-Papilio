@@ -13,12 +13,12 @@ data class User(
     val firstName : String,
     val lastName : String,
     val email : String,
-    @Json(name="firebase_id")
+    @Json(name = "firebase_id")
     val firebaseId : String
 )
 
 data class UserRequest(
-    @Json(name="user")
-    val user: User
+    @Json(name = "user")
+    val user : User
 )
 

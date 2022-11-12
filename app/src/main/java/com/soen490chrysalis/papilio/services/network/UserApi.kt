@@ -20,14 +20,14 @@ private const val BASE_URL = BuildConfig.BACKEND_API_URL
 
 // Build the Moshi object with Kotlin adapter factory that Retrofit will be using
 private val moshi = Moshi.Builder()
-    .add(KotlinJsonAdapterFactory())
-    .build()
+        .add(KotlinJsonAdapterFactory())
+        .build()
 
 // The Retrofit object with the Moshi converter.
 private val retrofit = Retrofit.Builder()
-    .addConverterFactory(MoshiConverterFactory.create(moshi))
-    .baseUrl(BASE_URL)
-    .build()
+        .addConverterFactory(MoshiConverterFactory.create(moshi))
+        .baseUrl(BASE_URL)
+        .build()
 
 /*
     DESCRIPTION:
@@ -41,7 +41,7 @@ interface IUserApiService
 {
     @POST("createUser")
     suspend fun createUser(
-        @Body user: UserRequest
+        @Body user : UserRequest
     ) : Response<Void>
 }
 

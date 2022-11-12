@@ -14,28 +14,32 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 @LargeTest
-class InitialActivityUITest {
+class InitialActivityUITest
+{
 
     @get:Rule
     val activityRule = ActivityScenarioRule(InitialActivity::class.java)
 
     @Test
-    fun activityDisplaysExpectedText() {
+    fun activityDisplaysExpectedText()
+    {
         onView(withText(R.string.papilio_slogan)).check(matches(isDisplayed()))
         onView(withText(R.string.sign_up)).check(matches(isDisplayed()))
         onView(withText(R.string.login)).check(matches(isDisplayed()))
     }
 
     @Test
-    fun navigateToSignUpActivity() {
+    fun navigateToSignUpActivity()
+    {
         onView(withText(R.string.sign_up)).check(matches(isDisplayed())).perform(click())
 
         // Check that the sign up activity is displayed
-         onView(withText(R.string.signup_activity_greeting_message)).check(matches(isDisplayed()))
+        onView(withText(R.string.signup_activity_greeting_message)).check(matches(isDisplayed()))
     }
 
     @Test
-    fun navigateToLoginActivity() {
+    fun navigateToLoginActivity()
+    {
         onView(withText(R.string.login)).check(matches(isDisplayed())).perform(click())
 
         // Check that the sign up activity is displayed

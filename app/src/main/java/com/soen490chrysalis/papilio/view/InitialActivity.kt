@@ -10,14 +10,16 @@ import com.soen490chrysalis.papilio.databinding.ActivityInitialBinding
 import com.soen490chrysalis.papilio.viewModel.LoginViewModel
 import com.soen490chrysalis.papilio.viewModel.LoginViewModelFactory
 
-class InitialActivity : AppCompatActivity() {
+class InitialActivity : AppCompatActivity()
+{
 
     private val logTag = InitialActivity::class.java.simpleName
     private lateinit var loginViewModel : LoginViewModel
 
-    private lateinit var binding: ActivityInitialBinding
+    private lateinit var binding : ActivityInitialBinding
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState : Bundle?)
+    {
         super.onCreate(savedInstanceState)
 
         binding = ActivityInitialBinding.inflate(layoutInflater)
@@ -44,7 +46,7 @@ class InitialActivity : AppCompatActivity() {
         // Check if user is signed in (non-null) and update UI accordingly.
         val currentUser : FirebaseUser? = loginViewModel.getUser()
 
-        if ( currentUser != null )
+        if (currentUser != null)
         {
             Log.d(logTag, "Current user: ${currentUser.displayName}")
             val intent = Intent(this, MainActivity::class.java)

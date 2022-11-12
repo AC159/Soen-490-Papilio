@@ -64,7 +64,12 @@ class LoginViewModelTest
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun createAccountWithEmailAndPassword() = runTest {
-        loginViewModel.firebaseCreateAccountWithEmailAndPassword("firstName", "lastName", "some email", "password")
+        loginViewModel.firebaseCreateAccountWithEmailAndPassword(
+            "firstName",
+            "lastName",
+            "some email",
+            "password"
+        )
         advanceUntilIdle()
         assert(loginViewModel.authResponse.value!!.authSuccessful)
     }
@@ -150,33 +155,45 @@ class LoginViewModelTest
     {
         // Test empty password
         var res = loginViewModel.validatePassword("")
-        assert(res == "Password must contain at least 1 digit, 1 lowercase character, " +
-                "1 uppercase character, 1 special character, no white spaces & a minimum of 6 characters!")
+        assert(
+            res == "Password must contain at least 1 digit, 1 lowercase character, " +
+                    "1 uppercase character, 1 special character, no white spaces & a minimum of 6 characters!"
+        )
 
         // Test valid password with no special character
         res = loginViewModel.validatePassword("noSpecialChar123")
-        assert(res == "Password must contain at least 1 digit, 1 lowercase character, " +
-                "1 uppercase character, 1 special character, no white spaces & a minimum of 6 characters!")
+        assert(
+            res == "Password must contain at least 1 digit, 1 lowercase character, " +
+                    "1 uppercase character, 1 special character, no white spaces & a minimum of 6 characters!"
+        )
 
         // password with no digits
         res = loginViewModel.validatePassword("no#Digit_asga")
-        assert(res == "Password must contain at least 1 digit, 1 lowercase character, " +
-                "1 uppercase character, 1 special character, no white spaces & a minimum of 6 characters!")
+        assert(
+            res == "Password must contain at least 1 digit, 1 lowercase character, " +
+                    "1 uppercase character, 1 special character, no white spaces & a minimum of 6 characters!"
+        )
 
         // password with no letters
         res = loginViewModel.validatePassword("1232423455346")
-        assert(res == "Password must contain at least 1 digit, 1 lowercase character, " +
-                "1 uppercase character, 1 special character, no white spaces & a minimum of 6 characters!")
+        assert(
+            res == "Password must contain at least 1 digit, 1 lowercase character, " +
+                    "1 uppercase character, 1 special character, no white spaces & a minimum of 6 characters!"
+        )
 
         // Password contains whitespace
         res = loginViewModel.validatePassword("Password hasWhiteSpace*123")
-        assert(res == "Password must contain at least 1 digit, 1 lowercase character, " +
-                "1 uppercase character, 1 special character, no white spaces & a minimum of 6 characters!")
+        assert(
+            res == "Password must contain at least 1 digit, 1 lowercase character, " +
+                    "1 uppercase character, 1 special character, no white spaces & a minimum of 6 characters!"
+        )
 
         // password too short
         res = loginViewModel.validatePassword("short")
-        assert(res == "Password must contain at least 1 digit, 1 lowercase character, " +
-                "1 uppercase character, 1 special character, no white spaces & a minimum of 6 characters!")
+        assert(
+            res == "Password must contain at least 1 digit, 1 lowercase character, " +
+                    "1 uppercase character, 1 special character, no white spaces & a minimum of 6 characters!"
+        )
 
         // valid password
         res = loginViewModel.validatePassword("ValidPasswd123$%")

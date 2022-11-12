@@ -19,11 +19,24 @@ interface IUserRepository
 
     fun getUser() : FirebaseUser?
 
-    suspend fun createUser( user : FirebaseUser?, updateDisplayName : Boolean, firstName: String?, lastName: String? ) : Response<Void>
+    suspend fun createUser(
+        user : FirebaseUser?,
+        updateDisplayName : Boolean,
+        firstName : String?,
+        lastName : String?
+    ) : Response<Void>
 
-    suspend fun firebaseAuthWithGoogle(idToken: String) : Pair<Boolean, String>
+    suspend fun firebaseAuthWithGoogle(idToken : String) : Pair<Boolean, String>
 
-    suspend fun firebaseCreateAccountWithEmailAndPassword(firstName : String, lastName : String, emailAddress: String, password: String) : Pair<Boolean, String>
+    suspend fun firebaseCreateAccountWithEmailAndPassword(
+        firstName : String,
+        lastName : String,
+        emailAddress : String,
+        password : String
+    ) : Pair<Boolean, String>
 
-    suspend fun firebaseLoginWithEmailAndPassword(emailAddress: String, password: String) : Pair<Boolean, String>
+    suspend fun firebaseLoginWithEmailAndPassword(
+        emailAddress : String,
+        password : String
+    ) : Pair<Boolean, String>
 }

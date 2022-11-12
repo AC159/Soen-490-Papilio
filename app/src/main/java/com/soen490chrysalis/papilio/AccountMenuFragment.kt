@@ -7,15 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.soen490chrysalis.papilio.databinding.ActivityAccountMenuBinding
-import com.soen490chrysalis.papilio.view.MainActivity
+import com.soen490chrysalis.papilio.view.UserProfileActivity
 import kotlinx.android.synthetic.main.activity_account_menu.*
 import kotlinx.android.synthetic.main.activity_account_menu.view.*
-
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
@@ -42,33 +36,10 @@ class AccountMenuFragment : Fragment()
         val profileButton = view.findViewById<androidx.appcompat.widget.AppCompatButton>(R.id.account_user_profile)
 
         profileButton?.setOnClickListener {
-            parentFragmentManager.beginTransaction().replace(R.id.relativelayout, UserProfileFragment(),"USER_PROFILE").commit()
-            (activity as MainActivity).currentFragmentID = "USER_PROFILE"
+            val intent = Intent(this.activity, UserProfileActivity::class.java)
+            startActivity(intent)
         }
 
         return view
     }
-
-    companion object
-    {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment UserProfileFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            AccountMenuFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
-    }
-
-
 }

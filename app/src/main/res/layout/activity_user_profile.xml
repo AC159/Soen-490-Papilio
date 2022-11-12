@@ -11,12 +11,11 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="#F6F5F5"
+        android:background="#F6F3F5"
         tools:context=".view.userProfileActivity"
         >
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="500dp"
@@ -24,12 +23,10 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="500dp"
+                android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:background="@drawable/user_profile_background"
                 >
-
-
 
                     <ImageView
                         android:layout_width="125dp"
@@ -227,7 +224,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:gravity="center"
+            android:layout_weight="1"
             android:background="#52A89F"
             >
 
@@ -237,18 +234,19 @@
                 android:text="PAST ACTIVITIES"
                 android:textColor="@color/white"
                 android:textSize="20dp"
-                android:textStyle="bold">
+                android:textStyle="bold"
+                android:paddingLeft="20dp"
+                android:paddingTop="20dp">
             </TextView>
 
             <HorizontalScrollView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:layout_height="match_parent"
                 android:layout_marginBottom="20dp">
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:scrollbars="none">
 
                     <include layout="@layout/user_profile_activity_box"></include>
@@ -259,10 +257,6 @@
                     <include layout="@layout/user_profile_activity_box"></include>
 
                 </LinearLayout>
-
-
-
-
             </HorizontalScrollView>
         </LinearLayout>
 

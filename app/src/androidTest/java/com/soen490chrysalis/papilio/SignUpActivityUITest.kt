@@ -282,7 +282,7 @@ class SignUpActivityUITest {
         Thread.sleep(1000)
 
         // Check if there is a snackbar
-        Espresso.onView(withText("The email address is already in use by another account.")).check(matches(isDisplayed()))
+        Espresso.onView(withText("Email already exists!")).check(matches(isDisplayed()))
     }
 
     @Test

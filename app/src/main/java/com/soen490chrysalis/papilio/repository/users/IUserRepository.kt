@@ -2,6 +2,7 @@ package com.soen490chrysalis.papilio.repository.users
 
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.FirebaseUser
+import retrofit2.Response
 
 /*
     DESCRIPTION:
@@ -18,9 +19,11 @@ interface IUserRepository
 
     fun getUser() : FirebaseUser?
 
-    suspend fun firebaseAuthWithGoogle(idToken: String, authResultCallBack : (authResult : Boolean, errorMessage: String) -> Unit)
+    suspend fun createUser( user : FirebaseUser?, updateDisplayName : Boolean, firstName: String?, lastName: String? ) : Response<Void>
 
-    suspend fun firebaseCreateAccountWithEmailAndPassword(emailAddress: String, password: String, authResultCallBack : (authResult : Boolean, errorMessage: String) -> Unit)
+    suspend fun firebaseAuthWithGoogle(idToken: String) : Pair<Boolean, String>
 
-    suspend fun firebaseLoginWithEmailAndPassword(emailAddress: String, password: String, authResultCallBack : (authResult : Boolean, errorMessage: String) -> Unit)
+    suspend fun firebaseCreateAccountWithEmailAndPassword(firstName : String, lastName : String, emailAddress: String, password: String) : Pair<Boolean, String>
+
+    suspend fun firebaseLoginWithEmailAndPassword(emailAddress: String, password: String) : Pair<Boolean, String>
 }

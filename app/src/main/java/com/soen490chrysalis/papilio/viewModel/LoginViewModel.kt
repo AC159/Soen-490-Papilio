@@ -103,17 +103,19 @@ class LoginViewModel(private val userRepository: IUserRepository) : ViewModel()
             user to a new page */
         // create a coroutine that will run in the UI thread
         viewModelScope.launch {
-            userRepository.firebaseAuthWithGoogle(idToken, ::handleAuthResult)
+            val result = userRepository.firebaseAuthWithGoogle(idToken)
+            handleAuthResult(result.first, result.second)
         }
     }
 
-    fun firebaseCreateAccountWithEmailAndPassword( emailAddress: String, password: String )
+    fun firebaseCreateAccountWithEmailAndPassword(firstName : String, lastName : String, emailAddress: String, password: String )
     {
         /* Calling the handleAuthResult function will trigger the observer in the activity that listens to changes which will redirect the
             user to a new page */
         // create a coroutine that will run in the UI thread
         viewModelScope.launch {
-            userRepository.firebaseCreateAccountWithEmailAndPassword(emailAddress, password, ::handleAuthResult)
+            val result = userRepository.firebaseCreateAccountWithEmailAndPassword(firstName, lastName, emailAddress, password)
+            handleAuthResult(result.first, result.second)
         }
     }
 
@@ -123,7 +125,8 @@ class LoginViewModel(private val userRepository: IUserRepository) : ViewModel()
             user to a new page */
         // create a coroutine that will run in the UI thread
         viewModelScope.launch {
-            userRepository.firebaseLoginWithEmailAndPassword(emailAddress, password, ::handleAuthResult)
+            val result = userRepository.firebaseLoginWithEmailAndPassword(emailAddress, password)
+            handleAuthResult(result.first, result.second)
         }
     }
 }

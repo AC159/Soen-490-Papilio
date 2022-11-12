@@ -3,6 +3,7 @@ package com.soen490chrysalis.papilio.view
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.lifecycle.Observer
@@ -23,7 +24,6 @@ import com.soen490chrysalis.papilio.viewModel.LoginViewModelFactory
 
 class LoginActivity : AppCompatActivity()
 {
-
     private val logTag = SignUpActivity::class.java.simpleName
     private lateinit var binding : ActivityLoginBinding
 
@@ -80,6 +80,8 @@ class LoginActivity : AppCompatActivity()
         loginViewModel.authResponse.observe(this, hasUserAuthenticatedObserver)
 
         binding.signInWithGoogleButton.setOnClickListener {
+            binding.progressBarLogin.visibility = View.VISIBLE
+
             // Initiate the whole Google Sign In procedure
             val intent = googleSignInClient.signInIntent
             startActivityForResult(intent, RC_SIGN_IN)
@@ -104,15 +106,34 @@ class LoginActivity : AppCompatActivity()
 
             if ( emailValidation == null && passwordValidation == null )
             {
+                binding.progressBarLogin.visibility = View.VISIBLE
+
                 // Valid email and password
                 loginViewModel.firebaseLoginWithEmailAndPassword(email, password)
             }
         }
-
     }
 
+    override fun onStart()
+    {
+        super.onStart()
+
+        // Check if user is signed in (non-null) and update UI accordingly.
+        val currentUser : FirebaseUser? = loginViewModel.getUser()
+
+        if ( currentUser != null )
+        {
+            Log.d(logTag, "Current user: ${currentUser.displayName}")
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+    }
+
+    // Utility function that displays a snackbar in case of errors
     private fun displaySnackBar(coordinatorLayout: CoordinatorLayout, errorMessage : String)
     {
+        binding.progressBarLogin.visibility = View.GONE // Hide snackbar in case of errors
         Snackbar.make(coordinatorLayout, errorMessage, Snackbar.LENGTH_LONG).show()
     }
 

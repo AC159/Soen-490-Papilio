@@ -6,6 +6,9 @@ plugins {
     id 'jacoco'
 }
 
+def localProperties = new Properties()
+localProperties.load(new FileInputStream(rootProject.file("local.properties")))
+
 android {
     compileSdkVersion 33
     buildToolsVersion "30.0.3"
@@ -23,10 +26,12 @@ android {
     buildTypes {
         debug {
             testCoverageEnabled true
+            buildConfigField("String", "BACKEND_API_URL", "\"" + localProperties['BACKEND_API_URL'] + "\"")
         }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField("String", "BACKEND_API_URL", "\"" + localProperties['BACKEND_API_URL'] + "\"")
         }
     }
     compileOptions {
@@ -38,6 +43,12 @@ android {
     }
     buildFeatures {
         viewBinding true
+    }
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+            returnDefaultValues = true
+        }
     }
     namespace 'com.soen490chrysalis.papilio'
 }
@@ -87,6 +98,7 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment-ktx:2.4.1'
     implementation 'androidx.navigation:navigation-ui-ktx:2.4.1'
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.4"
 
     // Dependencies for retrofit library for network requests
     def retrofit_version = '2.9.0'
@@ -111,6 +123,7 @@ dependencies {
     androidTestImplementation("org.mockito.kotlin:mockito-kotlin:4.0.0")
     androidTestImplementation("org.mockito:mockito-inline:2.13.0")
 
+    testImplementation "com.squareup.okhttp3:mockwebserver:4.10.0"
     testImplementation "org.mockito:mockito-core:4.0.0"
     testImplementation "org.mockito:mockito-inline:2.13.0"
     testImplementation "org.mockito.kotlin:mockito-kotlin:4.0.0"

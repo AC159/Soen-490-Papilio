@@ -3,14 +3,21 @@ package com.soen490chrysalis.papilio.repository
 import android.util.Log
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.AuthResult
-import com.google.firebase.auth.FirebaseAuth
+import com.google.android.gms.tasks.TaskCompletionSource
+import com.google.firebase.auth.*
+import com.soen490chrysalis.papilio.repository.users.IUserRepository
 import com.soen490chrysalis.papilio.repository.users.UserRepository
+import com.soen490chrysalis.papilio.services.network.IUserApiService
 import com.soen490chrysalis.papilio.testUtils.MainCoroutineRule
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import io.mockk.every
 import io.mockk.mockkStatic
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
+import okhttp3.mockwebserver.MockResponse
+import okhttp3.mockwebserver.MockWebServer
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -19,16 +26,28 @@ import org.junit.runners.JUnit4
 import org.mockito.Mockito
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
+import retrofit2.Retrofit
+import retrofit2.converter.moshi.MoshiConverterFactory
 
 
 @RunWith(JUnit4::class)
 class UserRepositoryTest
 {
+    private var mockWebServer = MockWebServer()
+    private lateinit var mockRetrofitUserService: IUserApiService
+    private val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
+
     private val mockFirebaseAuth = Mockito.mock(FirebaseAuth::class.java)
     private val mockAuthTask = Mockito.mock(Task::class.java)
+    private val mockAuthResult = Mockito.mock(AuthResult::class.java)
     private val mockGoogleSignInClient = Mockito.mock(GoogleSignInClient::class.java)
 
-    private val userRepository = Mockito.spy(UserRepository(mockFirebaseAuth))
+    private val mockFirebaseUser = Mockito.mock(FirebaseUser::class.java)
+    private val mockFirebaseUserUid = "aset23q45346457sdfhrtu5r"
+
+    private lateinit var userRepository : IUserRepository
+    private val firstName = "firstName"
+    private val lastName = "lastName"
     private val email = "someEmail@gmail.com"
     private val password = "password"
 
@@ -39,14 +58,47 @@ class UserRepositoryTest
     @Before
     fun setUp()
     {
-        userRepository.initialize(mockGoogleSignInClient) // this line is just to get more test coverage
-
         // Stub firebase authentication functions
         @Suppress("UNCHECKED_CAST")
         Mockito.`when`(mockFirebaseAuth.signInWithEmailAndPassword(email, password)).thenReturn(
             mockAuthTask as Task<AuthResult>?
         )
-        Mockito.`when`(mockFirebaseAuth.createUserWithEmailAndPassword(email, password)).thenReturn(mockAuthTask)
+
+        /*
+            The next 3 lines are very important when it comes to calling functions that return tasks
+            on which we are calling the '.await()' function. In order to not make the '.await()' hang,
+            we must return a TaskCompletionSource<AuthResult> that will return a task which will not make
+            the '.await()' function block anymore.
+         */
+        val taskCompletionSource = TaskCompletionSource<AuthResult>()
+        taskCompletionSource.setResult(mockAuthResult)
+        Mockito.`when`(mockFirebaseAuth.createUserWithEmailAndPassword(email, password)).thenReturn(taskCompletionSource.task)
+        Mockito.`when`(mockFirebaseAuth.signInWithEmailAndPassword(email, password)).thenReturn(taskCompletionSource.task)
+
+//        val voidTaskResult = TaskCompletionSource<Void>()
+//        voidTaskResult.setResult(null)
+//        val userProfileChangeRequest = UserProfileChangeRequest.Builder().setDisplayName("$firstName $lastName").build()
+//        Mockito.`when`(mockFirebaseUser.updateProfile(userProfileChangeRequest)).thenReturn(voidTaskResult.task)
+
+        Mockito.`when`(mockAuthResult.user).thenReturn(mockFirebaseUser)
+        Mockito.`when`(mockFirebaseUser.displayName).thenReturn("$firstName $lastName")
+        Mockito.`when`(mockFirebaseUser.email).thenReturn(email)
+        Mockito.`when`(mockFirebaseUser.uid).thenReturn(mockFirebaseUserUid)
+
+        mockWebServer.start()
+        println("Webserver has successfully started...")
+
+        mockRetrofitUserService = Retrofit.Builder()
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .baseUrl(mockWebServer.url("/")) // note the URL is different from production one
+            .build()
+            .create(IUserApiService::class.java)
+
+        println("Instantiated mockRetrofitUserService!")
+
+        // Important to initialize the user rempository here since the mockRetrofitUserService needs to be create beforehand
+        userRepository = Mockito.spy(UserRepository(mockFirebaseAuth, mockRetrofitUserService))
+        userRepository.initialize(mockGoogleSignInClient) // this line is just to get more test coverage
 
         // Mock all log calls
         mockkStatic(Log::class)
@@ -55,6 +107,14 @@ class UserRepositoryTest
         every { Log.d(any(), any(), any()) } returns 0
         every { Log.i(any(), any()) } returns 0
         every { Log.e(any(), any()) } returns 0
+
+        println("Setup method is done!")
+    }
+
+    @After
+    fun teardown()
+    {
+        mockWebServer.shutdown()
     }
 
     @Test
@@ -66,32 +126,121 @@ class UserRepositoryTest
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun authenticationWithFirebase() = runTest {
-        val authResultCallback = { _: Boolean, _: String ->  } // Lambda function that does nothing
+    fun createAccountWithEmailAndPasswordTest() = runTest {
+        /* It is important to enqueue mock responses to the web server if we are going to make API calls in the test, otherwise
+            the result will not be successful. */
+        val mockedResponse = MockResponse().setResponseCode(200)
+        mockWebServer.enqueue(mockedResponse)
 
-        // Create an account with a successful task
-        userRepository.firebaseCreateAccountWithEmailAndPassword(email, password, authResultCallback)
+        val result : Pair<Boolean, String> = userRepository.firebaseCreateAccountWithEmailAndPassword(firstName, lastName, email, password)
+        println("Result: $result")
+
+        assert(result.first && result.second == "OK")
         Mockito.verify(mockFirebaseAuth, times(1)).createUserWithEmailAndPassword(email, password)
-
-        userRepository.firebaseLoginWithEmailAndPassword(email, password, authResultCallback)
-        Mockito.verify(mockFirebaseAuth, times(1)).signInWithEmailAndPassword(email, password)
+        Mockito.verify(userRepository, times(1)).createUser(mockFirebaseUser, true, firstName, lastName)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun callbackHandler() = runTest {
-        val authResultSuccessCallback = { authResult: Boolean, _: String -> assert(authResult) }
-        val authResultFailureCallback = { authResult: Boolean, _: String -> assert(!authResult) }
+    fun createAccountWithEmailAndPasswordWithFirebaseAuthWeakPasswordException() = runTest {
+        val taskCompletionSource = TaskCompletionSource<AuthResult>()
+        taskCompletionSource.setException(FirebaseAuthWeakPasswordException("400", "Weak password!", null))
+        Mockito.`when`(mockFirebaseAuth.createUserWithEmailAndPassword(email, password)).thenReturn(taskCompletionSource.task)
 
-        // Test the code when the authentication task is successful
-        Mockito.`when`(mockAuthTask.isSuccessful).thenReturn(true)
-        @Suppress("UNCHECKED_CAST")
-        userRepository.authTaskCompletedCallback(mockAuthTask as Task<AuthResult>, authResultSuccessCallback)
-        Mockito.verify(userRepository, times(1)).getUser()
+        val result : Pair<Boolean, String> = userRepository.firebaseCreateAccountWithEmailAndPassword(firstName, lastName, email, password)
+        println("Result: $result")
 
-        // Test the code when the authentication task is not successful
-        Mockito.`when`(mockAuthTask.isSuccessful).thenReturn(false)
-        Mockito.`when`(mockAuthTask.exception).thenReturn(Mockito.mock(Exception::class.java))
-        userRepository.authTaskCompletedCallback(mockAuthTask, authResultFailureCallback)
+        assert(!result.first && result.second == "Password is too weak!")
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun createAccountWithEmailAndPasswordWithFirebaseAuthInvalidCredentialsException() = runTest {
+        val taskCompletionSource = TaskCompletionSource<AuthResult>()
+        taskCompletionSource.setException(FirebaseAuthInvalidCredentialsException("400", "Malformed email address!"))
+        Mockito.`when`(mockFirebaseAuth.createUserWithEmailAndPassword(email, password)).thenReturn(taskCompletionSource.task)
+
+        val result : Pair<Boolean, String> = userRepository.firebaseCreateAccountWithEmailAndPassword(firstName, lastName, email, password)
+        println("Result: $result")
+
+        assert(!result.first && result.second == "Email address is malformed!")
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun createAccountWithEmailAndPasswordWithFirebaseAuthUserCollisionException() = runTest {
+        val taskCompletionSource = TaskCompletionSource<AuthResult>()
+        taskCompletionSource.setException(FirebaseAuthUserCollisionException("400", "Email already exists!"))
+        Mockito.`when`(mockFirebaseAuth.createUserWithEmailAndPassword(email, password)).thenReturn(taskCompletionSource.task)
+
+        val result : Pair<Boolean, String> = userRepository.firebaseCreateAccountWithEmailAndPassword(firstName, lastName, email, password)
+        println("Result: $result")
+
+        assert(!result.first && result.second == "Email already exists!")
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun createAccountWithEmailAndPasswordWithGenericException() = runTest {
+        val taskCompletionSource = TaskCompletionSource<AuthResult>()
+        taskCompletionSource.setException(Exception("Oops, something went wrong!"))
+        Mockito.`when`(mockFirebaseAuth.createUserWithEmailAndPassword(email, password)).thenReturn(taskCompletionSource.task)
+
+        val result : Pair<Boolean, String> = userRepository.firebaseCreateAccountWithEmailAndPassword(firstName, lastName, email, password)
+        println("Result: $result")
+
+        assert(!result.first && result.second == "Oops, something went wrong!")
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun signInWithEmailAndPassword() = runTest {
+        /* It is important to enqueue mock responses to the web server if we are going to make API calls in the test, otherwise
+            the result will not be successful. */
+        val mockedResponse = MockResponse().setResponseCode(200)
+        mockWebServer.enqueue(mockedResponse)
+
+        val result : Pair<Boolean, String> = userRepository.firebaseLoginWithEmailAndPassword(email, password)
+        println("Result: $result")
+
+        assert(result.first && result.second == "OK")
+        Mockito.verify(mockFirebaseAuth, times(1)).signInWithEmailAndPassword(email, password)
+        Mockito.verify(userRepository, times(1)).createUser(mockFirebaseUser, false, null, null)
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun signInWithEmailAndPasswordWithFirebaseAuthInvalidUserException() = runTest {
+        val taskCompletionSource = TaskCompletionSource<AuthResult>()
+        taskCompletionSource.setException(FirebaseAuthInvalidUserException("400", "Invalid User!"))
+        Mockito.`when`(mockFirebaseAuth.signInWithEmailAndPassword(email, password)).thenReturn(taskCompletionSource.task)
+
+        val result : Pair<Boolean, String> = userRepository.firebaseLoginWithEmailAndPassword(email, password)
+        println("Result: $result")
+        assert(!result.first && result.second == "User has been disabled or does not exist!")
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun signInWithEmailAndPasswordWithFirebaseAuthInvalidCredentialsException() = runTest {
+        val taskCompletionSource = TaskCompletionSource<AuthResult>()
+        taskCompletionSource.setException(FirebaseAuthInvalidCredentialsException("400", "Invalid Credentials!"))
+        Mockito.`when`(mockFirebaseAuth.signInWithEmailAndPassword(email, password)).thenReturn(taskCompletionSource.task)
+
+        val result : Pair<Boolean, String> = userRepository.firebaseLoginWithEmailAndPassword(email, password)
+        println("Result: $result")
+        assert(!result.first && result.second == "Wrong password!")
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun signInWithEmailAndPasswordWithGenericException() = runTest {
+        val taskCompletionSource = TaskCompletionSource<AuthResult>()
+        taskCompletionSource.setException(Exception("Oops, something went wrong!"))
+        Mockito.`when`(mockFirebaseAuth.signInWithEmailAndPassword(email, password)).thenReturn(taskCompletionSource.task)
+
+        val result : Pair<Boolean, String> = userRepository.firebaseLoginWithEmailAndPassword(email, password)
+        println("Result: $result")
+        assert(!result.first && result.second == "Oops, something went wrong!")
     }
 }

@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Html
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.lifecycle.Observer
@@ -75,6 +76,8 @@ class SignUpActivity : AppCompatActivity() {
 
         // Register the login with google listener
         binding.continueWithGoogleButton.setOnClickListener {
+            binding.progressBarSignUp.visibility = View.VISIBLE
+
             // Initiate the whole Google Sign In procedure
             val intent = googleSignInClient.signInIntent
             startActivityForResult(intent, RC_SIGN_IN)
@@ -136,14 +139,17 @@ class SignUpActivity : AppCompatActivity() {
 
             if ( firstNameValidation == null && lastNameValidation == null && emailValidation == null && passwordValidation == null )
             {
-                loginViewModel.firebaseCreateAccountWithEmailAndPassword(email, password)
+                binding.progressBarSignUp.visibility = View.VISIBLE
+                loginViewModel.firebaseCreateAccountWithEmailAndPassword(firstName, lastName, email, password)
             }
         }
 
     }
 
+    // Utility function that displays a snackbar in case of errors
     private fun displaySnackBar(coordinatorLayout: CoordinatorLayout, errorMessage : String)
     {
+        binding.progressBarSignUp.visibility = View.GONE // Hide the snackbar if there is any error
         Snackbar.make(coordinatorLayout, errorMessage, Snackbar.LENGTH_LONG).show()
     }
 

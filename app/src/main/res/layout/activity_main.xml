@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.MainActivity">
+    tools:context=".view.MainActivity"
+    android:id="@+id/home_activity">
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment_container_view"
@@ -22,12 +23,12 @@
             android:id="@+id/relativelayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/bottonnav"
+            android:layout_above="@+id/bottomnav"
             android:layout_marginBottom="9dp"
             android:padding="5dp"/>
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/bottonnav"
+            android:id="@+id/bottomnav"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"

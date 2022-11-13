@@ -4,8 +4,6 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.navigation.NavigationBarView
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.soen490chrysalis.papilio.*
 import com.soen490chrysalis.papilio.databinding.ActivityMainBinding
 
@@ -14,9 +12,6 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
 {
     var bottomNavigationView: NavigationBarView? = null
     private lateinit var binding : ActivityMainBinding
-    private lateinit var firebaseAuth: FirebaseAuth
-    private lateinit var firebaseUser : FirebaseUser
-    public var currentFragmentID : String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,7 +21,7 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
         setContentView(view)
 
         // Setting the listener to detect when we press one of the button on the navigation bar
-        bottomNavigationView = binding.bottonnav
+        bottomNavigationView = binding.bottomnav
         bottomNavigationView?.setOnItemSelectedListener(this)
     }
 
@@ -38,25 +33,21 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
             R.id.home ->
             {
                 supportFragmentManager.beginTransaction().replace(binding.fragmentContainerView.id, HomeFragment(), "HOME").commit()
-                currentFragmentID = "HOME"
             }
 
             R.id.browse ->
             {
                 supportFragmentManager.beginTransaction().replace(binding.fragmentContainerView.id, BrowseFragment(), "BROWSE").commit()
-                currentFragmentID = "BROWSE"
             }
 
             R.id.activities ->
             {
                 supportFragmentManager.beginTransaction().replace(binding.fragmentContainerView.id, ActivitiesFragment(), "ACTIVITIES").commit()
-                currentFragmentID = "ACTIVITIES"
             }
 
             R.id.account ->
             {
                 supportFragmentManager.beginTransaction().replace(binding.fragmentContainerView.id, AccountMenuFragment(), "ACCOUNT MENU").commit()
-                currentFragmentID = "ACCOUNT MENU"
             }
         }
 

@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
             R.id.activities -> supportFragmentManager.beginTransaction()
                     .replace(binding.fragmentContainerView.id, ActivitiesFragment()).commit()
             R.id.account    -> supportFragmentManager.beginTransaction()
-                    .replace(binding.fragmentContainerView.id, UserProfileFragment()).commit()
+                    .replace(binding.fragmentContainerView.id, AccountMenuFragment()).commit()
         }
 
         return true

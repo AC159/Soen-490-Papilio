@@ -10,10 +10,11 @@ import com.soen490chrysalis.papilio.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListener
 {
-    var bottomNavigationView: NavigationBarView? = null
+    var bottomNavigationView : NavigationBarView? = null
     private lateinit var binding : ActivityMainBinding
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState : Bundle?)
+    {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -26,29 +27,18 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
     }
 
     // Function that loads in a page/fragment on the navigation bar when you tap the respective button
-    override fun onNavigationItemSelected(item: MenuItem): Boolean
+    override fun onNavigationItemSelected(item : MenuItem) : Boolean
     {
-        when(item.itemId)
+        when (item.itemId)
         {
-            R.id.home ->
-            {
-                supportFragmentManager.beginTransaction().replace(binding.fragmentContainerView.id, HomeFragment(), "HOME").commit()
-            }
-
-            R.id.browse ->
-            {
-                supportFragmentManager.beginTransaction().replace(binding.fragmentContainerView.id, BrowseFragment(), "BROWSE").commit()
-            }
-
-            R.id.activities ->
-            {
-                supportFragmentManager.beginTransaction().replace(binding.fragmentContainerView.id, ActivitiesFragment(), "ACTIVITIES").commit()
-            }
-
-            R.id.account ->
-            {
-                supportFragmentManager.beginTransaction().replace(binding.fragmentContainerView.id, AccountMenuFragment(), "ACCOUNT MENU").commit()
-            }
+            R.id.home       -> supportFragmentManager.beginTransaction()
+                    .replace(binding.fragmentContainerView.id, HomeFragment()).commit()
+            R.id.browse     -> supportFragmentManager.beginTransaction()
+                    .replace(binding.fragmentContainerView.id, BrowseFragment()).commit()
+            R.id.activities -> supportFragmentManager.beginTransaction()
+                    .replace(binding.fragmentContainerView.id, ActivitiesFragment()).commit()
+            R.id.account    -> supportFragmentManager.beginTransaction()
+                    .replace(binding.fragmentContainerView.id, UserProfileFragment()).commit()
         }
 
         return true

@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Html
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.lifecycle.Observer
@@ -22,17 +23,19 @@ import com.soen490chrysalis.papilio.viewModel.AuthResponse
 import com.soen490chrysalis.papilio.viewModel.LoginViewModel
 import com.soen490chrysalis.papilio.viewModel.LoginViewModelFactory
 
-class SignUpActivity : AppCompatActivity() {
+class SignUpActivity : AppCompatActivity()
+{
     private val logTag = SignUpActivity::class.java.simpleName
 
-    private lateinit var binding: ActivitySignUpBinding
+    private lateinit var binding : ActivitySignUpBinding
 
     private val RC_SIGN_IN = 9001
-    private lateinit var googleSignInClient: GoogleSignInClient
+    private lateinit var googleSignInClient : GoogleSignInClient
 
     private lateinit var loginViewModel : LoginViewModel
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState : Bundle?)
+    {
         super.onCreate(savedInstanceState)
 
         binding = ActivitySignUpBinding.inflate(layoutInflater)
@@ -40,9 +43,9 @@ class SignUpActivity : AppCompatActivity() {
 
         // Configure Google Sign In
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.default_web_client_id))
-            .requestEmail()
-            .build()
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build()
 
         // We cannot place this code in the LoginViewModel because it requires the activity object
         googleSignInClient = GoogleSignIn.getClient(this, gso)
@@ -53,9 +56,12 @@ class SignUpActivity : AppCompatActivity() {
 
         val hasUserAuthenticatedObserver = Observer<AuthResponse> { authResponse_ ->
             // The user has successfully logged in. We can now move to the next page/activity
-            Log.d(logTag, "Auth observer has detected changes: \nauth response: ${authResponse_.authSuccessful}" +
-                    "\nerror message: ${authResponse_.errorMessage}")
-            if ( authResponse_.authSuccessful )
+            Log.d(
+                logTag,
+                "Auth observer has detected changes: \nauth response: ${authResponse_.authSuccessful}" +
+                        "\nerror message: ${authResponse_.errorMessage}"
+            )
+            if (authResponse_.authSuccessful)
             {
                 // Go to main page
                 val homePage = Intent(this, MainActivity::class.java)
@@ -75,6 +81,8 @@ class SignUpActivity : AppCompatActivity() {
 
         // Register the login with google listener
         binding.continueWithGoogleButton.setOnClickListener {
+            binding.progressBarSignUp.visibility = View.VISIBLE
+
             // Initiate the whole Google Sign In procedure
             val intent = googleSignInClient.signInIntent
             startActivityForResult(intent, RC_SIGN_IN)
@@ -91,12 +99,14 @@ class SignUpActivity : AppCompatActivity() {
 
             // Create a button at the bottom of the alert box called "ACCEPT".
             // This also includes the code that will run when the "ACCEPT" button is pressed.
-            builder.setPositiveButton(R.string.alert_dialog_accept, DialogInterface.OnClickListener { dialog_: DialogInterface, _: Int ->
-                run {
-                    // When the "Accept button is pressed, simply dismiss the dialog
-                    dialog_.dismiss()
-                }
-            })
+            builder.setPositiveButton(
+                R.string.alert_dialog_accept,
+                DialogInterface.OnClickListener { dialog_ : DialogInterface, _ : Int ->
+                    run {
+                        // When the "Accept button is pressed, simply dismiss the dialog
+                        dialog_.dismiss()
+                    }
+                })
 
             builder.show() //When the alert box is set up, finally display it on screen.
         }
@@ -111,43 +121,51 @@ class SignUpActivity : AppCompatActivity() {
 
             // Take the user input from all the input fields and validate them
             val firstNameValidation = loginViewModel.validateFirstName(firstName)
-            if ( firstNameValidation != null )
+            if (firstNameValidation != null)
             {
                 binding.userFirstName.error = firstNameValidation
             }
 
             val lastNameValidation = loginViewModel.validateLastName(lastName)
-            if ( lastNameValidation != null )
+            if (lastNameValidation != null)
             {
                 binding.userLastName.error = lastNameValidation
             }
 
             val emailValidation = loginViewModel.validateEmailAddress(email)
-            if ( emailValidation != null )
+            if (emailValidation != null)
             {
                 binding.userEmailAddress.error = emailValidation
             }
 
             val passwordValidation = loginViewModel.validatePassword(password)
-            if ( passwordValidation != null )
+            if (passwordValidation != null)
             {
                 binding.userPassword.error = passwordValidation
             }
 
-            if ( firstNameValidation == null && lastNameValidation == null && emailValidation == null && passwordValidation == null )
+            if (firstNameValidation == null && lastNameValidation == null && emailValidation == null && passwordValidation == null)
             {
-                loginViewModel.firebaseCreateAccountWithEmailAndPassword(email, password)
+                binding.progressBarSignUp.visibility = View.VISIBLE
+                loginViewModel.firebaseCreateAccountWithEmailAndPassword(
+                    firstName,
+                    lastName,
+                    email,
+                    password
+                )
             }
         }
 
     }
 
-    private fun displaySnackBar(coordinatorLayout: CoordinatorLayout, errorMessage : String)
+    // Utility function that displays a snackbar in case of errors
+    private fun displaySnackBar(coordinatorLayout : CoordinatorLayout, errorMessage : String)
     {
+        binding.progressBarSignUp.visibility = View.GONE // Hide the snackbar if there is any error
         Snackbar.make(coordinatorLayout, errorMessage, Snackbar.LENGTH_LONG).show()
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
+    override fun onActivityResult(requestCode : Int, resultCode : Int, data : Intent?)
     {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -156,7 +174,8 @@ class SignUpActivity : AppCompatActivity() {
         {
             try
             {
-                val task : Task<GoogleSignInAccount> = GoogleSignIn.getSignedInAccountFromIntent(data)
+                val task : Task<GoogleSignInAccount> =
+                    GoogleSignIn.getSignedInAccountFromIntent(data)
 
                 // Google Sign In was successful, authenticate with Firebase
                 val account : GoogleSignInAccount = task.result

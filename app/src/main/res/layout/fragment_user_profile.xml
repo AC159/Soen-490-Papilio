@@ -9,7 +9,7 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:cardBackgroundColor="@color/yellow" >
+        app:cardBackgroundColor="@color/yellow">
 
         <ImageView
             android:id="@+id/imageView"

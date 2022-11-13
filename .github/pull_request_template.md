@@ -7,8 +7,8 @@
  - 
  - 
 
-# Manual Testing
-To test the activity manager you have to:
+# Testing
+To test this feature you have to:
 
 1. Step 1
 2. Step 2

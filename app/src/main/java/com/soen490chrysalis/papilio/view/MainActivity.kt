@@ -1,15 +1,11 @@
 package com.soen490chrysalis.papilio.view
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.navigation.NavigationBarView
+import com.soen490chrysalis.papilio.*
 import com.soen490chrysalis.papilio.databinding.ActivityMainBinding
-import com.soen490chrysalis.papilio.ActivitiesFragment
-import com.soen490chrysalis.papilio.BrowseFragment
-import com.soen490chrysalis.papilio.HomeFragment
-import com.soen490chrysalis.papilio.UserProfileFragment
-import com.soen490chrysalis.papilio.R
 
 
 class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListener
@@ -25,8 +21,8 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
         val view = binding.root
         setContentView(view)
 
-        //Setting the listener to detect when we press one of the button on the navigation bar
-        bottomNavigationView = binding.bottonnav
+        // Setting the listener to detect when we press one of the button on the navigation bar
+        bottomNavigationView = binding.bottomnav
         bottomNavigationView?.setOnItemSelectedListener(this)
     }
 
@@ -42,8 +38,9 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
             R.id.activities -> supportFragmentManager.beginTransaction()
                     .replace(binding.fragmentContainerView.id, ActivitiesFragment()).commit()
             R.id.account    -> supportFragmentManager.beginTransaction()
-                    .replace(binding.fragmentContainerView.id, UserProfileFragment()).commit()
+                    .replace(binding.fragmentContainerView.id, AccountMenuFragment()).commit()
         }
+
         return true
     }
 }

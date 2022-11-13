@@ -27,46 +27,53 @@ class UserProfileActivity : AppCompatActivity()
         // If the Google account exists (which means the user used Google to log in / sign up
         if(acct != null)
         {
-            //Get the photoUrl of the google profile picture of your Google account
+            // Get the photoUrl of the google profile picture of your Google account
             var googleProfilePicture = acct.photoUrl
 
+            // if the user's google profile picture exists then display it on the user profile activity
             if(googleProfilePicture == null)
             {
                 binding.userProfilePicture.setImageResource(R.drawable.user_pfp_example)
             }
-            else
+            else // If the user's google profile picture does not exist, then display just the placeholder image on the profile
             {
+                // Here we use the Glide library to import the pfp from the google account of the logged in user
                 Glide.with(this)
                     .load(acct.photoUrl)
                     .circleCrop()
                     .into(binding.userProfilePicture)
             }
 
+            // Also display the full name and email from the user's Google account on the profile
             binding.userProfileName.setText(acct.displayName)
             binding.userProfileEmail.setText("Email: "+acct.email)
         }
-        else
+        else // If the google account does not exist, then it means the user logged in with their firebase account
         {
+            // Get the firebase user from FireBaseAuth
             val user = FirebaseAuth.getInstance().currentUser
             user?.let{
 
-                binding.userProfileName.setText("John Doe")
+                // Set the full name, email on the profile from the firebase account, and show the placeholder pfp as the pfp
+                binding.userProfileName.setText(user.displayName)
                 binding.userProfileEmail.setText("Email: " + user.email)
                 binding.userProfilePicture.setImageResource(R.drawable.user_pfp_example)
             }
 
         }
 
-
+        // Create Action Bar var so we can 1) display it with a proper title and 2) put a working back button on it
         var actionBar = supportActionBar
         super.onCreate(savedInstanceState)
 
+        // if Action Bar is not null, then put a back button on it as well as put the "User Profile" title on it
         if(actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true)
             actionBar.title = "User Profile"
         }
     }
 
+    // This is the function that's called when the back button on the action bar is pressed
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {

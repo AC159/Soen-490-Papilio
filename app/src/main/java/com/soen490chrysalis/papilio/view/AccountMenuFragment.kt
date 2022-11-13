@@ -1,4 +1,4 @@
-package com.soen490chrysalis.papilio
+package com.soen490chrysalis.papilio.view
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,10 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.soen490chrysalis.papilio.databinding.ActivityAccountMenuBinding
-import com.soen490chrysalis.papilio.view.UserProfileActivity
-import kotlinx.android.synthetic.main.activity_account_menu.*
-import kotlinx.android.synthetic.main.activity_account_menu.view.*
+import com.soen490chrysalis.papilio.R
+import com.soen490chrysalis.papilio.databinding.AccountMenuFragmentBinding
+import kotlinx.android.synthetic.main.account_menu_fragment.*
+import kotlinx.android.synthetic.main.account_menu_fragment.view.*
 
 /**
  * A simple [Fragment] subclass.
@@ -18,12 +18,12 @@ import kotlinx.android.synthetic.main.activity_account_menu.view.*
  */
 class AccountMenuFragment : Fragment()
 {
-    private lateinit var binding : ActivityAccountMenuBinding
+    private lateinit var binding : AccountMenuFragmentBinding
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityAccountMenuBinding.inflate(layoutInflater)
+        binding = AccountMenuFragmentBinding.inflate(layoutInflater)
     }
 
     override fun onCreateView(
@@ -32,7 +32,7 @@ class AccountMenuFragment : Fragment()
     ) : View?
     {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.activity_account_menu, container, false)
+        val view = inflater.inflate(R.layout.account_menu_fragment, container, false)
         val profileButton = view.findViewById<androidx.appcompat.widget.AppCompatButton>(R.id.account_user_profile)
 
         profileButton?.setOnClickListener {

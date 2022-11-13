@@ -14,10 +14,10 @@ import androidx.fragment.app.Fragment
 class BrowseFragment : Fragment()
 {
     // TODO: Rename and change types of parameters
-    private var mParam1: String? = null
-    private var mParam2: String? = null
+    private var mParam1 : String? = null
+    private var mParam2 : String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?)
+    override fun onCreate(savedInstanceState : Bundle?)
     {
         super.onCreate(savedInstanceState)
         if (arguments != null)
@@ -28,9 +28,9 @@ class BrowseFragment : Fragment()
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View?
+        inflater : LayoutInflater, container : ViewGroup?,
+        savedInstanceState : Bundle?
+    ) : View?
     {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_browse, container, false)
@@ -52,7 +52,8 @@ class BrowseFragment : Fragment()
          * @return A new instance of fragment BrowseFragment.
          */
         // TODO: Rename and change types and number of parameters
-        fun newInstance(param1: String?, param2: String?): BrowseFragment {
+        fun newInstance(param1 : String?, param2 : String?) : BrowseFragment
+        {
             val fragment = BrowseFragment()
             val args = Bundle()
             args.putString(ARG_PARAM1, param1)

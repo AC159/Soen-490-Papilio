@@ -27,13 +27,17 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 
-fun hasNoErrorText(): Matcher<View?>? {
-    return object : BoundedMatcher<View?, EditText>(EditText::class.java) {
-        override fun describeTo(description: Description) {
+fun hasNoErrorText() : Matcher<View?>?
+{
+    return object : BoundedMatcher<View?, EditText>(EditText::class.java)
+    {
+        override fun describeTo(description : Description)
+        {
             description.appendText("has no error text: ")
         }
 
-        override fun matchesSafely(view: EditText): Boolean {
+        override fun matchesSafely(view : EditText) : Boolean
+        {
             return view.error == null
         }
     }
@@ -41,7 +45,8 @@ fun hasNoErrorText(): Matcher<View?>? {
 
 @RunWith(AndroidJUnit4::class)
 @LargeTest
-class SignUpActivityUITest {
+class SignUpActivityUITest
+{
 
     private val validEmail = "validEmail@gmail.com"
     private val validFirstName = "validFirstName"
@@ -57,11 +62,15 @@ class SignUpActivityUITest {
     @Test
     fun activityDisplaysExpectedText()
     {
-        Espresso.onView(withText(R.string.signup_activity_greeting_message)).check(matches(isDisplayed()))
+        Espresso.onView(withText(R.string.signup_activity_greeting_message))
+                .check(matches(isDisplayed()))
         Espresso.onView(withText(R.string.continue_with_google)).check(matches(isDisplayed()))
-        Espresso.onView(withText(R.string.sign_up)).perform(scrollTo()).check(matches(isDisplayed()))
-        Espresso.onView(withText(R.string.signup_activity_user_agreement)).perform(scrollTo()).check(matches(isDisplayed()))
-        Espresso.onView(withText(R.string.signup_activity_our_terms_of_use_and_privacy_notice)).perform(scrollTo()).check(matches(isDisplayed()))
+        Espresso.onView(withText(R.string.sign_up)).perform(scrollTo())
+                .check(matches(isDisplayed()))
+        Espresso.onView(withText(R.string.signup_activity_user_agreement)).perform(scrollTo())
+                .check(matches(isDisplayed()))
+        Espresso.onView(withText(R.string.signup_activity_our_terms_of_use_and_privacy_notice))
+                .perform(scrollTo()).check(matches(isDisplayed()))
     }
 
     @Test
@@ -69,13 +78,15 @@ class SignUpActivityUITest {
     {
         Espresso.onView(withText(R.string.continue_with_google)).check(matches(isClickable()))
         Espresso.onView(withText(R.string.sign_up)).check(matches(isClickable()))
-        Espresso.onView(withText(R.string.signup_activity_our_terms_of_use_and_privacy_notice)).check(matches(isClickable()))
+        Espresso.onView(withText(R.string.signup_activity_our_terms_of_use_and_privacy_notice))
+                .check(matches(isClickable()))
     }
 
     @Test
     fun verifyThatTermsOfUseDialogIsDisplayed()
     {
-        Espresso.onView(withText(R.string.signup_activity_our_terms_of_use_and_privacy_notice)).check(matches(isDisplayed())).perform(click())
+        Espresso.onView(withText(R.string.signup_activity_our_terms_of_use_and_privacy_notice))
+                .check(matches(isDisplayed())).perform(click())
 
         // Check that dialog is displayed
         Espresso.onView(isRoot()).inRoot(isDialog()).check(matches(isDisplayed()))
@@ -94,9 +105,10 @@ class SignUpActivityUITest {
     fun testFirstNameInputField()
     {
         // Fill the first name field and try to login
-        Espresso.onView(withId(R.id.user_first_name)).perform(typeText(
-            "this first name is too long and should show an error upon clicking the submit button"
-        ),
+        Espresso.onView(withId(R.id.user_first_name)).perform(
+            typeText(
+                "this first name is too long and should show an error upon clicking the submit button"
+            ),
             closeSoftKeyboard() // important to close the keyboard otherwise the sign up button is not visible!
         )
 
@@ -104,22 +116,31 @@ class SignUpActivityUITest {
         Espresso.onView(withText(R.string.sign_up)).perform(scrollTo(), click())
 
         // All input fields should also display their respective errors
-        Espresso.onView(withId(R.id.user_first_name)).check(matches(hasErrorText("First name must be between 1 and 25 characters long!")))
-        Espresso.onView(withId(R.id.user_last_name)).check(matches(hasErrorText("Last name must be between 1 and 25 characters long!")))
-        Espresso.onView(withId(R.id.user_email_address)).check(matches(hasErrorText("Not a valid email!")))
-        Espresso.onView(withId(R.id.user_password)).check(matches(hasErrorText("Password must contain at least 1 digit, 1 lowercase character, " +
-                "1 uppercase character, 1 special character, no white spaces & a minimum of 6 characters!")))
+        Espresso.onView(withId(R.id.user_first_name))
+                .check(matches(hasErrorText("First name must be between 1 and 25 characters long!")))
+        Espresso.onView(withId(R.id.user_last_name))
+                .check(matches(hasErrorText("Last name must be between 1 and 25 characters long!")))
+        Espresso.onView(withId(R.id.user_email_address))
+                .check(matches(hasErrorText("Not a valid email!")))
+        Espresso.onView(withId(R.id.user_password)).check(
+            matches(
+                hasErrorText(
+                    "Password must contain at least 1 digit, 1 lowercase character, " +
+                            "1 uppercase character, 1 special character, no white spaces & a minimum of 6 characters!"
+                )
+            )
+        )
 
         // Fill a valid first name and try to login
         Espresso.onView(withId(R.id.user_first_name)).perform(
             clearText(),
             typeText(
-            validFirstName
+                validFirstName
             ),
             closeSoftKeyboard() // important to close the keyboard otherwise the sign up button is not visible!
         )
 
-        Espresso.onView(withText(R.string.sign_up)).perform(scrollTo(),  click())
+        Espresso.onView(withText(R.string.sign_up)).perform(scrollTo(), click())
 
         // There should be no errors displayed
         Espresso.onView(withId(R.id.user_first_name)).check(matches(hasNoErrorText()))
@@ -129,9 +150,10 @@ class SignUpActivityUITest {
     fun testLastNameInputField()
     {
         // Fill the email name field and try to login
-        Espresso.onView(withId(R.id.user_last_name)).perform(typeText(
-            "this last name is too long and should show an error upon clicking the submit button"
-        ),
+        Espresso.onView(withId(R.id.user_last_name)).perform(
+            typeText(
+                "this last name is too long and should show an error upon clicking the submit button"
+            ),
             closeSoftKeyboard() // important to close the keyboard otherwise the sign up button is not visible!
         )
 
@@ -139,11 +161,20 @@ class SignUpActivityUITest {
         Espresso.onView(withText(R.string.sign_up)).perform(scrollTo(), click())
 
         // All input fields should also display their respective errors
-        Espresso.onView(withId(R.id.user_first_name)).check(matches(hasErrorText("First name must be between 1 and 25 characters long!")))
-        Espresso.onView(withId(R.id.user_last_name)).check(matches(hasErrorText("Last name must be between 1 and 25 characters long!")))
-        Espresso.onView(withId(R.id.user_email_address)).check(matches(hasErrorText("Not a valid email!")))
-        Espresso.onView(withId(R.id.user_password)).check(matches(hasErrorText("Password must contain at least 1 digit, 1 lowercase character, " +
-                "1 uppercase character, 1 special character, no white spaces & a minimum of 6 characters!")))
+        Espresso.onView(withId(R.id.user_first_name))
+                .check(matches(hasErrorText("First name must be between 1 and 25 characters long!")))
+        Espresso.onView(withId(R.id.user_last_name))
+                .check(matches(hasErrorText("Last name must be between 1 and 25 characters long!")))
+        Espresso.onView(withId(R.id.user_email_address))
+                .check(matches(hasErrorText("Not a valid email!")))
+        Espresso.onView(withId(R.id.user_password)).check(
+            matches(
+                hasErrorText(
+                    "Password must contain at least 1 digit, 1 lowercase character, " +
+                            "1 uppercase character, 1 special character, no white spaces & a minimum of 6 characters!"
+                )
+            )
+        )
 
         // Fill a valid last name and try to login
         Espresso.onView(withId(R.id.user_last_name)).perform(
@@ -164,9 +195,10 @@ class SignUpActivityUITest {
     fun testEmailInputField()
     {
         // Fill the email field and try to login
-        Espresso.onView(withId(R.id.user_email_address)).perform(typeText(
-            "invalid email address"
-        ),
+        Espresso.onView(withId(R.id.user_email_address)).perform(
+            typeText(
+                "invalid email address"
+            ),
             closeSoftKeyboard() // important to close the keyboard otherwise the sign up button is not visible!
         )
 
@@ -174,11 +206,20 @@ class SignUpActivityUITest {
         Espresso.onView(withText(R.string.sign_up)).perform(click())
 
         // All input fields should also display their respective errors
-        Espresso.onView(withId(R.id.user_first_name)).check(matches(hasErrorText("First name must be between 1 and 25 characters long!")))
-        Espresso.onView(withId(R.id.user_last_name)).check(matches(hasErrorText("Last name must be between 1 and 25 characters long!")))
-        Espresso.onView(withId(R.id.user_email_address)).check(matches(hasErrorText("Not a valid email!")))
-        Espresso.onView(withId(R.id.user_password)).check(matches(hasErrorText("Password must contain at least 1 digit, 1 lowercase character, " +
-                "1 uppercase character, 1 special character, no white spaces & a minimum of 6 characters!")))
+        Espresso.onView(withId(R.id.user_first_name))
+                .check(matches(hasErrorText("First name must be between 1 and 25 characters long!")))
+        Espresso.onView(withId(R.id.user_last_name))
+                .check(matches(hasErrorText("Last name must be between 1 and 25 characters long!")))
+        Espresso.onView(withId(R.id.user_email_address))
+                .check(matches(hasErrorText("Not a valid email!")))
+        Espresso.onView(withId(R.id.user_password)).check(
+            matches(
+                hasErrorText(
+                    "Password must contain at least 1 digit, 1 lowercase character, " +
+                            "1 uppercase character, 1 special character, no white spaces & a minimum of 6 characters!"
+                )
+            )
+        )
 
         // Fill a valid email and try to login
         Espresso.onView(withId(R.id.user_email_address)).perform(
@@ -199,9 +240,10 @@ class SignUpActivityUITest {
     fun testPasswordInputField()
     {
         // Fill the password field and try to login
-        Espresso.onView(withId(R.id.user_password)).perform(typeText(
-            "invalid password"
-        ),
+        Espresso.onView(withId(R.id.user_password)).perform(
+            typeText(
+                "invalid password"
+            ),
             closeSoftKeyboard() // important to close the keyboard otherwise the sign up button is not visible!
         )
 
@@ -209,11 +251,20 @@ class SignUpActivityUITest {
         Espresso.onView(withText(R.string.sign_up)).perform(click())
 
         // All input fields should also display their respective errors
-        Espresso.onView(withId(R.id.user_first_name)).check(matches(hasErrorText("First name must be between 1 and 25 characters long!")))
-        Espresso.onView(withId(R.id.user_last_name)).check(matches(hasErrorText("Last name must be between 1 and 25 characters long!")))
-        Espresso.onView(withId(R.id.user_email_address)).check(matches(hasErrorText("Not a valid email!")))
-        Espresso.onView(withId(R.id.user_password)).check(matches(hasErrorText("Password must contain at least 1 digit, 1 lowercase character, " +
-                "1 uppercase character, 1 special character, no white spaces & a minimum of 6 characters!")))
+        Espresso.onView(withId(R.id.user_first_name))
+                .check(matches(hasErrorText("First name must be between 1 and 25 characters long!")))
+        Espresso.onView(withId(R.id.user_last_name))
+                .check(matches(hasErrorText("Last name must be between 1 and 25 characters long!")))
+        Espresso.onView(withId(R.id.user_email_address))
+                .check(matches(hasErrorText("Not a valid email!")))
+        Espresso.onView(withId(R.id.user_password)).check(
+            matches(
+                hasErrorText(
+                    "Password must contain at least 1 digit, 1 lowercase character, " +
+                            "1 uppercase character, 1 special character, no white spaces & a minimum of 6 characters!"
+                )
+            )
+        )
 
         // Fill a valid password and try to login
         Espresso.onView(withId(R.id.user_password)).perform(
@@ -231,11 +282,11 @@ class SignUpActivityUITest {
     }
 
     @Test
-    /*
-        IMPORTANT: This test verifies that a snackbar is shown containing an error message.
-        This test relies on a pre-existing account on firebase (the one with "validEmail@gmail.com" email), otherwise
-        the test will fail.
-    */
+            /*
+                IMPORTANT: This test verifies that a snackbar is shown containing an error message.
+                This test relies on a pre-existing account on firebase (the one with "validEmail@gmail.com" email), otherwise
+                the test will fail.
+            */
     fun checkIfSnackbarAppearsWithCreateAccountWithEmailAndPassword()
     {
         // Let's start by filling the input fields with correct information
@@ -282,7 +333,7 @@ class SignUpActivityUITest {
         Thread.sleep(1000)
 
         // Check if there is a snackbar
-        Espresso.onView(withText("The email address is already in use by another account.")).check(matches(isDisplayed()))
+        Espresso.onView(withText("Email already exists!")).check(matches(isDisplayed()))
     }
 
     @Test
@@ -359,7 +410,10 @@ class SignUpActivityUITest {
         intending(hasComponent(MainActivity::class.java.name)).respondWith(intentResult)
 
         activityRule.scenario.onActivity { activity ->
-            activity.startActivityForResult(Intent(activity, MainActivity::class.java), 9001) // the request code is the same as in the signup activity
+            activity.startActivityForResult(
+                Intent(activity, MainActivity::class.java),
+                9001
+            ) // the request code is the same as in the signup activity
         }
 
         /* Delay the thread for 1 second so that the snackbar has time to appear.

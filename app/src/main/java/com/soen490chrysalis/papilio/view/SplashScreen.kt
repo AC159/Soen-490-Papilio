@@ -7,8 +7,10 @@ import android.os.Handler
 import android.os.Looper
 import com.soen490chrysalis.papilio.R
 
-class SplashScreen : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
+class SplashScreen : AppCompatActivity()
+{
+    override fun onCreate(savedInstanceState : Bundle?)
+    {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
 
@@ -16,7 +18,7 @@ class SplashScreen : AppCompatActivity() {
 
         val handler = Handler(Looper.getMainLooper())
         handler.postDelayed({
-            val intent = Intent (this, InitialActivity::class.java)
+            val intent = Intent(this, InitialActivity::class.java)
             startActivity(intent)
             finish()
         }, 3000)

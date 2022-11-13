@@ -20,9 +20,9 @@ import java.util.regex.Pattern
     Author: Anastassy Cap
     Date: October 5, 2022
 */
-data class AuthResponse(var authSuccessful : Boolean, var errorMessage : String )
+data class AuthResponse(var authSuccessful : Boolean, var errorMessage : String)
 
-class LoginViewModel(private val userRepository: IUserRepository) : ViewModel()
+class LoginViewModel(private val userRepository : IUserRepository) : ViewModel()
 {
     private val logTag = LoginViewModel::class.java.simpleName
     var authResponse : MutableLiveData<AuthResponse> = MutableLiveData<AuthResponse>()
@@ -37,7 +37,7 @@ class LoginViewModel(private val userRepository: IUserRepository) : ViewModel()
         return userRepository.getUser()
     }
 
-    fun validateFirstName( firstName : String ) : String?
+    fun validateFirstName(firstName : String) : String?
     {
         if (firstName.length in 1..25)
         {
@@ -46,7 +46,7 @@ class LoginViewModel(private val userRepository: IUserRepository) : ViewModel()
         return "First name must be between 1 and 25 characters long!"
     }
 
-    fun validateLastName( lastName : String ) : String?
+    fun validateLastName(lastName : String) : String?
     {
         if (lastName.length in 1..25)
         {
@@ -55,28 +55,32 @@ class LoginViewModel(private val userRepository: IUserRepository) : ViewModel()
         return "Last name must be between 1 and 25 characters long!"
     }
 
-    fun validateEmailAddress( emailAddress : String ) : String?
+    fun validateEmailAddress(emailAddress : String) : String?
     {
-        if ( emailAddress.isNotEmpty() && PatternsCompat.EMAIL_ADDRESS.matcher(emailAddress).matches() )
+        if (emailAddress.isNotEmpty() && PatternsCompat.EMAIL_ADDRESS.matcher(emailAddress)
+                        .matches()
+        )
         {
             return null
         }
         return "Not a valid email!"
     }
 
-    fun validatePassword( password : String ) : String?
+    fun validatePassword(password : String) : String?
     {
-        val passwordREGEX = Pattern.compile("^" +
-                "(?=.*[0-9])" +         // at least 1 digit
-                "(?=.*[a-z])" +         // at least 1 lower case letter
-                "(?=.*[A-Z])" +         // at least 1 upper case letter
-                "(?=.*[a-zA-Z])" +      // any letter
-                "(?=.*[!@#$%^&*()_+])" +// at least 1 special character
-                "(?=\\S+$)" +           // no white spaces
-                ".{6,}" +               // at least 6 characters
-                "$")
+        val passwordREGEX = Pattern.compile(
+            "^" +
+                    "(?=.*[0-9])" +         // at least 1 digit
+                    "(?=.*[a-z])" +         // at least 1 lower case letter
+                    "(?=.*[A-Z])" +         // at least 1 upper case letter
+                    "(?=.*[a-zA-Z])" +      // any letter
+                    "(?=.*[!@#$%^&*()_+])" +// at least 1 special character
+                    "(?=\\S+$)" +           // no white spaces
+                    ".{6,}" +               // at least 6 characters
+                    "$"
+        )
 
-        if ( password.length in 6..20 && passwordREGEX.matcher(password).matches() )
+        if (password.length in 6..20 && passwordREGEX.matcher(password).matches())
         {
             return null
         }
@@ -84,9 +88,9 @@ class LoginViewModel(private val userRepository: IUserRepository) : ViewModel()
                 "1 uppercase character, 1 special character, no white spaces & a minimum of 6 characters!"
     }
 
-    fun handleAuthResult(authResult: Boolean, errorMessage : String)
+    fun handleAuthResult(authResult : Boolean, errorMessage : String)
     {
-        if ( !authResult )
+        if (!authResult)
         {
             // authentication was not successful, so we set an error message
             authResponse.value = AuthResponse(false, errorMessage)
@@ -98,32 +102,46 @@ class LoginViewModel(private val userRepository: IUserRepository) : ViewModel()
         Log.d(logTag, "Return value from userRepository $authResult")
     }
 
-    fun firebaseAuthWithGoogle(idToken: String) {
-        /* Calling the handleAuthResult function will trigger the observer in the activity that listens to changes which will redirect the
-            user to a new page */
-        // create a coroutine that will run in the UI thread
-        viewModelScope.launch {
-            userRepository.firebaseAuthWithGoogle(idToken, ::handleAuthResult)
-        }
-    }
-
-    fun firebaseCreateAccountWithEmailAndPassword( emailAddress: String, password: String )
+    fun firebaseAuthWithGoogle(idToken : String)
     {
         /* Calling the handleAuthResult function will trigger the observer in the activity that listens to changes which will redirect the
             user to a new page */
         // create a coroutine that will run in the UI thread
         viewModelScope.launch {
-            userRepository.firebaseCreateAccountWithEmailAndPassword(emailAddress, password, ::handleAuthResult)
+            val result = userRepository.firebaseAuthWithGoogle(idToken)
+            handleAuthResult(result.first, result.second)
         }
     }
 
-    fun firebaseLoginWithEmailAndPassword( emailAddress: String, password: String )
+    fun firebaseCreateAccountWithEmailAndPassword(
+        firstName : String,
+        lastName : String,
+        emailAddress : String,
+        password : String
+    )
     {
         /* Calling the handleAuthResult function will trigger the observer in the activity that listens to changes which will redirect the
             user to a new page */
         // create a coroutine that will run in the UI thread
         viewModelScope.launch {
-            userRepository.firebaseLoginWithEmailAndPassword(emailAddress, password, ::handleAuthResult)
+            val result = userRepository.firebaseCreateAccountWithEmailAndPassword(
+                firstName,
+                lastName,
+                emailAddress,
+                password
+            )
+            handleAuthResult(result.first, result.second)
+        }
+    }
+
+    fun firebaseLoginWithEmailAndPassword(emailAddress : String, password : String)
+    {
+        /* Calling the handleAuthResult function will trigger the observer in the activity that listens to changes which will redirect the
+            user to a new page */
+        // create a coroutine that will run in the UI thread
+        viewModelScope.launch {
+            val result = userRepository.firebaseLoginWithEmailAndPassword(emailAddress, password)
+            handleAuthResult(result.first, result.second)
         }
     }
 }

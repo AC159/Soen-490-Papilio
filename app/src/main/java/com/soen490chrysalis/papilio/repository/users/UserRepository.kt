@@ -62,21 +62,20 @@ class UserRepository(
         return withContext(coroutineDispatcher)
         {
             try
-                {
-                    // todo: should I surround it with an if statement that checks for null values?
-                    val response =
-                        userService.getUserByFirebaseId(firebaseAuth.currentUser?.uid).body()
-                    Log.d(logTag, "userRepository getUserByFirebaseId() response: $response")
-                    return@withContext response
-                }
-                catch (e : Exception)
-                {
-                    Log.d(
-                        logTag,
-                        "userRepository getUserByFirebaseId() exception occurred: ${e.message}"
-                    )
-                    println(e.message)
-                }
+            {
+                val response =
+                    userService.getUserByFirebaseId(firebaseAuth.currentUser?.uid).body()
+                Log.d(logTag, "userRepository getUserByFirebaseId() response: $response")
+                return@withContext response
+            }
+            catch (e : Exception)
+            {
+                Log.d(
+                    logTag,
+                    "userRepository getUserByFirebaseId() exception occurred: ${e.message}"
+                )
+                println(e.message)
+            }
             return@withContext null
         }
     }

@@ -34,7 +34,7 @@ private val retrofit = Retrofit.Builder()
 /*
     DESCRIPTION:
     Interface that instructs retrofit how to communicate with the server to make network requests.
-    TODO: This is where new endpoints will be added in the future.
+    This is where new endpoints will be added in the future.
 
     Author: Anastassy Cap
     Date: November 1st, 2022

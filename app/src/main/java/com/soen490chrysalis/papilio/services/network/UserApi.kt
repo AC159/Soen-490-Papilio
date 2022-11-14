@@ -1,7 +1,9 @@
 package com.soen490chrysalis.papilio.services.network
 
+import androidx.annotation.Nullable
 import com.soen490chrysalis.papilio.BuildConfig
 import com.soen490chrysalis.papilio.services.network.requests.UserRequest
+import com.soen490chrysalis.papilio.services.network.responses.GetUserByFirebaseIdResponse
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Response
@@ -39,6 +41,11 @@ private val retrofit = Retrofit.Builder()
 */
 interface IUserApiService
 {
+    @GET("get/{firebaseId}")
+    suspend fun getUserByFirebaseId(
+        @Path("firebaseId") firebaseId : String?
+    ) : Response<GetUserByFirebaseIdResponse>
+
     @POST("createUser")
     suspend fun createUser(
         @Body user : UserRequest

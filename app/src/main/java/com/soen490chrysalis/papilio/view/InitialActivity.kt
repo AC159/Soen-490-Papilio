@@ -3,8 +3,10 @@ package com.soen490chrysalis.papilio.view
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseUser
 import com.soen490chrysalis.papilio.databinding.ActivityInitialBinding
 import com.soen490chrysalis.papilio.viewModel.GetUserResponse
@@ -30,6 +32,8 @@ class InitialActivity : AppCompatActivity()
         loginViewModel = ViewModelProvider(this, loginFactory)[LoginViewModel::class.java]
 
         loginViewModel.userObject.observe(this) { userResponse : GetUserResponse ->
+            binding.progressBarFetchingUserInfo.visibility = View.GONE // hide progress bar
+
             val currentUser : FirebaseUser? = loginViewModel.getUser()
 
             /* Verify if the current user exists in firebase and has his info stored in the db,
@@ -59,6 +63,9 @@ class InitialActivity : AppCompatActivity()
     override fun onStart()
     {
         super.onStart()
+
+        // Show a visible progress bar when we are fetching user information
+        binding.progressBarFetchingUserInfo.visibility = View.VISIBLE
 
         /* Make a network request to determine if the current user already has his
         information stored in the database*/

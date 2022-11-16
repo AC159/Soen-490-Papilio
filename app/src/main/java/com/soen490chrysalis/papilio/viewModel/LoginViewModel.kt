@@ -138,8 +138,8 @@ class LoginViewModel(private val userRepository : IUserRepository) : ViewModel()
         // create a coroutine that will run in the UI thread
         viewModelScope.launch {
             val result = userRepository.firebaseCreateAccountWithEmailAndPassword(
-                firstName,
-                lastName,
+                firstName.trim(),
+                lastName.trim(),
                 emailAddress,
                 password
             )

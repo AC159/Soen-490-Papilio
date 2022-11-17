@@ -8,9 +8,11 @@ import com.google.firebase.auth.*
 import com.soen490chrysalis.papilio.repository.users.IUserRepository
 import com.soen490chrysalis.papilio.repository.users.UserRepository
 import com.soen490chrysalis.papilio.services.network.IUserApiService
+import com.soen490chrysalis.papilio.services.network.responses.UserObject
 import com.soen490chrysalis.papilio.testUtils.MainCoroutineRule
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import io.mockk.core.ValueClassSupport.boxedValue
 import io.mockk.every
 import io.mockk.mockkStatic
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -119,6 +121,68 @@ class UserRepositoryTest
     {
         userRepository.getUser()
         verify(mockFirebaseAuth, times(1)).currentUser
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun getUserByFirebaseId() = runTest {
+        // Test the route with a firebase id of null
+        var response = userRepository.getUserByFirebaseId()
+        println("Response: $response")
+        assert(response == null)
+
+        // Let's test the route with a valid firebase id
+        val user = UserObject(
+            "first",
+            "last",
+            "validEmail@gmail.com",
+            "hQH3m5B4dUXoHXvbneslxcuCHR52",
+            "1",
+            null,
+            "2022-11-14T02:07:02.585Z",
+            "2022-11-14T02:07:02.585Z"
+        )
+
+        val mockServerResponse = MockResponse().setResponseCode(200).setBody(
+            "{\n" +
+                    "    \"found\": true,\n" +
+                    "    \"user\": {\n" +
+                    "        \"firebase_id\": \"hQH3m5B4dUXoHXvbneslxcuCHR52\",\n" +
+                    "        \"firstName\": \"first\",\n" +
+                    "        \"lastName\": \"last\",\n" +
+                    "        \"countryCode\": \"1\",\n" +
+                    "        \"phone\": null,\n" +
+                    "        \"email\": \"validEmail@gmail.com\",\n" +
+                    "        \"createdAt\": \"2022-11-14T02:07:02.585Z\",\n" +
+                    "        \"updatedAt\": \"2022-11-14T02:07:02.585Z\"\n" +
+                    "    }\n" +
+                    "}"
+        )
+        mockWebServer.enqueue(mockServerResponse)
+
+        Mockito.`when`(mockFirebaseAuth.currentUser).thenReturn(mockFirebaseUser)
+        Mockito.`when`(mockFirebaseUser?.uid).thenReturn(mockFirebaseUserUid)
+
+        response = userRepository.getUserByFirebaseId()
+        println("Response: $response")
+
+        assert(response!!.user == user)
+        Mockito.verify(mockFirebaseAuth, times(2)).currentUser
+        Mockito.verify(mockFirebaseUser, times(1))?.uid
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun firebaseAuthWithGoogleTest() = runTest {
+        /* It is important to enqueue mock responses to the web server if we are going to make API calls in the test, otherwise
+            the result will not be successful. */
+        val mockedResponse = MockResponse().setResponseCode(200)
+        mockWebServer.enqueue(mockedResponse)
+
+        val idToken = "someToken"
+        val result : Pair<Boolean, String> = userRepository.firebaseAuthWithGoogle(idToken)
+        println("Result: $result")
+        assert(!result.first && result.second == "firebaseAuth.signInWithCredential(credential) must not be null")
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)

@@ -1,11 +1,13 @@
 package com.soen490chrysalis.papilio.view
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.soen490chrysalis.papilio.R
+import com.soen490chrysalis.papilio.create_activity
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -38,7 +40,14 @@ class ActivitiesFragment : Fragment()
     ) : View?
     {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_activities, container, false)
+        val view = inflater.inflate(R.layout.fragment_activities, container, false)
+        val createActivityButton = view.findViewById<androidx.appcompat.widget.AppCompatButton>(R.id.activities_create_activity_button)
+
+        createActivityButton?.setOnClickListener {
+            val intent = Intent(this.activity, create_activity::class.java)
+            startActivity(intent)
+        }
+        return view
     }
 
     companion object

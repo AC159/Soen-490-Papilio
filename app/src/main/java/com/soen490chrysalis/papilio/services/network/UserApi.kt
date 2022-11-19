@@ -1,6 +1,5 @@
 package com.soen490chrysalis.papilio.services.network
 
-import androidx.annotation.Nullable
 import com.soen490chrysalis.papilio.BuildConfig
 import com.soen490chrysalis.papilio.services.network.requests.UserRequest
 import com.soen490chrysalis.papilio.services.network.responses.GetUserByFirebaseIdResponse

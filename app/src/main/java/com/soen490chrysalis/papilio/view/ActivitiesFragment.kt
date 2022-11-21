@@ -6,8 +6,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModel
 import com.soen490chrysalis.papilio.R
 import com.soen490chrysalis.papilio.create_activity
+import com.soen490chrysalis.papilio.databinding.ActivityCreateActivityBinding
+import com.soen490chrysalis.papilio.databinding.FragmentActivitiesBinding
+import kotlinx.android.synthetic.main.fragment_activities.view.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -34,20 +38,30 @@ class ActivitiesFragment : Fragment()
         }
     }
 
+    private var _binding : FragmentActivitiesBinding? = null
+    private val binding get() = _binding!!
+
     override fun onCreateView(
-        inflater : LayoutInflater, container : ViewGroup?,
+        inflater : LayoutInflater,
+        container : ViewGroup?,
         savedInstanceState : Bundle?
     ) : View?
     {
-        // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_activities, container, false)
-        val createActivityButton = view.findViewById<androidx.appcompat.widget.AppCompatButton>(R.id.activities_create_activity_button)
+        _binding = FragmentActivitiesBinding.inflate(inflater, container, false)
+        val view = binding.root
+        val createActivityButton = view.activities_create_activity_button
 
         createActivityButton?.setOnClickListener {
             val intent = Intent(this.activity, create_activity::class.java)
             startActivity(intent)
         }
         return view
+    }
+
+    override fun onDestroyView()
+    {
+        super.onDestroyView()
+        _binding = null
     }
 
     companion object

@@ -40,6 +40,10 @@
         <activity
             android:name=".view.UserProfileActivity"
             android:exported="true" />
+        <activity
+            android:name=".create_activity"
+            android:exported="true">
+        </activity>
     </application>
 
 </manifest>

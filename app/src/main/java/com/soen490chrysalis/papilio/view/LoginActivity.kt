@@ -14,7 +14,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.tasks.Task
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.auth.FirebaseUser
 import com.soen490chrysalis.papilio.viewModel.LoginViewModel
 import com.soen490chrysalis.papilio.R
 import com.soen490chrysalis.papilio.databinding.ActivityLoginBinding
@@ -114,22 +113,6 @@ class LoginActivity : AppCompatActivity()
                 // Valid email and password
                 loginViewModel.firebaseLoginWithEmailAndPassword(email, password)
             }
-        }
-    }
-
-    override fun onStart()
-    {
-        super.onStart()
-
-        // Check if user is signed in (non-null) and update UI accordingly.
-        val currentUser : FirebaseUser? = loginViewModel.getUser()
-
-        if (currentUser != null)
-        {
-            Log.d(logTag, "Current user: ${currentUser.displayName}")
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-            finish()
         }
     }
 

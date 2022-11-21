@@ -2,6 +2,7 @@ package com.soen490chrysalis.papilio.repository.users
 
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.FirebaseUser
+import com.soen490chrysalis.papilio.services.network.responses.GetUserByFirebaseIdResponse
 import retrofit2.Response
 
 /*
@@ -18,6 +19,8 @@ interface IUserRepository
     fun initialize(googleSignInClient : GoogleSignInClient)
 
     fun getUser() : FirebaseUser?
+
+    suspend fun getUserByFirebaseId() : GetUserByFirebaseIdResponse?
 
     suspend fun createUser(
         user : FirebaseUser?,

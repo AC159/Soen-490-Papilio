@@ -14,6 +14,7 @@ import com.google.firebase.auth.UserProfileChangeRequest
 import com.soen490chrysalis.papilio.services.network.*
 import com.soen490chrysalis.papilio.services.network.requests.User
 import com.soen490chrysalis.papilio.services.network.requests.UserRequest
+import com.soen490chrysalis.papilio.services.network.responses.GetUserByFirebaseIdResponse
 import kotlinx.coroutines.tasks.await
 import retrofit2.Response
 import kotlinx.coroutines.CoroutineDispatcher
@@ -54,6 +55,29 @@ class UserRepository(
     override fun getUser() : FirebaseUser?
     {
         return firebaseAuth.currentUser
+    }
+
+    override suspend fun getUserByFirebaseId() : GetUserByFirebaseIdResponse?
+    {
+        return withContext(coroutineDispatcher)
+        {
+            try
+            {
+                val response =
+                    userService.getUserByFirebaseId(firebaseAuth.currentUser?.uid).body()
+                Log.d(logTag, "userRepository getUserByFirebaseId() response: $response")
+                return@withContext response
+            }
+            catch (e : Exception)
+            {
+                Log.d(
+                    logTag,
+                    "userRepository getUserByFirebaseId() exception occurred: ${e.message}"
+                )
+                println(e.message)
+            }
+            return@withContext null
+        }
     }
 
     /*

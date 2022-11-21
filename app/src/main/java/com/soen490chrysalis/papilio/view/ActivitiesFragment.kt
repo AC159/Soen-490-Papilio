@@ -6,10 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModel
-import com.soen490chrysalis.papilio.R
 import com.soen490chrysalis.papilio.create_activity
-import com.soen490chrysalis.papilio.databinding.ActivityCreateActivityBinding
 import com.soen490chrysalis.papilio.databinding.FragmentActivitiesBinding
 import kotlinx.android.synthetic.main.fragment_activities.view.*
 

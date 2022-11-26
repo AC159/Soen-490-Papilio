@@ -34,9 +34,14 @@ class AccountMenuFragment : Fragment()
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.account_menu_fragment, container, false)
         val profileButton = view.findViewById<androidx.appcompat.widget.AppCompatButton>(R.id.account_user_profile)
+        val quizbutton = view.findViewById<androidx.appcompat.widget.AppCompatButton>(R.id.account_activity_quiz)
 
         profileButton?.setOnClickListener {
             val intent = Intent(this.activity, UserProfileActivity::class.java)
+            startActivity(intent)
+        }
+        quizbutton?.setOnClickListener {
+            val intent = Intent(this.activity, QuizPart1::class.java)
             startActivity(intent)
         }
 

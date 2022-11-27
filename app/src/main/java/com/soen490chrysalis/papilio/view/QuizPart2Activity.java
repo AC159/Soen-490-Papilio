@@ -2,7 +2,9 @@ package com.soen490chrysalis.papilio.view;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -19,6 +21,7 @@ public class QuizPart2Activity extends AppCompatActivity {
     Button choice3;
     Button choice4;
     TextView question;
+    TextView skip;
     TextInputEditText input;
 
 
@@ -35,6 +38,7 @@ public class QuizPart2Activity extends AppCompatActivity {
         choice4 = (Button) findViewById(R.id.choise4);
         question = (TextView) findViewById(R.id.question);
         input = (TextInputEditText) findViewById(R.id.otherInput);
+        skip = (TextView) findViewById(R.id.skip);
 
         next.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,5 +58,28 @@ public class QuizPart2Activity extends AppCompatActivity {
                 input.setVisibility(View.VISIBLE);
             }
         });
+
+        skip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(QuizPart2Activity.this, MainActivity.class));
+            }
+        });
+
+        var actionBar = getSupportActionBar();
+
+        if(actionBar != null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle("Activity Quiz");
+        }
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        int id = item.getItemId();
+
+        if(id == android.R.id.home){
+            this.finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

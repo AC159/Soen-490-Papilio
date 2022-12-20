@@ -48,7 +48,7 @@ class ActivitiesFragment : Fragment()
         val createActivityButton = view.activities_create_activity_button
 
         createActivityButton?.setOnClickListener {
-            val intent = Intent(this.activity, create_activity::class.java)
+            val intent = Intent(this.activity, CreateActivity::class.java)
             startActivity(intent)
         }
         return view

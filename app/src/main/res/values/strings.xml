@@ -114,7 +114,24 @@
             </ul><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
         ]]>
     </string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
     <string name="placeholder_bio">Enjoy meeting new people and exploring my city. If you’re down to meet a friendly guy who knows how to have fun come join me at my activities.</string>
+    <string name="create_activity">+ Create Activity</string>
+    <string name="import_picture">Import Picture</string>
+    <string name="ex_10">ex: 10</string>
+    <string name="maximum_number_of_participants">Maximum number of participants:</string>
+    <string name="description">Description...</string>
+    <string name="event_description">Event Description:</string>
+    <string name="ex_23h00">ex: 23h00</string>
+    <string name="ex_19h00">ex: 19h00</string>
+    <string name="event_end_time">Event End Time:</string>
+    <string name="event_start_time">Event Start Time:</string>
+    <string name="dd_mm_yyyy">dd-mm-yyyy</string>
+    <string name="event_date">Event Date:</string>
+    <string name="location">Location</string>
+    <string name="event_location">Event Location:</string>
+    <string name="title">Title</string>
+    <string name="event_title">Event Title:</string>
+    <string name="create_your_activity">Create Your Activity</string>
+    <string name="papilio_logo">Papilio logo</string>
 </resources>

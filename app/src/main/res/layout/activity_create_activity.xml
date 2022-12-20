@@ -4,19 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.create_activity">
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white"
-        android:orientation="horizontal"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+    tools:context=".view.CreateActivity">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -24,7 +12,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical"
                 tools:ignore="UselessParent">
 
@@ -42,7 +30,7 @@
                             android:id="@+id/iv_papilio_logo"
                             android:layout_width="match_parent"
                             android:layout_height="70dp"
-                            android:contentDescription="Papilio logo"
+                            android:contentDescription="@string/papilio_logo"
                             app:srcCompat="@drawable/papilio_logo_app" />
                     </LinearLayout>
 
@@ -53,9 +41,9 @@
                         android:layout_marginHorizontal="10dp"
                         android:layout_marginBottom="10dp"
                         android:gravity="center"
-                        android:text="Create Your Activity"
+                        android:text="@string/create_your_activity"
                         android:textColor="#053F5C"
-                        android:textSize="25dp"
+                        android:textSize="25sp"
                         android:textStyle="bold" />
 
                     <LinearLayout
@@ -71,9 +59,9 @@
                             android:layout_height="wrap_content"
                             android:layout_marginHorizontal="10dp"
                             android:layout_marginTop="10dp"
-                            android:text="Event Title:"
+                            android:text="@string/event_title"
                             android:textColor="@color/black"
-                            android:textSize="20dp" />
+                            android:textSize="20sp" />
 
                         <EditText
                             android:id="@+id/event_title"
@@ -83,11 +71,12 @@
                             android:background="@drawable/edit_text_shape"
                             android:backgroundTint="@color/white"
                             android:ems="10"
-                            android:hint=" Title"
+                            android:hint="@string/title"
+                            android:paddingStart="10dp"
                             android:inputType="textPersonName"
                             android:textColor="@color/black"
-                            android:textColorHint="#DEE5E9" />
-
+                            android:textColorHint="#DEE5E9"
+                            tools:ignore="RtlSymmetry" />
 
                         <TextView
                             android:id="@+id/textView5"
@@ -95,9 +84,9 @@
                             android:layout_height="wrap_content"
                             android:layout_marginHorizontal="10dp"
                             android:layout_marginTop="10dp"
-                            android:text="Event Location:"
+                            android:text="@string/event_location"
                             android:textColor="@color/black"
-                            android:textSize="20dp" />
+                            android:textSize="20sp" />
 
                         <EditText
                             android:id="@+id/event_location"
@@ -107,10 +96,13 @@
                             android:background="@drawable/edit_text_shape"
                             android:backgroundTint="@color/white"
                             android:ems="10"
-                            android:hint=" Location"
+                            android:hint="@string/location"
+                            android:paddingStart="10dp"
                             android:inputType="textPersonName"
                             android:textColor="@color/black"
-                            android:textColorHint="#DEE5E9" />
+                            android:textColorHint="#DEE5E9"
+                            tools:ignore="RtlSymmetry"
+                            android:autofillHints="" />
 
                         <TextView
                             android:id="@+id/textView6"
@@ -118,9 +110,9 @@
                             android:layout_height="wrap_content"
                             android:layout_marginHorizontal="10dp"
                             android:layout_marginTop="10dp"
-                            android:text="Event Date:"
+                            android:text="@string/event_date"
                             android:textColor="@color/black"
-                            android:textSize="20dp" />
+                            android:textSize="20sp" />
 
                         <EditText
                             android:id="@+id/event_date"
@@ -130,16 +122,17 @@
                             android:background="@drawable/edit_text_shape"
                             android:backgroundTint="@color/white"
                             android:ems="10"
-                            android:hint=" dd-mm-yyyy"
+                            android:hint="@string/dd_mm_yyyy"
+                            android:paddingStart="10dp"
                             android:inputType="date"
                             android:textColor="@color/black"
-                            android:textColorHint="#DEE5E9" />
+                            android:textColorHint="#DEE5E9"
+                            tools:ignore="RtlSymmetry" />
 
                         <LinearLayout
                             android:id="@+id/LinearLayout01"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentBottom="true">
+                            android:layout_height="wrap_content">
 
                             <TextView
                                 android:id="@+id/textView7"
@@ -147,9 +140,9 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginHorizontal="10dp"
                                 android:layout_marginTop="10dp"
-                                android:text="Event Start Time:"
+                                android:text="@string/event_start_time"
                                 android:textColor="@color/black"
-                                android:textSize="20dp" />
+                                android:textSize="20sp" />
 
                             <TextView
                                 android:id="@+id/textView8"
@@ -157,16 +150,15 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginHorizontal="10dp"
                                 android:layout_marginTop="10dp"
-                                android:text="Event End Time:"
+                                android:text="@string/event_end_time"
                                 android:textColor="@color/black"
-                                android:textSize="20dp" />
+                                android:textSize="20sp" />
                         </LinearLayout>
 
                         <LinearLayout
                             android:id="@+id/LinearLayout03"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentBottom="true">
+                            android:layout_height="wrap_content">
 
                             <EditText
                                 android:id="@+id/event_start_time"
@@ -176,10 +168,12 @@
                                 android:background="@drawable/edit_text_shape"
                                 android:backgroundTint="@color/white"
                                 android:ems="10"
-                                android:hint=" ex: 19h00"
+                                android:hint="@string/ex_19h00"
+                                android:paddingStart="10dp"
                                 android:inputType="time"
                                 android:textColor="@color/black"
-                                android:textColorHint="#DEE5E9" />
+                                android:textColorHint="#DEE5E9"
+                                tools:ignore="RtlSymmetry" />
 
                             <EditText
                                 android:id="@+id/event_end_time"
@@ -189,10 +183,12 @@
                                 android:background="@drawable/edit_text_shape"
                                 android:backgroundTint="@color/white"
                                 android:ems="10"
-                                android:hint=" ex: 23h00"
+                                android:hint="@string/ex_23h00"
+                                android:paddingStart="10dp"
                                 android:inputType="time"
                                 android:textColor="@color/black"
-                                android:textColorHint="#DEE5E9" />
+                                android:textColorHint="#DEE5E9"
+                                tools:ignore="RtlSymmetry" />
                         </LinearLayout>
 
                         <TextView
@@ -201,9 +197,9 @@
                             android:layout_height="wrap_content"
                             android:layout_marginHorizontal="10dp"
                             android:layout_marginTop="10dp"
-                            android:text="Event Description:"
+                            android:text="@string/event_description"
                             android:textColor="@color/black"
-                            android:textSize="20dp" />
+                            android:textSize="20sp" />
 
                         <EditText
                             android:id="@+id/event_description"
@@ -214,10 +210,12 @@
                             android:backgroundTint="@color/white"
                             android:ems="10"
                             android:gravity="top"
-                            android:hint=" Description..."
+                            android:hint="@string/description"
+                            android:paddingStart="10dp"
                             android:inputType="textMultiLine"
                             android:textColor="@color/black"
-                            android:textColorHint="#DEE5E9" />
+                            android:textColorHint="#DEE5E9"
+                            tools:ignore="RtlSymmetry" />
 
                         <TextView
                             android:id="@+id/textView10"
@@ -225,9 +223,9 @@
                             android:layout_height="wrap_content"
                             android:layout_marginHorizontal="10dp"
                             android:layout_marginTop="10dp"
-                            android:text="Maximum number of participants:"
+                            android:text="@string/maximum_number_of_participants"
                             android:textColor="@color/black"
-                            android:textSize="20dp" />
+                            android:textSize="20sp" />
 
                         <EditText
                             android:id="@+id/event_max_number_participants"
@@ -237,49 +235,46 @@
                             android:background="@drawable/edit_text_shape"
                             android:backgroundTint="@color/white"
                             android:ems="10"
-                            android:hint=" ex: 10"
+                            android:hint="@string/ex_10"
+                            android:paddingStart="10dp"
                             android:inputType="number"
                             android:textColor="@color/black"
-                            android:textColorHint="#DEE5E9" />
+                            android:textColorHint="#DEE5E9"
+                            tools:ignore="RtlSymmetry" />
 
-                        <TextView
-                            android:id="@+id/textView11"
+                        <Button
+                            android:id="@+id/import_picture_btn"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginHorizontal="10dp"
-                            android:layout_marginTop="10dp"
-                            android:text="Import Picture:"
-                            android:textColor="@color/black"
-                            android:textSize="20dp" />
-
-                        <androidx.appcompat.widget.AppCompatButton
-                            android:id="@+id/button"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="10dp"
-                            android:background="@drawable/rounded_button_shape"
-                            android:backgroundTint="#52A79E"
-                            android:text="Import Picture"
+                            android:elevation="5dp"
+                            android:layout_marginTop="20sp"
+                            app:cornerRadius="12dp"
+                            android:backgroundTint="@color/turquoise"
+                            android:visibility="visible"
+                            android:text="@string/import_picture"
                             android:textColor="@color/white"
-                            android:textSize="15dp" />
+                            android:textSize="15sp" />
 
                         <LinearLayout
                             android:id="@+id/LinearLayout02"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_alignParentBottom="true"
                             android:layout_marginTop="10dp"
                             android:background="@color/white">
 
                             <Button
-                                android:id="@+id/Button03"
-                                android:layout_width="55dp"
+                                android:id="@+id/create_activity_btn"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_margin="10dp"
                                 android:layout_weight="1"
-                                android:backgroundTint="#053F5C"
-                                android:text="+ Create Activity"
-                                android:textStyle="bold"></Button>
+                                app:cornerRadius="12dp"
+                                android:elevation="5dp"
+                                android:backgroundTint="@color/dark_blue"
+                                android:text="@string/create_activity"
+                                android:textStyle="bold" />
+
                         </LinearLayout>
 
                     </LinearLayout>
@@ -287,7 +282,7 @@
                 </LinearLayout>
 
             </LinearLayout>
+
         </ScrollView>
 
-    </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -45,7 +45,7 @@ class ActivitiesFragment : Fragment()
     {
         _binding = FragmentActivitiesBinding.inflate(inflater, container, false)
         val view = binding.root
-        val createActivityButton = view.activities_create_activity_button
+        val createActivityButton = view.create_activity_fab_btn
 
         createActivityButton?.setOnClickListener {
             val intent = Intent(this.activity, CreateActivity::class.java)

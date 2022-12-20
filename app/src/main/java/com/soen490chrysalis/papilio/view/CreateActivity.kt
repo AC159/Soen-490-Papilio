@@ -1,11 +1,11 @@
-package com.soen490chrysalis.papilio
+package com.soen490chrysalis.papilio.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import com.soen490chrysalis.papilio.databinding.ActivityCreateActivityBinding
 
-class create_activity : AppCompatActivity()
+class CreateActivity : AppCompatActivity()
 {
     private lateinit var binding : ActivityCreateActivityBinding
 

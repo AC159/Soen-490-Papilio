@@ -114,20 +114,16 @@
                             android:textColor="@color/black"
                             android:textSize="20sp" />
 
-                        <EditText
-                            android:id="@+id/event_date"
-                            android:layout_width="match_parent"
-                            android:layout_height="30dp"
-                            android:layout_marginHorizontal="10dp"
-                            android:background="@drawable/edit_text_shape"
-                            android:backgroundTint="@color/white"
-                            android:ems="10"
-                            android:hint="@string/dd_mm_yyyy"
-                            android:paddingStart="10dp"
-                            android:inputType="date"
-                            android:textColor="@color/black"
-                            android:textColorHint="#DEE5E9"
-                            tools:ignore="RtlSymmetry" />
+                        <TextView
+                            android:id="@+id/select_date_btn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:layout_marginStart="20dp"
+                            android:clickable="true"
+                            android:textColor="@color/dark_blue"
+                            android:text="@string/select_date"
+                            android:focusable="true" />
 
                         <LinearLayout
                             android:id="@+id/LinearLayout01"

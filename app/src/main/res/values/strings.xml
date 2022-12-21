@@ -137,4 +137,5 @@
     <string name="papilio_logo">Papilio logo</string>
     <string name="select_start_time">Select Start Time</string>
     <string name="select_end_time">Select End Time</string>
+    <string name="select_date">Select Date</string>
 </resources>

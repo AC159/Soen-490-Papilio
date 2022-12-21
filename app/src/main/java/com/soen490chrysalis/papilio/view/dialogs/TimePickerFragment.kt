@@ -2,7 +2,6 @@ package com.soen490chrysalis.papilio.view.dialogs
 
 import android.app.Dialog
 import android.app.TimePickerDialog
-import android.icu.util.Calendar
 import android.os.Bundle
 import android.text.format.DateFormat
 import android.util.Log
@@ -32,10 +31,5 @@ class TimePickerFragment(
         eventTime.hourOfDay = hourOfDay
         eventTime.minute = minute
         onTimeSetCallback(eventTime)
-    }
-
-    fun getTime() : EventTime
-    {
-        return eventTime
     }
 }

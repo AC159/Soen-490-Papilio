@@ -1,5 +1,6 @@
 package com.soen490chrysalis.papilio.view
 
+import android.icu.util.Calendar
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -10,6 +11,8 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.ViewModelProvider
 import com.soen490chrysalis.papilio.databinding.ActivityCreateActivityBinding
+import com.soen490chrysalis.papilio.view.dialogs.DatePickerFragment
+import com.soen490chrysalis.papilio.view.dialogs.EventDate
 import com.soen490chrysalis.papilio.view.dialogs.EventTime
 import com.soen490chrysalis.papilio.view.dialogs.TimePickerFragment
 import com.soen490chrysalis.papilio.viewModel.CreateActivityViewModel
@@ -24,6 +27,10 @@ class CreateActivity : AppCompatActivity()
     private var pictureURIs : List<Uri> = ArrayList()
     private var startTime : EventTime = EventTime(0, 0)
     private var endTime : EventTime = EventTime(0, 0)
+
+    private val c : Calendar = Calendar.getInstance()
+    private var activityDate =
+        EventDate(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH))
 
     override fun onCreate(savedInstanceState : Bundle?)
     {
@@ -50,6 +57,16 @@ class CreateActivity : AppCompatActivity()
         // Setup a listener on the create activity button
         binding.createActivityBtn.setOnClickListener {
             handleUserInputValidation()
+        }
+
+        binding.selectDateBtn.setOnClickListener {
+            val datePicker = DatePickerFragment(
+                ::activityDateCallback,
+                activityDate.year,
+                activityDate.month,
+                activityDate.day
+            )
+            datePicker.show(supportFragmentManager, "Select Activity Date")
         }
 
         binding.selectStartTimeBtn.setOnClickListener {
@@ -89,6 +106,13 @@ class CreateActivity : AppCompatActivity()
         }
     }
 
+    private fun activityDateCallback(date : EventDate)
+    {
+        activityDate = date
+        binding.selectDateBtn.text =
+            "${activityDate.month + 1}/${activityDate.day}/${activityDate.year}"
+    }
+
     private fun startTimeCallback(time : EventTime)
     {
         startTime = time
@@ -119,7 +143,6 @@ class CreateActivity : AppCompatActivity()
     {
         val activityTitle : String = binding.eventTitle.text.toString()
         val location : String = binding.eventLocation.text.toString()
-        val date : String = binding.eventDate.text.toString()
         val description : String = binding.eventDescription.text.toString()
         val maxNbrOfParticipants : String = binding.eventMaxNumberParticipants.text.toString()
 
@@ -133,12 +156,6 @@ class CreateActivity : AppCompatActivity()
         if (locationValidation != null)
         {
             binding.eventLocation.error = locationValidation
-        }
-
-        val dateValidation = createActivityViewModel.validateActivityDate(date)
-        if (dateValidation != null)
-        {
-            binding.eventDate.error = dateValidation
         }
 
         val descriptionValidation =

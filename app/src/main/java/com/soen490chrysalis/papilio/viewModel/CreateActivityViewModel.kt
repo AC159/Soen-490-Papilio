@@ -19,11 +19,6 @@ class CreateActivityViewModel : ViewModel()
         return null
     }
 
-    fun validateActivityDate(date : String) : String?
-    {
-        return null
-    }
-
     fun validateActivityDescription(description : String) : String?
     {
         if (description.length >= 15) return null

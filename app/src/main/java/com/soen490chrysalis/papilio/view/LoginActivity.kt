@@ -18,7 +18,7 @@ import com.soen490chrysalis.papilio.viewModel.LoginViewModel
 import com.soen490chrysalis.papilio.R
 import com.soen490chrysalis.papilio.databinding.ActivityLoginBinding
 import com.soen490chrysalis.papilio.viewModel.AuthResponse
-import com.soen490chrysalis.papilio.viewModel.LoginViewModelFactory
+import com.soen490chrysalis.papilio.viewModel.factories.LoginViewModelFactory
 
 
 class LoginActivity : AppCompatActivity()

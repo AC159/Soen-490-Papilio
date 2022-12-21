@@ -4,12 +4,17 @@ import android.icu.util.Calendar
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.OpenableColumns
+import android.text.SpannableString
+import android.text.SpannableStringBuilder
+import android.text.style.UnderlineSpan
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.snackbar.Snackbar
 import com.soen490chrysalis.papilio.databinding.ActivityCreateActivityBinding
 import com.soen490chrysalis.papilio.view.dialogs.DatePickerFragment
 import com.soen490chrysalis.papilio.view.dialogs.EventDate
@@ -85,13 +90,36 @@ class CreateActivity : AppCompatActivity()
             registerForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(5)) { uris ->
                 // Callback is invoked after the user selects media items or closes the
                 // photo picker.
-                pictureURIs = uris
-                if (uris.isNotEmpty())
+
+                if (uris.size > 5)
                 {
+                    // Display a snackbar to the user that up to 5 pictures are allowed to be selected
+                    // We need to make this check since not all phones support the photo picker
+                    Snackbar.make(
+                        binding.coordinatorLayoutCreateActivity,
+                        "You can select up to 5 pictures!",
+                        Snackbar.LENGTH_LONG
+                    ).show()
+                }
+                else if (uris.isNotEmpty())
+                {
+                    pictureURIs = uris
                     Log.d(logTag, "Photo picker: # of pictures selected: ${uris.size}")
                     Log.d(logTag, "Uris: $uris")
+                    val builder = SpannableStringBuilder()
+
+                    for (uri in pictureURIs)
+                    {
+                        val cursor = contentResolver.query(uri, null, null, null, null)
+                        val nameIndex = cursor?.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+                        cursor?.moveToFirst()
+                        val spannableString =
+                            SpannableString(nameIndex?.let { cursor.getString(it).toString() })
+                        spannableString.setSpan(UnderlineSpan(), 0, spannableString.length, 0)
+                        builder.append(spannableString).append("\n")
+                    }
                     binding.chosenFilesTv.visibility = View.VISIBLE
-                    binding.chosenFilesTv.text = "${uris.size} file(s) chosen"
+                    binding.chosenFilesTv.text = builder
                 }
                 else
                 {

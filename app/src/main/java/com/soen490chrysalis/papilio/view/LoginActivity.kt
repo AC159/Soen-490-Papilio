@@ -119,7 +119,7 @@ class LoginActivity : AppCompatActivity()
     // Utility function that displays a snackbar in case of errors
     private fun displaySnackBar(coordinatorLayout : CoordinatorLayout, errorMessage : String)
     {
-        binding.progressBarLogin.visibility = View.GONE // Hide snackbar in case of errors
+        binding.progressBarLogin.visibility = View.GONE // Hide progress bar in case of errors
         Snackbar.make(coordinatorLayout, errorMessage, Snackbar.LENGTH_LONG).show()
     }
 

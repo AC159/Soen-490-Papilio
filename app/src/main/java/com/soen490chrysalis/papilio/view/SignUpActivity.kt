@@ -161,7 +161,7 @@ class SignUpActivity : AppCompatActivity()
     // Utility function that displays a snackbar in case of errors
     private fun displaySnackBar(coordinatorLayout : CoordinatorLayout, errorMessage : String)
     {
-        binding.progressBarSignUp.visibility = View.GONE // Hide the snackbar if there is any error
+        binding.progressBarSignUp.visibility = View.GONE // Hide the progress bar if there is any error
         Snackbar.make(coordinatorLayout, errorMessage, Snackbar.LENGTH_LONG).show()
     }
 

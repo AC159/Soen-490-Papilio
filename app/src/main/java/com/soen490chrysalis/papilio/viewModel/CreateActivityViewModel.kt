@@ -2,7 +2,6 @@ package com.soen490chrysalis.papilio.viewModel
 
 import android.net.Uri
 import androidx.lifecycle.ViewModel
-import com.soen490chrysalis.papilio.view.dialogs.EventTime
 
 class CreateActivityViewModel : ViewModel()
 {
@@ -12,11 +11,6 @@ class CreateActivityViewModel : ViewModel()
     {
         if (title.length >= 3) return null
         return "Title must be at least 3 characters long!"
-    }
-
-    fun validateActivityLocation(location : String) : String?
-    {
-        return null
     }
 
     fun validateActivityDescription(description : String) : String?

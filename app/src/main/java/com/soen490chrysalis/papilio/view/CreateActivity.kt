@@ -170,7 +170,6 @@ class CreateActivity : AppCompatActivity()
     private fun handleUserInputValidation()
     {
         val activityTitle : String = binding.eventTitle.text.toString()
-        val location : String = binding.eventLocation.text.toString()
         val description : String = binding.eventDescription.text.toString()
         val maxNbrOfParticipants : String = binding.eventMaxNumberParticipants.text.toString()
 
@@ -178,12 +177,6 @@ class CreateActivity : AppCompatActivity()
         if (titleValidation != null)
         {
             binding.eventTitle.error = titleValidation
-        }
-
-        val locationValidation = createActivityViewModel.validateActivityLocation(location)
-        if (locationValidation != null)
-        {
-            binding.eventLocation.error = locationValidation
         }
 
         val descriptionValidation =

@@ -15,10 +15,25 @@ buildscript {
     }
 }
 
+def properties = new Properties()
+properties.load(rootProject.file('local.properties').newDataInputStream())
+def MAPBOX_SECRET_TOKEN = properties.getProperty('MAPBOX_SECRET_TOKEN')
+
 allprojects {
     repositories {
         google()
         mavenCentral()
+        maven {
+            url 'https://api.mapbox.com/downloads/v2/releases/maven'
+            authentication {
+                basic(BasicAuthentication)
+            }
+            credentials {
+                // The username should always be `mapbox`
+                username = "mapbox"
+                password = "$MAPBOX_SECRET_TOKEN"
+            }
+        }
     }
 }
 

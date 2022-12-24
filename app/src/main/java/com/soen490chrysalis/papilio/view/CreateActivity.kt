@@ -1,5 +1,7 @@
 package com.soen490chrysalis.papilio.view
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.icu.util.Calendar
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
@@ -11,10 +13,16 @@ import android.text.style.UnderlineSpan
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.widget.ArrayAdapter
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.core.widget.addTextChangedListener
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
+import com.mapbox.search.autofill.Query
 import com.soen490chrysalis.papilio.databinding.ActivityCreateActivityBinding
 import com.soen490chrysalis.papilio.view.dialogs.DatePickerFragment
 import com.soen490chrysalis.papilio.view.dialogs.EventDate
@@ -26,6 +34,7 @@ import com.soen490chrysalis.papilio.viewModel.factories.CreateActivityViewModelF
 class CreateActivity : AppCompatActivity()
 {
     private val logTag = CreateActivity::class.java.simpleName
+    private val PERMISSIONS_REQUEST_LOCATION = 0
     private lateinit var binding : ActivityCreateActivityBinding
     private lateinit var createActivityViewModel : CreateActivityViewModel
 
@@ -62,6 +71,7 @@ class CreateActivity : AppCompatActivity()
         // Setup a listener on the create activity button
         binding.createActivityBtn.setOnClickListener {
             handleUserInputValidation()
+            Log.d(logTag, "Final activity location is ${binding.eventLocation.text}")
         }
 
         binding.selectDateBtn.setOnClickListener {
@@ -132,6 +142,55 @@ class CreateActivity : AppCompatActivity()
             // Allow the user to only choose pictures and launch the photo picker
             pickMultipleMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
+
+        binding.eventLocation.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus && !isPermissionGranted(Manifest.permission.ACCESS_FINE_LOCATION))
+            {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                    ),
+                    PERMISSIONS_REQUEST_LOCATION
+                )
+            }
+        }
+
+        binding.eventLocation.addTextChangedListener {
+
+            val userAddress : String = binding.eventLocation.text.toString()
+
+            /* We will only ask mapbox to give us address suggestions once the user has put
+               enough text because otherwise the suggestions are not accurate and we are wasting
+               API calls
+            */
+            if (userAddress.length >= 15)
+            {
+                val query : Query? = Query.create(userAddress)
+
+                if (query != null)
+                {
+                    createActivityViewModel.getMapBoxAddressSuggestions(query)
+                }
+            }
+        }
+
+        createActivityViewModel.activityAddressSuggestions.observe(this, Observer<List<String>> {
+            val adapter : ArrayAdapter<String> =
+                ArrayAdapter(this, android.R.layout.select_dialog_item, it)
+
+            binding.eventLocation.setAdapter(adapter)
+            adapter.notifyDataSetChanged() // Force to show the dropdown of address suggestions
+        })
+    }
+
+    @Suppress("SameParameterValue")
+    private fun isPermissionGranted(permission : String) : Boolean
+    {
+        return ContextCompat.checkSelfPermission(
+            this, permission
+        ) == PackageManager.PERMISSION_GRANTED
     }
 
     private fun activityDateCallback(date : EventDate)

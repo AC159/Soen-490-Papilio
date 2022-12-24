@@ -138,4 +138,5 @@
     <string name="select_start_time">Select Start Time</string>
     <string name="select_end_time">Select End Time</string>
     <string name="select_date">Select Date</string>
+    <string name="MAPBOX_PUBLIC_ACCESS_TOKEN">pk.eyJ1IjoiYWMyMDAwIiwiYSI6ImNsYzEwdng2YzJpenEzdXBudDR2NWczNW0ifQ.20lZpfiX1vGKx1J8-dodqw</string>
 </resources>

@@ -98,6 +98,16 @@ class LoginViewModelTest
         assert(loginViewModel.getUser() is FirebaseUser)
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun getUserByFirebaseId() = runTest {
+        loginViewModel.getUserByFirebaseId()
+        advanceUntilIdle()
+        assert( loginViewModel.userObject.value != null )
+        assert(loginViewModel.userObject.value!!.requestIsFinished)
+        assert(loginViewModel.userObject.value!!.userObject!!.email == "validEmail@gmail.com")
+    }
+
     @Test
     fun validateFirstName()
     {

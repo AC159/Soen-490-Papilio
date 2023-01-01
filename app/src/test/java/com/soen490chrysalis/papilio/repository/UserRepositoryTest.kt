@@ -140,7 +140,8 @@ class UserRepositoryTest
             "1",
             null,
             "2022-11-14T02:07:02.585Z",
-            "2022-11-14T02:07:02.585Z"
+            "2022-11-14T02:07:02.585Z",
+            "Hello! It's me, firstName!"
         )
 
         val mockServerResponse = MockResponse().setResponseCode(200).setBody(

@@ -1,6 +1,7 @@
 package com.soen490chrysalis.papilio.services.network.requests
 
 import com.squareup.moshi.Json
+import org.json.JSONObject
 
 /*
     File that will hold all the data classes for request objects
@@ -22,3 +23,15 @@ data class UserRequest(
     val user : User
 )
 
+data class Identifier(
+    @Json(name = "firebase_id")
+    val firebaseId: String
+)
+
+data class UserUpdate(
+    @Json(name = "identifier")
+    val identifier : Identifier,
+
+    @Json(name = "update")
+    val update: Map<String, kotlin.Any>
+)

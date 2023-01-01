@@ -2,17 +2,31 @@ package com.soen490chrysalis.papilio.view
 
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.firebase.auth.FirebaseAuth
 import com.soen490chrysalis.papilio.*
 import com.soen490chrysalis.papilio.databinding.ActivityUserProfileBinding
+import com.soen490chrysalis.papilio.repository.users.IUserRepository
+import com.soen490chrysalis.papilio.repository.users.UserRepository
+import com.soen490chrysalis.papilio.services.network.UserApi
+import com.soen490chrysalis.papilio.viewModel.LoginViewModel
+import com.soen490chrysalis.papilio.viewModel.LoginViewModelFactory
+import com.soen490chrysalis.papilio.viewModel.UserProfileViewModel
 
 
 class UserProfileActivity : AppCompatActivity()
 {
     private lateinit var binding : ActivityUserProfileBinding
+    private lateinit var userProfileViewModel : UserProfileViewModel
+    private var isEditing : Boolean = false
+    private var editedFields : MutableMap<String, kotlin.Any> = mutableMapOf<String, kotlin.Any>()
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
@@ -20,6 +34,12 @@ class UserProfileActivity : AppCompatActivity()
         binding = ActivityUserProfileBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+
+        val userRepository : IUserRepository =
+            UserRepository(FirebaseAuth.getInstance(), userService = UserApi.retrofitService)
+
+        userProfileViewModel = UserProfileViewModel(userRepository);
+        userProfileViewModel.getUserByFirebaseId()
 
         // Get the last signed in Google account so we can check if the user logged in with Google or through normal log in
         val acct = GoogleSignIn.getLastSignedInAccount(this)
@@ -47,17 +67,31 @@ class UserProfileActivity : AppCompatActivity()
             // Also display the full name and email from the user's Google account on the profile
             binding.userProfileName.setText(acct.displayName)
             binding.userProfileEmail.setText("Email: "+acct.email)
+
+            userProfileViewModel.userObject.observe(this, Observer {
+                binding.userProfileBio.setText(userProfileViewModel.userObject.value?.userObject?.bio)
+                binding.userProfileBioEdit.setText(userProfileViewModel.userObject.value?.userObject?.bio)
+            })
+
         }
         else // If the google account does not exist, then it means the user logged in with their firebase account
         {
             // Get the firebase user from FireBaseAuth
             val user = FirebaseAuth.getInstance().currentUser
             user?.let{
-
                 // Set the full name, email on the profile from the firebase account, and show the placeholder pfp as the pfp
+
+
+
                 binding.userProfileName.setText(user.displayName)
                 binding.userProfileEmail.setText("Email: " + user.email)
                 binding.userProfilePicture.setImageResource(R.drawable.user_pfp_example)
+
+                userProfileViewModel.userObject.observe(this, Observer {
+                    binding.userProfileBio.setText(userProfileViewModel.userObject.value?.userObject?.bio)
+                    binding.userProfileBioEdit.setText(userProfileViewModel.userObject.value?.userObject?.bio)
+                })
+
             }
 
         }
@@ -71,6 +105,40 @@ class UserProfileActivity : AppCompatActivity()
             actionBar.setDisplayHomeAsUpEnabled(true)
             actionBar.title = "User Profile"
         }
+
+        binding.editProfileButton.setOnClickListener{
+            if(!isEditing)
+            {
+                binding.editProfileButton.text="Save Changes"
+                binding.userProfileBioEdit.visibility = View.VISIBLE
+                binding.userProfileBio.visibility = View.GONE
+
+                isEditing = true
+            }
+            else {
+
+                if (this.currentFocus != null) {
+                    val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                    inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0)
+                }
+                binding.userProfileBioEdit.visibility = View.GONE
+                binding.userProfileBio.visibility = View.VISIBLE
+                binding.editProfileButton.text="Edit Profile"
+
+                isEditing = false
+
+                if(binding.userProfileBio.text != binding.userProfileBioEdit.text)
+                {
+                    editedFields.put("bio", binding.userProfileBioEdit.text.toString())
+                }
+
+                if(!editedFields.isEmpty())
+                {
+                    userProfileViewModel.updateUserProfile(editedFields)
+                    editedFields.clear()
+                }
+            }
+        }
     }
 
     // This is the function that's called when the back button on the action bar is pressed
@@ -82,5 +150,11 @@ class UserProfileActivity : AppCompatActivity()
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    fun EditText.hideKeyboard() {
+        clearFocus()
+        val imm = context.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(getWindowToken(), 0)
     }
 }

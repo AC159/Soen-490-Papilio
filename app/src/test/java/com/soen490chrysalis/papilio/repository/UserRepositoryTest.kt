@@ -95,7 +95,7 @@ class UserRepositoryTest
 
         println("Instantiated mockRetrofitUserService!")
 
-        // Important to initialize the user rempository here since the mockRetrofitUserService needs to be create beforehand
+        // Important to initialize the user repository here since the mockRetrofitUserService needs to be create beforehand
         userRepository = Mockito.spy(UserRepository(mockFirebaseAuth, mockRetrofitUserService))
         userRepository.initialize(mockGoogleSignInClient) // this line is just to get more test coverage
 
@@ -128,7 +128,6 @@ class UserRepositoryTest
     fun getUserByFirebaseId() = runTest {
         // Test the route with a firebase id of null
         var response = userRepository.getUserByFirebaseId()
-        println("Response: $response")
         assert(response == null)
 
         // Let's test the route with a valid firebase id
@@ -155,7 +154,8 @@ class UserRepositoryTest
                     "        \"phone\": null,\n" +
                     "        \"email\": \"validEmail@gmail.com\",\n" +
                     "        \"createdAt\": \"2022-11-14T02:07:02.585Z\",\n" +
-                    "        \"updatedAt\": \"2022-11-14T02:07:02.585Z\"\n" +
+                    "        \"updatedAt\": \"2022-11-14T02:07:02.585Z\",\n" +
+                    "        \"bio\": \"Hello! It's me, firstName!\"\n" +
                     "    }\n" +
                     "}"
         )

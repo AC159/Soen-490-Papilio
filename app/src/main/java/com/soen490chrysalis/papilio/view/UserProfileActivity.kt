@@ -137,7 +137,7 @@ class UserProfileActivity : AppCompatActivity()
                 binding.userProfileBioEdit.visibility = View.VISIBLE
                 binding.userProfilePhoneEditButton.visibility = View.VISIBLE
                 binding.userProfileBio.visibility = View.GONE
-                binding.userProfilePicture.setImageResource(R.drawable.user_pfp_example_editing)
+                binding.userProfilePicture.setImageResource(R.drawable.user_pfp_example)
 
                 if(!isGoogleAccount) // only display the "Change Password" button if the current account is a Google account and not just a database/Firebase account.
                 {

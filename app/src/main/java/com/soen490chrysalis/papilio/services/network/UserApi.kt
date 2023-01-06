@@ -53,8 +53,7 @@ interface IUserApiService
 
     @PUT("updateUserProfile")
     suspend fun updateUser(
-        @Body user : UserUpdate,
-
+        @Body user : UserUpdate
     ) : Response<Void>
 }
 

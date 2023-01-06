@@ -8,7 +8,6 @@ import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.soen490chrysalis.papilio.repository.users.IUserRepository
 import kotlinx.coroutines.launch
-import java.util.regex.Pattern
 
 class UserProfileViewModel(private val userRepository : IUserRepository) : ViewModel()
 {
@@ -40,6 +39,7 @@ class UserProfileViewModel(private val userRepository : IUserRepository) : ViewM
 
         viewModelScope.launch {
             val userResponse = userRepository.updateUser(editedFields)
+            Log.d("userResponse: updateUser ->", userResponse.message())
 
             val afterUpdateResponse = userRepository.getUserByFirebaseId()
 
@@ -47,56 +47,6 @@ class UserProfileViewModel(private val userRepository : IUserRepository) : ViewM
 
             editedFields.clear()
         }
-    }
-
-    fun validatePhoneNumber(number : String): String?
-    {
-        if(number.length < 10)
-        {
-            return "Please enter a valid phone number (10 digits)"
-        }
-
-        return null
-    }
-
-    fun validateCountryCode(number : String): String?
-    {
-        if(number.length > 5 || number.isEmpty())
-        {
-            return "Please enter a valid country code (without the plus sign)"
-        }
-
-        return null
-    }
-
-    fun validatePassword(password : String) : String?
-    {
-        val passwordREGEX = Pattern.compile(
-            "^" +
-                    "(?=.*[0-9])" +         // at least 1 digit
-                    "(?=.*[a-z])" +         // at least 1 lower case letter
-                    "(?=.*[A-Z])" +         // at least 1 upper case letter
-                    "(?=.*[a-zA-Z])" +      // any letter
-                    "(?=.*[!@#$%^&*()_+])" +// at least 1 special character
-                    "(?=\\S+$)" +           // no white spaces
-                    ".{6,}" +               // at least 6 characters
-                    "$"
-        )
-
-        if (password.length in 6..20 && passwordREGEX.matcher(password).matches())
-        {
-            return null
-        }
-        return "Password must contain at least 1 digit, 1 lowercase character, " +
-                "1 uppercase character, 1 special character, no white spaces & a minimum of 6 characters!"
-    }
-
-    fun confirmPassword(password : String, password2 : String) : String?
-    {
-        if(password == password2)
-            return null
-        else
-            return "Make sure passwords match!"
     }
 
     fun changeUserPassword(oldPassword : String, newPassword : String)

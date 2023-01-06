@@ -8,6 +8,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
+import android.text.InputFilter
 import android.text.InputType
 import android.view.MenuItem
 import android.view.View
@@ -15,6 +16,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -22,96 +24,96 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.soen490chrysalis.papilio.*
 import com.soen490chrysalis.papilio.databinding.ActivityUserProfileBinding
-import com.soen490chrysalis.papilio.repository.users.IUserRepository
-import com.soen490chrysalis.papilio.repository.users.UserRepository
-import com.soen490chrysalis.papilio.services.network.UserApi
 import com.soen490chrysalis.papilio.viewModel.UserProfileViewModel
+import com.soen490chrysalis.papilio.viewModel.UserProfileViewModelFactory
+import com.soen490chrysalis.papilio.utility.UtilityFunctions
 
 
-class UserProfileActivity : AppCompatActivity()
-{
-    private lateinit var binding : ActivityUserProfileBinding
-    private lateinit var userProfileViewModel : UserProfileViewModel
-    private var isEditing : Boolean = false
-    private var isGoogleAccount : Boolean = false
+class UserProfileActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityUserProfileBinding
+    private lateinit var userProfileViewModel: UserProfileViewModel
+    private var isEditing: Boolean = false
+    private var isGoogleAccount: Boolean = false
 
 
-    override fun onCreate(savedInstanceState: Bundle?)
-    {
+    override fun onCreate(savedInstanceState: Bundle?) {
         //Get the binding for the User Profile Activity
         binding = ActivityUserProfileBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
 
-        val userRepository : IUserRepository =
-            UserRepository(FirebaseAuth.getInstance(), userService = UserApi.retrofitService)
-
-        userProfileViewModel = UserProfileViewModel(userRepository);
+        val userProfileFactory = UserProfileViewModelFactory()
+        userProfileViewModel =
+            ViewModelProvider(this, userProfileFactory)[UserProfileViewModel::class.java]
         userProfileViewModel.getUserByFirebaseId()
 
-        // Get the last signed in Google account so we can check if the user logged in with Google or through normal log in
-        val acct = GoogleSignIn.getLastSignedInAccount(this)
+        // Get the providerID from the firebase user object so we can check if the user logged in with Google or via email/password
+        val user = FirebaseAuth.getInstance().currentUser
 
         // If the Google account exists (which means the user used Google to log in / sign up
-        if(acct != null)
-        {
-            isGoogleAccount = true
+        if (user?.providerId == "google.com") {
+            // Need this to access the profile pic url for the user's Google account
+            val acct = GoogleSignIn.getLastSignedInAccount(this)
 
             // Get the photoUrl of the google profile picture of your Google account
-            var googleProfilePicture = acct.photoUrl
+            var googleProfilePicture = acct?.photoUrl
 
             // if the user's google profile picture exists then display it on the user profile activity
-            if(googleProfilePicture == null)
-            {
+            if (googleProfilePicture == null) {
                 binding.userProfilePicture.setImageResource(R.drawable.user_pfp_example)
-            }
-            else // If the user's google profile picture does not exist, then display just the placeholder image on the profile
+            } else // If the user's google profile picture does not exist, then display just the placeholder image on the profile
             {
                 // Here we use the Glide library to import the pfp from the google account of the logged in user
                 Glide.with(this)
-                    .load(acct.photoUrl)
+                    .load(acct?.photoUrl)
                     .circleCrop()
                     .into(binding.userProfilePicture)
             }
 
             // Also display the full name and email from the user's Google account on the profile
-            binding.userProfileName.setText(acct.displayName)
-            binding.userProfileEmail.setText("Email: "+acct.email)
+            binding.userProfileName.text = user.displayName
+            binding.userProfileEmail.text = "Email: " + user.email
 
             userProfileViewModel.userObject.observe(this, Observer {
-                binding.userProfileBio.setText(userProfileViewModel.userObject.value?.userObject?.bio)
+                binding.userProfileBio.text = userProfileViewModel.userObject.value?.userObject?.bio
                 binding.userProfileBioEdit.setText(userProfileViewModel.userObject.value?.userObject?.bio)
-                binding.userProfilePhone.setText("Phone: +"
-                        + userProfileViewModel.userObject.value?.userObject?.countryCode
-                        + " "
-                        + userProfileViewModel.userObject.value?.userObject?.phone)
+                val countryCode = userProfileViewModel.userObject.value?.userObject?.countryCode
+                val phone = userProfileViewModel.userObject.value?.userObject?.phone
+
+                if (phone != null) {
+                    binding.userProfileAddPhoneButton.visibility = View.GONE
+                    binding.userProfilePhoneLayout.visibility = View.VISIBLE
+                    binding.userProfilePhone.text = ("Phone: +"
+                            + countryCode
+                            + " "
+                            + phone)
+                }
             })
 
-        }
-        else // If the google account does not exist, then it means the user logged in with their firebase account
+        } else // If the google account does not exist, then it means the user logged in with their firebase account
         {
             // Get the firebase user from FireBaseAuth
             val user = FirebaseAuth.getInstance().currentUser
-            user?.let{
+            user?.let {
 
                 // Set the full name, email on the profile from the firebase account, and show the placeholder pfp as the pfp
 
-                binding.userProfileName.setText(user.displayName)
-                binding.userProfileEmail.setText("Email: " + user.email)
+                binding.userProfileName.text = user.displayName
+                binding.userProfileEmail.text = "Email: " + user.email
                 binding.userProfilePicture.setImageResource(R.drawable.user_pfp_example)
 
                 userProfileViewModel.userObject.observe(this, Observer {
-                    binding.userProfileBio.setText(userProfileViewModel.userObject.value?.userObject?.bio)
+                    binding.userProfileBio.text =
+                        userProfileViewModel.userObject.value?.userObject?.bio
                     binding.userProfileBioEdit.setText(userProfileViewModel.userObject.value?.userObject?.bio)
 
-                    var countryCode = userProfileViewModel.userObject.value?.userObject?.countryCode
-                    var phone = userProfileViewModel.userObject.value?.userObject?.phone
+                    val countryCode = userProfileViewModel.userObject.value?.userObject?.countryCode
+                    val phone = userProfileViewModel.userObject.value?.userObject?.phone
 
-                    if(phone != null)
-                    {
+                    if (phone != null) {
                         binding.userProfileAddPhoneButton.visibility = View.GONE
                         binding.userProfilePhoneLayout.visibility = View.VISIBLE
-                        binding.userProfilePhone.setText("Phone: +"
+                        binding.userProfilePhone.text = ("Phone: +"
                                 + countryCode
                                 + " "
                                 + phone)
@@ -125,43 +127,40 @@ class UserProfileActivity : AppCompatActivity()
         super.onCreate(savedInstanceState)
 
         // if Action Bar is not null, then put a back button on it as well as put the "User Profile" title on it
-        if(actionBar != null) {
+        if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true)
             actionBar.title = "User Profile"
         }
 
         // listener for the "Edit Profile" button on the user profile page.
-        binding.editProfileButton.setOnClickListener{
-            if(!isEditing) // if we are not already in editing mode, change the text of the button and make all editable fields visible and available for editing
+        binding.editProfileButton.setOnClickListener {
+            if (!isEditing) // if we are not already in editing mode, change the text of the button and make all editable fields visible and available for editing
             {
-                binding.editProfileButton.text="Save Changes"
+                binding.editProfileButton.text = "Save Changes"
                 binding.userProfileBioEdit.visibility = View.VISIBLE
                 binding.userProfilePhoneEditButton.visibility = View.VISIBLE
                 binding.userProfileBio.visibility = View.GONE
                 binding.userProfilePicture.setImageResource(R.drawable.user_pfp_example)
 
-                if(!isGoogleAccount) // only display the "Change Password" button if the current account is a Google account and not just a database/Firebase account.
-                {
+                // only display the "Change Password" button if the current account is not a Google account.
+                if (FirebaseAuth.getInstance().currentUser?.providerId != "google.com") {
                     binding.userProfilePasswordButton.visibility = View.VISIBLE
                 }
 
                 isEditing = true // now we are in editing mode
-            }
-            else { // if we are already in editing mode, then save the changes made by the user to their profile, and call the viewmodel function that sends this info through a PUT request
-
-                val error : String? = null
+            } else { // if we are already in editing mode, then save the changes made by the user to their profile, and call the viewmodel function that sends this info through a PUT request
 
                 if (this.currentFocus != null) {
-                    val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                    val inputMethodManager =
+                        getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
                     inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0)
                 }
                 binding.userProfileBioEdit.visibility = View.GONE
                 binding.userProfileBio.visibility = View.VISIBLE
-                binding.editProfileButton.text="Edit Profile"
+                binding.editProfileButton.text = "Edit Profile"
                 binding.userProfilePicture.setImageResource(R.drawable.user_pfp_example)
 
-                if(!isGoogleAccount)
-                {
+                if (user?.providerId != "google.com") {
                     binding.userProfilePasswordButton.visibility = View.GONE
                 }
 
@@ -169,103 +168,75 @@ class UserProfileActivity : AppCompatActivity()
 
                 // The following if-statements are all about adding the edited fields to a map in the view model
 
-                if(binding.userProfileBio.text != binding.userProfileBioEdit.text)
-                {
-                    userProfileViewModel.addEditedField("bio", binding.userProfileBioEdit.text.toString())
+                if (binding.userProfileBio.text != binding.userProfileBioEdit.text) {
+                    userProfileViewModel.addEditedField(
+                        "bio",
+                        binding.userProfileBioEdit.text.toString()
+                    )
                 }
 
-
                 // If at least one field was edited by the user, then send the PUT request to the backend so that the user's changes can be saved
-                if(!userProfileViewModel.isEditedFieldsEmpty())
-                {
+                if (!userProfileViewModel.isEditedFieldsEmpty()) {
                     userProfileViewModel.updateUserProfile()
                 }
             }
         }
 
-        binding.userProfilePasswordButton.setOnClickListener{
-            val builder = AlertDialog.Builder(this)
-            builder.setTitle("Change Password")
+        binding.userProfilePasswordButton.setOnClickListener {
 
-            val passwordInput1 = EditText(this)
-            passwordInput1.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-            passwordInput1.hint = "Enter Current Password"
+            val currentPasswordInput = EditText(this)
+            currentPasswordInput.inputType =
+                InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+            currentPasswordInput.hint = "Enter Current Password"
 
-            val passwordInput2 = EditText(this)
-            passwordInput2.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-            passwordInput2.hint = "Enter New Password"
+            val newPasswordInput = EditText(this)
+            newPasswordInput.inputType =
+                InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+            newPasswordInput.hint = "Enter New Password"
 
-            val passwordInput3 = EditText(this)
-            passwordInput3.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-            passwordInput3.hint = "Confirm New Password"
+            val newPasswordConfirmInput = EditText(this)
+            newPasswordConfirmInput.inputType =
+                InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+            newPasswordConfirmInput.hint = "Confirm New Password"
 
             val messageText = TextView(this)
             messageText.setTextColor(Color.RED)
 
-            val layout = LinearLayout(this)
-
-            val params = LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT
+            val layout = LinearLayoutCreator(
+                arrayOf(
+                    currentPasswordInput,
+                    newPasswordInput,
+                    newPasswordConfirmInput,
+                    messageText
+                )
             )
-
-            layout.orientation = LinearLayout.VERTICAL
-            layout.setPadding(50, 75, 50, 75)
-            layout.layoutParams = params
-
-            layout.addView(passwordInput1)
-            layout.addView(passwordInput2)
-            layout.addView(passwordInput3)
-            layout.addView(messageText)
-
-
-            builder.setView(layout)
-
-            builder.setPositiveButton(
-                "Save",
-                DialogInterface.OnClickListener { dialog_ : DialogInterface, _ : Int ->
-
-                })
-
-            builder.setNegativeButton(
-                "Cancel",
-                DialogInterface.OnClickListener { dialog : DialogInterface, _ : Int ->
-                    run {
-                        // When the "Accept button is pressed, simply dismiss the dialog
-                        dialog.dismiss()
-                    }
-                })
+            val builder = DialogBuilderCreator("Change Password", layout)
 
             val dialog = builder.create()
-
             dialog.show()
 
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(View.OnClickListener {
 
                 var closeDialog = false
 
+                var passwordQualityCheck: String? =
+                    UtilityFunctions.validatePassword(newPasswordInput.text.toString())
+                var passwordEqualityCheck: String? = UtilityFunctions.confirmPassword(
+                    newPasswordInput.text.toString(),
+                    newPasswordConfirmInput.text.toString()
+                )
 
-                var validationError : String? = null
-                var confirmationError : String? = null
-
-                validationError = userProfileViewModel.validatePassword(passwordInput2.text.toString())
-                confirmationError = userProfileViewModel.confirmPassword(passwordInput2.text.toString(), passwordInput3.text.toString())
-
-                if(validationError != null)
-                {
-                    messageText.setText(validationError)
-                }
-                else if (confirmationError != null)
-                {
-                    messageText.setText(confirmationError)
-                }
-                else if(passwordInput1.text == null)
-                {
-                    messageText.setText("Please enter current password")
-                }
-                else
-                {
-                    userProfileViewModel.changeUserPassword(passwordInput1.text.toString(), passwordInput3.text.toString())
+                if (passwordQualityCheck != null) {
+                    messageText.text = passwordQualityCheck
+                } else if (passwordEqualityCheck != null) {
+                    messageText.text = passwordEqualityCheck
+                } else if (currentPasswordInput.text == null) {
+                    messageText.text = "Please enter current password"
+                } else {
+                    userProfileViewModel.changeUserPassword(
+                        currentPasswordInput.text.toString(),
+                        newPasswordConfirmInput.text.toString()
+                    )
                     closeDialog = true
                 }
 
@@ -274,84 +245,58 @@ class UserProfileActivity : AppCompatActivity()
 
         }
 
-        binding.userProfileAddPhoneButton.setOnClickListener{
-            val builder = AlertDialog.Builder(this)
-            builder.setTitle("Change Password")
-
+        val addPhoneNumberFunction = View.OnClickListener {
             val countryCodeInput = EditText(this)
             countryCodeInput.inputType = InputType.TYPE_CLASS_NUMBER
+            countryCodeInput.filters = arrayOf(InputFilter.LengthFilter(5))
+            countryCodeInput.hint = "Enter Country Code"
 
             val phoneInput = EditText(this)
             phoneInput.inputType = InputType.TYPE_CLASS_PHONE
+            phoneInput.filters = arrayOf(InputFilter.LengthFilter(10))
+            phoneInput.hint = "Enter 10-digit phone number"
 
             val messageText = TextView(this)
             messageText.setTextColor(Color.RED)
 
-            val layout = LinearLayout(this)
-
-            val params = LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT
-            )
-
-            layout.orientation = LinearLayout.VERTICAL
-            layout.setPadding(50, 75, 50, 75)
-            layout.layoutParams = params
-
-            layout.addView(countryCodeInput)
-            layout.addView(phoneInput)
-            layout.addView(messageText)
-
+            val layout = LinearLayoutCreator(arrayOf(countryCodeInput, phoneInput, messageText))
+            val builder = DialogBuilderCreator("Add Phone Number", layout)
             builder.setView(layout)
 
-            builder.setPositiveButton(
-                "Save",
-                DialogInterface.OnClickListener { dialog_ : DialogInterface, _ : Int ->
-
-                })
-
-            builder.setNegativeButton(
-                "Cancel",
-                DialogInterface.OnClickListener { dialog_ : DialogInterface, _ : Int ->
-                    run {
-                        // When the "Accept button is pressed, simply dismiss the dialog
-                        dialog_.dismiss()
-                    }
-                })
-
             val dialog = builder.create()
-
             dialog.show()
 
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(View.OnClickListener {
 
                 var closeDialog = false
 
-                val validationError1 = userProfileViewModel.validateCountryCode(countryCodeInput.text.toString())
-                val validationError2 = userProfileViewModel.validatePhoneNumber(phoneInput.text.toString())
+                val countryCodeValidationCheck =
+                    UtilityFunctions.validateCountryCode(countryCodeInput.text.toString())
+                val phoneNumberValidationCheck =
+                    UtilityFunctions.validatePhoneNumber(phoneInput.text.toString())
 
-                if(validationError1 != null)
-                {
-                    messageText.setText(validationError1)
-                }
-                else if (validationError2 != null)
-                {
-                    messageText.setText(validationError2)
-                }
-                else
-                {
-                    userProfileViewModel.addEditedField("countryCode", countryCodeInput.text.toString())
+                if (countryCodeValidationCheck != null) {
+                    messageText.setText(countryCodeValidationCheck)
+                } else if (phoneNumberValidationCheck != null) {
+                    messageText.setText(phoneNumberValidationCheck)
+                } else {
+                    userProfileViewModel.addEditedField(
+                        "countryCode",
+                        countryCodeInput.text.toString()
+                    )
                     userProfileViewModel.addEditedField("phone", phoneInput.text.toString())
                     closeDialog = true
                 }
 
                 if (closeDialog) dialog.dismiss()
             })
-
         }
 
-        binding.userProfilePicture.setOnClickListener{
-            if(isEditing) // if we are not already in editing mode, change the text of the button and make all editable fields visible and available for editing
+        binding.userProfileAddPhoneButton.setOnClickListener(addPhoneNumberFunction)
+        binding.userProfilePhoneEditButton.setOnClickListener(addPhoneNumberFunction)
+
+        binding.userProfilePicture.setOnClickListener {
+            if (isEditing && user?.providerId != "google.com") // if we are not already in editing mode, change the text of the button and make all editable fields visible and available for editing
             {
                 ImagePicker.with(this)
                     .crop()
@@ -362,36 +307,52 @@ class UserProfileActivity : AppCompatActivity()
         }
 
         userProfileViewModel.passwordChangeResult.observe(this, Observer {
-            if(userProfileViewModel.passwordChangeResult.value != null)
-            {
+            if (userProfileViewModel.passwordChangeResult.value != null) {
                 val coordinatorLayout = binding.relativeLayoutUserProfile
-                displaySnackBar(coordinatorLayout, userProfileViewModel.passwordChangeResult.value.toString())
+                displaySnackBar(
+                    coordinatorLayout,
+                    userProfileViewModel.passwordChangeResult.value.toString()
+                )
             }
         })
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK) {
-            //Image Uri will not be null for RESULT_OK
-            val uri: Uri = data?.data!!
 
-            // Use Uri object instead of File to avoid storage permissions
+        val rootLayout = binding.relativeLayoutUserProfile
+
+        if (resultCode == Activity.RESULT_OK) {
+
+            val uri: Uri = data?.data!!
 
             Glide.with(this)
                 .load(uri)
                 .circleCrop()
                 .into(binding.userProfilePicture)
+
+            displaySnackBar(
+                rootLayout,
+                "Profile Picture Successfully Changed!"
+            )
+
         } else if (resultCode == ImagePicker.RESULT_ERROR) {
-            Toast.makeText(this, ImagePicker.getError(data), Toast.LENGTH_SHORT).show()
+
+            displaySnackBar(
+                rootLayout,
+                ImagePicker.getError(data)
+            )
         } else {
-            Toast.makeText(this, "Task Cancelled", Toast.LENGTH_SHORT).show()
+
+            displaySnackBar(
+                rootLayout,
+                "Cancelled"
+            )
         }
     }
 
     // Utility function that displays a snackbar in case of errors
-    private fun displaySnackBar(coordinatorLayout : RelativeLayout, errorMessage : String)
-    {
+    private fun displaySnackBar(coordinatorLayout: RelativeLayout, errorMessage: String) {
         Snackbar.make(coordinatorLayout, errorMessage, Snackbar.LENGTH_LONG).show()
     }
 
@@ -406,9 +367,48 @@ class UserProfileActivity : AppCompatActivity()
         return super.onOptionsItemSelected(item)
     }
 
-    fun EditText.hideKeyboard() {
-        clearFocus()
-        val imm = context.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(getWindowToken(), 0)
+    fun LinearLayoutCreator(viewsToAdd: Array<View>): LinearLayout {
+        val params = LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.MATCH_PARENT
+        )
+
+        val subViewParams = LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+
+        val newLayout = LinearLayout(this)
+        newLayout.layoutParams = params
+        for (view in viewsToAdd) {
+            view.layoutParams = subViewParams
+            newLayout.addView(view)
+        }
+        newLayout.orientation = LinearLayout.VERTICAL
+        newLayout.setPadding(50, 75, 50, 75)
+
+        return newLayout
+    }
+
+    fun DialogBuilderCreator(title: String, layout: LinearLayout): AlertDialog.Builder {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle(title)
+        builder.setView(layout)
+        builder.setPositiveButton(
+            "Save",
+            DialogInterface.OnClickListener { dialog_: DialogInterface, _: Int ->
+
+            })
+
+        builder.setNegativeButton(
+            "Cancel",
+            DialogInterface.OnClickListener { dialog: DialogInterface, _: Int ->
+                run {
+                    // When the "Accept button is pressed, simply dismiss the dialog
+                    dialog.dismiss()
+                }
+            })
+
+        return builder
     }
 }

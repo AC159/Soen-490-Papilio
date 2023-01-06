@@ -1,7 +1,6 @@
 package com.soen490chrysalis.papilio.services.network.requests
 
 import com.squareup.moshi.Json
-import org.json.JSONObject
 
 /*
     File that will hold all the data classes for request objects

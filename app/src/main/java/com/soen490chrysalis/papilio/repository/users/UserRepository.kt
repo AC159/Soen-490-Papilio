@@ -118,7 +118,7 @@ class UserRepository(
        Utility function that makes a request to the backend to update a user.
 
        The key (and only) argument for this function is "variableMap", which is a MutableMap object that contains a map of all the
-       edited fields in the user profile page. In short, all fields that the user changed in the user profile get updated in one single put request
+       edited fields in the user profile page. In short, all fields that the user changed in the user profile get updated in one single PUT request
        and all the edited fields are kept in the aforementioned MutableMap, which gets sent along with the PUT request as the Body of the request.
 
        Author: Anas Peerzada
@@ -128,13 +128,15 @@ class UserRepository(
         variableMap : Map<String, kotlin.Any>
     ) : Response<Void>
     {
+        return withContext(coroutineDispatcher)
+        {
+            val firebaseId = firebaseAuth.currentUser!!.uid
 
-        val firebaseId = firebaseAuth.currentUser!!.uid
+            val response = userService.updateUser(UserUpdate(Identifier(firebaseId), variableMap))
 
-        val response = userService.updateUser(UserUpdate(Identifier(firebaseId), variableMap))
-
-        Log.d(logTag, "Update user: $response")
-        return response
+            Log.d(logTag, "Update user: $response")
+            return@withContext response
+        }
     }
 
     override suspend fun firebaseAuthWithGoogle(idToken : String) : Pair<Boolean, String>

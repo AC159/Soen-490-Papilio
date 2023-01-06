@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/relative_layout_user_profile">
 
     <include
         android:id="@+id/layout"
@@ -37,7 +38,6 @@
                         android:foregroundGravity="center_horizontal"
                         android:src="@drawable/user_pfp_example">
                     </ImageView>
-
 
                 <TextView
                     android:id="@+id/user_profile_name"
@@ -86,6 +86,7 @@
                     android:inputType="text"
                     android:visibility="gone"
                     android:textAlignment="center"
+                    android:maxLength="50"
                     />
 
                 <LinearLayout
@@ -185,18 +186,18 @@
 
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
-                    android:layout_height="130dp"
+                    android:layout_height="135dp"
                     app:strokeColor="#52A89F"
                     app:strokeWidth="3dp"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
-                    app:cardCornerRadius="30dp"
+                    app:cardCornerRadius="15dp"
                     >
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical"
-                        android:layout_gravity="bottom"
+                        android:layout_gravity="center_horizontal"
                         android:paddingLeft="15dp"
                         android:paddingTop="5dp"
                         android:paddingRight="15dp"
@@ -205,10 +206,11 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Personal Information:"
-                            android:textColor="#000"
+                            android:text="Personal Information"
+                            android:textAlignment="center"
+                            android:textColor="#458c85"
                             android:textSize="18dp"
-                            android:layout_margin="10dp">
+                            android:layout_margin="5dp">
                         </TextView>
 
                         <TextView
@@ -217,9 +219,61 @@
                             android:id="@+id/user_profile_email"
                             android:text="Email: john.doe@email.ca"
                             android:textColor="#000"
-                            android:textSize="16sp"
-                            android:layout_marginStart="20dp">
+                            android:textAlignment="center"
+                            android:textSize="16sp">
                         </TextView>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:orientation="horizontal"
+                            android:id="@+id/user_profile_phone_layout"
+                            android:visibility="gone"
+                            >
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/user_profile_phone"
+                                android:layout_gravity="center_vertical"
+                                android:text="Phone: +14384532313"
+                                android:textColor="#000"
+                                android:textSize="16sp">
+                            </TextView>
+
+                            <ImageButton
+                                android:id="@+id/user_profile_phone_edit_button"
+                                android:layout_width="25sp"
+                                android:layout_height="25sp"
+                                android:background="@drawable/edit_button"
+                                android:layout_marginStart="15sp"
+                                android:visibility="gone"/>
+
+                        </LinearLayout>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/user_profile_addPhoneButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="35dp"
+                            android:padding="5dp"
+                            android:textSize="11sp"
+                            android:text="Add Phone Number"
+                            android:layout_gravity="center_horizontal"
+                            app:backgroundTint="#52A89F"
+                            />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/user_profile_passwordButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="35dp"
+                            android:padding="5dp"
+                            android:textSize="11sp"
+                            android:text="Change Password"
+                            android:layout_gravity="center_horizontal"
+                            app:backgroundTint="#52A89F"
+                            android:visibility="gone"
+                            />
 
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>

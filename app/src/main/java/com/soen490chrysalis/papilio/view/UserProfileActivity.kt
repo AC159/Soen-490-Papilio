@@ -1,21 +1,22 @@
 package com.soen490chrysalis.papilio.view
 
 import android.app.ActionBar.LayoutParams
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.DialogInterface
+import android.content.Intent
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import android.text.InputType
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.RelativeLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
+import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
@@ -349,6 +350,17 @@ class UserProfileActivity : AppCompatActivity()
 
         }
 
+        binding.userProfilePicture.setOnClickListener{
+            if(isEditing) // if we are not already in editing mode, change the text of the button and make all editable fields visible and available for editing
+            {
+                ImagePicker.with(this)
+                    .crop()
+                    .compress(1024)
+                    .galleryOnly()
+                    .start()
+            }
+        }
+
         userProfileViewModel.passwordChangeResult.observe(this, Observer {
             if(userProfileViewModel.passwordChangeResult.value != null)
             {
@@ -356,6 +368,25 @@ class UserProfileActivity : AppCompatActivity()
                 displaySnackBar(coordinatorLayout, userProfileViewModel.passwordChangeResult.value.toString())
             }
         })
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK) {
+            //Image Uri will not be null for RESULT_OK
+            val uri: Uri = data?.data!!
+
+            // Use Uri object instead of File to avoid storage permissions
+
+            Glide.with(this)
+                .load(uri)
+                .circleCrop()
+                .into(binding.userProfilePicture)
+        } else if (resultCode == ImagePicker.RESULT_ERROR) {
+            Toast.makeText(this, ImagePicker.getError(data), Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(this, "Task Cancelled", Toast.LENGTH_SHORT).show()
+        }
     }
 
     // Utility function that displays a snackbar in case of errors

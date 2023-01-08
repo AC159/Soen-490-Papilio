@@ -138,6 +138,7 @@ class UserProfileActivity : AppCompatActivity() {
                 binding.userProfileBioEdit.visibility = View.VISIBLE
                 binding.userProfilePhoneEditButton.visibility = View.VISIBLE
                 binding.userProfileBio.visibility = View.GONE
+                binding.userProfilePhoneEditButton.visibility = View.VISIBLE
                 binding.userProfilePicture.setImageResource(R.drawable.user_pfp_example)
 
                 // only display the "Change Password" button if the current account is not a Google account.
@@ -154,6 +155,7 @@ class UserProfileActivity : AppCompatActivity() {
                     inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
                 }
                 binding.userProfileBioEdit.visibility = View.GONE
+                binding.userProfilePhoneEditButton.visibility = View.GONE
                 binding.userProfileBio.visibility = View.VISIBLE
                 binding.editProfileButton.text = "Edit Profile"
                 binding.userProfilePicture.setImageResource(R.drawable.user_pfp_example)

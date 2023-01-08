@@ -11,14 +11,12 @@ import org.junit.runners.JUnit4
 import org.mockito.Mockito
 
 @RunWith(JUnit4::class)
-class UserProfileViewModelFactoryTest
-{
+class UserProfileViewModelFactoryTest {
     @get:Rule
     val rule = InstantTaskExecutorRule()
 
     @Test
-    fun createViewModel()
-    {
+    fun createViewModel() {
         // Mock firebase
         val firebaseAuthMock = Mockito.mock(FirebaseAuth::class.java)
 
@@ -26,7 +24,8 @@ class UserProfileViewModelFactoryTest
         every { FirebaseAuth.getInstance() } returns firebaseAuthMock
 
         val userProfileViewModelFactory = UserProfileViewModelFactory()
-        val userProfileViewModel = userProfileViewModelFactory.create(UserProfileViewModel::class.java)
+        val userProfileViewModel =
+            userProfileViewModelFactory.create(UserProfileViewModel::class.java)
 
         println(userProfileViewModel.javaClass.simpleName)
         println(userProfileViewModel::class.java.simpleName)

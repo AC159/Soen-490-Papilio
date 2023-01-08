@@ -28,7 +28,6 @@ import com.soen490chrysalis.papilio.viewModel.UserProfileViewModel
 import com.soen490chrysalis.papilio.viewModel.UserProfileViewModelFactory
 import com.soen490chrysalis.papilio.utility.UtilityFunctions
 
-
 class UserProfileActivity : AppCompatActivity() {
     private lateinit var binding: ActivityUserProfileBinding
     private lateinit var userProfileViewModel: UserProfileViewModel
@@ -54,7 +53,7 @@ class UserProfileActivity : AppCompatActivity() {
             val acct = GoogleSignIn.getLastSignedInAccount(this)
 
             // Get the photoUrl of the google profile picture of your Google account
-            var googleProfilePicture = acct?.photoUrl
+            val googleProfilePicture = acct?.photoUrl
 
             // if the user's google profile picture exists then display it on the user profile activity
             if (googleProfilePicture == null) {
@@ -91,13 +90,12 @@ class UserProfileActivity : AppCompatActivity() {
         } else // If the google account does not exist, then it means the user logged in with their firebase account
         {
             // Get the firebase user from FireBaseAuth
-            val user = FirebaseAuth.getInstance().currentUser
-            user?.let {
-
+            val firebaseUser = FirebaseAuth.getInstance().currentUser
+            firebaseUser?.let {
                 // Set the full name, email on the profile from the firebase account, and show the placeholder pfp as the pfp
 
-                binding.userProfileName.text = user.displayName
-                binding.userProfileEmail.text = "Email: " + user.email
+                binding.userProfileName.text = firebaseUser.displayName
+                binding.userProfileEmail.text = "Email: " + firebaseUser.email
                 binding.userProfilePicture.setImageResource(R.drawable.user_pfp_example)
 
                 userProfileViewModel.userObject.observe(this, Observer {
@@ -120,8 +118,8 @@ class UserProfileActivity : AppCompatActivity() {
             }
         }
 
-        // Create Action Bar var so we can 1) display it with a proper title and 2) put a working back button on it
-        var actionBar = supportActionBar
+        // Create Action Bar val so we can 1) display it with a proper title and 2) put a working back button on it
+        val actionBar = supportActionBar
         super.onCreate(savedInstanceState)
 
         // if Action Bar is not null, then put a back button on it as well as put the "User Profile" title on it

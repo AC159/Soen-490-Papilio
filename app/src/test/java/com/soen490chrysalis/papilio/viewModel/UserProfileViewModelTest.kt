@@ -33,8 +33,7 @@ import org.mockito.kotlin.times
 */
 
 @RunWith(JUnit4::class)
-class UserProfileViewModelTest
-{
+class UserProfileViewModelTest {
     private val mockUserRepository = MockUserRepository()
     private val userProfileViewModel = UserProfileViewModel(mockUserRepository)
     private val mockFirebaseAuth = Mockito.mock(FirebaseAuth::class.java)
@@ -49,15 +48,13 @@ class UserProfileViewModelTest
     val coroutineRule = MainCoroutineRule()
 
     @Before
-    fun setUp()
-    {
+    fun setUp() {
         mockkStatic(Log::class)
         every { Log.v(any(), any()) } returns 0
         every { Log.d(any(), any()) } returns 0
         every { Log.i(any(), any()) } returns 0
         every { Log.e(any(), any()) } returns 0
     }
-
 
     @Test
     fun addEditedField_CheckIfEmptyAfterAdding() = runTest {
@@ -86,7 +83,7 @@ class UserProfileViewModelTest
     fun updateUserPassword() = runTest {
 
         mockkStatic(FirebaseAuth::class)
-        every { FirebaseAuth.getInstance()} returns (mockFirebaseAuth)
+        every { FirebaseAuth.getInstance() } returns (mockFirebaseAuth)
 
         mockkStatic(FirebaseAuth::class)
         every { FirebaseAuth.getInstance().currentUser } returns (mockFirebaseUser)
@@ -94,17 +91,25 @@ class UserProfileViewModelTest
         Mockito.`when`(mockFirebaseUser.email).thenReturn("validEmail@gmail.com")
 
         mockkStatic(EmailAuthProvider::class)
-        every { EmailAuthProvider.getCredential("validEmail@gmail.com", "old password") } returns (mockEmailAuthCredential)
+        every {
+            EmailAuthProvider.getCredential(
+                "validEmail@gmail.com",
+                "old password"
+            )
+        } returns (mockEmailAuthCredential)
 
         val mockedTask = mockk<Task<Void>>(relaxed = true)
         every { mockedTask.isSuccessful } returns true
-        every { mockedTask.exception} returns null
-        Mockito.`when`(mockFirebaseUser.reauthenticate(mockEmailAuthCredential)).thenReturn(mockedTask)
+        every { mockedTask.exception } returns null
+        Mockito.`when`(mockFirebaseUser.reauthenticate(mockEmailAuthCredential))
+            .thenReturn(mockedTask)
         Mockito.`when`(mockFirebaseUser.updatePassword("new password")).thenReturn(mockedTask)
 
         val slot = slot<OnCompleteListener<Void>>()
 
-        every { mockFirebaseUser.reauthenticate(mockEmailAuthCredential).addOnCompleteListener {} } answers {
+        every {
+            mockFirebaseUser.reauthenticate(mockEmailAuthCredential).addOnCompleteListener {}
+        } answers {
             slot.captured.onComplete(mockedTask)
             mockedTask
         }
@@ -120,7 +125,4 @@ class UserProfileViewModelTest
         verify(mockFirebaseUser, times(2)).reauthenticate(mockEmailAuthCredential)
         verify(mockFirebaseUser, times(1)).updatePassword("new password")
     }
-
-
-
 }

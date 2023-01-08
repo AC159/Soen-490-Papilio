@@ -2,9 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relative_layout_user_profile"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/relative_layout_user_profile">
+    android:layout_height="match_parent">
 
     <include
         android:id="@+id/layout"
@@ -14,8 +14,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context=".view.userProfileActivity"
-        >
+        tools:context=".view.userProfileActivity">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="500dp"
@@ -24,19 +24,17 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
                 android:background="@drawable/user_profile_background"
-                >
+                android:orientation="vertical">
 
-                    <ImageView
-                        android:layout_width="125dp"
-                        android:layout_height="125dp"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="35dp"
-                        android:id="@+id/user_profile_picture"
-                        android:foregroundGravity="center_horizontal"
-                        android:src="@drawable/user_pfp_example">
-                    </ImageView>
+                <ImageView
+                    android:id="@+id/user_profile_picture"
+                    android:layout_width="125dp"
+                    android:layout_height="125dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="35dp"
+                    android:foregroundGravity="center_horizontal"
+                    android:src="@drawable/user_pfp_example" />
 
                 <TextView
                     android:id="@+id/user_profile_name"
@@ -44,49 +42,45 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:text="@string/example_full_name"
+                    android:textColor="@color/black"
                     android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black">
-                </TextView>
+                    android:textStyle="bold" />
 
                 <Button
                     android:id="@+id/edit_profile_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:text="@string/edit_profile_button_text"
-                    android:textStyle="bold"
-                    android:textColor="@color/light_sea_green"
-                    android:textSize="12sp"
                     android:background="@null"
                     android:paddingTop="1dp"
                     android:paddingBottom="15dp"
-                    >
-                </Button>
+                    android:text="@string/edit_profile_button_text"
+                    android:textColor="@color/light_sea_green"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/user_profile_bio"
-                    android:tag="Field"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
+                    android:hint="@string/bio_hint"
+                    android:padding="10dp"
+                    android:tag="Field"
                     android:text="@string/placeholder_bio"
-                    android:textSize="17sp"
                     android:textAlignment="center"
                     android:textColor="@color/black"
 
-                    android:padding="10dp">
-                </TextView>
+                    android:textSize="17sp" />
 
                 <EditText
+                    android:id="@+id/user_profile_bio_edit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/user_profile_bio_edit"
                     android:inputType="text"
-                    android:visibility="gone"
-                    android:textAlignment="center"
                     android:maxLength="50"
-                    />
+                    android:textAlignment="center"
+                    android:visibility="gone" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -96,17 +90,17 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="horizontal"
-                        android:paddingTop="10dp"
-                        android:paddingBottom="10dp"
                         android:paddingLeft="50dp"
-                        android:paddingRight="50dp">
+                        android:paddingTop="10dp"
+                        android:paddingRight="50dp"
+                        android:paddingBottom="10dp">
 
                         <LinearLayout
                             android:layout_width="0dp"
-                            android:layout_weight="1"
                             android:layout_height="match_parent"
-                            android:orientation="vertical"
-                            android:gravity="center">
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -119,9 +113,9 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:paddingTop="10dp"
                                 android:text="@string/example_languages"
-                                android:textColor="@color/black"
-                                android:paddingTop="10dp">
+                                android:textColor="@color/black">
 
                             </TextView>
 
@@ -129,26 +123,25 @@
 
                         <LinearLayout
                             android:layout_width="0dp"
-                            android:layout_weight="1"
                             android:layout_height="match_parent"
-                            android:orientation="vertical"
-                            android:gravity="center">
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/location_header"
-                                android:textColor="@color/light_sea_green"
-                                >
+                                android:textColor="@color/light_sea_green">
 
                             </TextView>
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:paddingTop="10dp"
                                 android:text="@string/example_location_montreal"
-                                android:textColor="@color/black"
-                                android:paddingTop="10dp">
+                                android:textColor="@color/black">
 
                             </TextView>
 
@@ -156,10 +149,10 @@
 
                         <LinearLayout
                             android:layout_width="0dp"
-                            android:layout_weight="1"
                             android:layout_height="match_parent"
-                            android:orientation="vertical"
-                            android:gravity="center">
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -172,10 +165,9 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:paddingTop="10dp"
                                 android:text="@string/activity_count_example"
-                                android:textColor="@color/black"
-                                android:paddingTop="10dp">
-                            </TextView>
+                                android:textColor="@color/black" />
 
                         </LinearLayout>
 
@@ -187,68 +179,64 @@
                     android:id="@+id/user_profile_personal_info_box"
                     android:layout_width="match_parent"
                     android:layout_height="135dp"
-                    app:strokeColor="@color/light_sea_green"
-                    app:strokeWidth="3dp"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     app:cardCornerRadius="15dp"
-                    >
+                    app:strokeColor="@color/light_sea_green"
+                    app:strokeWidth="3dp">
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:orientation="vertical"
                         android:layout_gravity="center_horizontal"
+                        android:orientation="vertical"
                         android:paddingLeft="15dp"
                         android:paddingTop="5dp"
                         android:paddingRight="15dp"
-                        android:paddingBottom="5dp"
-                        >
+                        android:paddingBottom="5dp">
+
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
                             android:text="@string/personal_information_title"
                             android:textAlignment="center"
                             android:textColor="@color/light_sea_green"
-                            android:textSize="18sp"
-                            android:layout_margin="5dp">
-                        </TextView>
+                            android:textSize="18sp" />
 
                         <TextView
+                            android:id="@+id/user_profile_email"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:id="@+id/user_profile_email"
                             android:text="@string/example_email"
-                            android:textColor="@color/black"
                             android:textAlignment="center"
-                            android:textSize="16sp">
-                        </TextView>
+                            android:textColor="@color/black"
+                            android:textSize="16sp" />
 
                         <LinearLayout
+                            android:id="@+id/user_profile_phone_layout"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
                             android:orientation="horizontal"
-                            android:id="@+id/user_profile_phone_layout"
-                            android:visibility="gone"
-                            >
+                            android:visibility="gone">
 
                             <TextView
+                                android:id="@+id/user_profile_phone"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:id="@+id/user_profile_phone"
                                 android:layout_gravity="center_vertical"
                                 android:text="@string/example_phone_number"
                                 android:textColor="@color/black"
-                                android:textSize="16sp">
-                            </TextView>
+                                android:textSize="16sp" />
 
                             <ImageButton
                                 android:id="@+id/user_profile_phone_edit_button"
                                 android:layout_width="25sp"
                                 android:layout_height="25sp"
-                                android:background="@drawable/edit_button"
                                 android:layout_marginStart="15sp"
-                                android:visibility="gone"/>
+                                android:background="@drawable/edit_button"
+                                android:visibility="gone" />
 
                         </LinearLayout>
 
@@ -256,24 +244,22 @@
                             android:id="@+id/user_profile_addPhoneButton"
                             android:layout_width="wrap_content"
                             android:layout_height="35dp"
-                            android:padding="5dp"
-                            android:textSize="11sp"
-                            android:text="@string/add_phone_number"
                             android:layout_gravity="center_horizontal"
-                            app:backgroundTint="@color/light_sea_green"
-                            />
+                            android:padding="5dp"
+                            android:text="@string/add_phone_number"
+                            android:textSize="11sp"
+                            app:backgroundTint="@color/light_sea_green" />
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/user_profile_passwordButton"
                             android:layout_width="wrap_content"
                             android:layout_height="35dp"
-                            android:padding="5dp"
-                            android:textSize="11sp"
-                            android:text="@string/change_password"
                             android:layout_gravity="center_horizontal"
-                            app:backgroundTint="@color/light_sea_green"
+                            android:padding="5dp"
+                            android:text="@string/change_password"
+                            android:textSize="11sp"
                             android:visibility="gone"
-                            />
+                            app:backgroundTint="@color/light_sea_green" />
 
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -286,22 +272,20 @@
             android:id="@+id/user_profile_activities_box"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:orientation="vertical"
             android:layout_weight="1"
             android:background="@color/light_sea_green"
-            >
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingStart="20dp"
+                android:paddingTop="20dp"
+                android:paddingEnd="20dp"
                 android:text="@string/past_activities"
                 android:textColor="@color/white"
                 android:textSize="15sp"
-                android:textStyle="bold"
-                android:paddingStart="20dp"
-                android:paddingEnd="20dp"
-                android:paddingTop="20dp">
-            </TextView>
+                android:textStyle="bold" />
 
             <HorizontalScrollView
                 android:layout_width="wrap_content"

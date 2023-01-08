@@ -131,5 +131,6 @@
     <string name="language_header">LANGUAGE</string>
     <string name="edit_profile_button_text">Edit Profile</string>
     <string name="example_full_name">John Doe</string>
-    <string name="bio_hint">Write your bio here…</string>
+    <string name="bio_hint">Your bio goes here!</string>
+    <string name="bio_edit_hint">Write your bio here…</string>
 </resources>

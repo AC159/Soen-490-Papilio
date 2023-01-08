@@ -122,7 +122,7 @@
     <string name="past_activities">PAST ACTIVITIES</string>
     <string name="example_phone_number">Phone: +14384532313</string>
     <string name="example_email">Email: john.doe@email.ca</string>
-    <string name="personal_information_title">Personal Information</string>
+    <string name="personal_information_title">Account Information</string>
     <string name="activity_count_example">5</string>
     <string name="activities_header">ACTIVITIES</string>
     <string name="example_location_montreal">Montreal, QC</string>

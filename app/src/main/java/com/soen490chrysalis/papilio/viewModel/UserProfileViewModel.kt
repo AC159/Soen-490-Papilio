@@ -9,11 +9,15 @@ import com.google.firebase.auth.FirebaseAuth
 import com.soen490chrysalis.papilio.repository.users.IUserRepository
 import kotlinx.coroutines.launch
 
+data class UserProfileRequestResponse(val status: Int, val message: String)
+
 class UserProfileViewModel(private val userRepository : IUserRepository) : ViewModel()
 {
     var userObject : MutableLiveData<GetUserResponse> = MutableLiveData<GetUserResponse>()
     var passwordChangeResult : MutableLiveData<String> = MutableLiveData<String>()
     private var editedFields : MutableMap<String, kotlin.Any> = mutableMapOf<String, kotlin.Any>()
+    var updateUserResponse : MutableLiveData<UserProfileRequestResponse> = MutableLiveData<UserProfileRequestResponse>()
+
 
     fun getUserByFirebaseId()
     {
@@ -25,7 +29,7 @@ class UserProfileViewModel(private val userRepository : IUserRepository) : ViewM
 
     fun addEditedField(fieldName: String, fieldValue: kotlin.Any)
     {
-        editedFields.put(fieldName, fieldValue);
+        editedFields[fieldName] = fieldValue
     }
 
     fun isEditedFieldsEmpty() : Boolean
@@ -35,49 +39,56 @@ class UserProfileViewModel(private val userRepository : IUserRepository) : ViewM
 
     fun updateUserProfile()
     {
-        if(editedFields.isEmpty()) return
+        if(editedFields.isEmpty())
+            updateUserResponse.value = UserProfileRequestResponse(0, "No Edited Fields")
+        else
+        {
+            viewModelScope.launch {
+                val userResponse = userRepository.updateUser(editedFields)
+                Log.d("userResponse: updateUser ->", userResponse.message())
 
-        viewModelScope.launch {
-            val userResponse = userRepository.updateUser(editedFields)
-            Log.d("userResponse: updateUser ->", userResponse.message())
+                updateUserResponse.value = UserProfileRequestResponse(userResponse.code(), userResponse.message())
 
-            val afterUpdateResponse = userRepository.getUserByFirebaseId()
+                val afterUpdateResponse = userRepository.getUserByFirebaseId()
 
-            userObject.value = GetUserResponse(true, afterUpdateResponse?.user)
+                userObject.value = GetUserResponse(true, afterUpdateResponse?.user)
 
-            editedFields.clear()
+                editedFields.clear()
+
+            }
         }
     }
 
     fun changeUserPassword(oldPassword : String, newPassword : String)
     {
+        val user = FirebaseAuth.getInstance().currentUser
         viewModelScope.launch {
+            if(user != null)
+            {
+                val email = user.email
+                val credential = email?.let { EmailAuthProvider.getCredential(it, oldPassword) }
 
-            val user = FirebaseAuth.getInstance().currentUser
-            val credential = user!!.email?.let { EmailAuthProvider.getCredential(it, oldPassword) }
-
-            if (credential != null) {
-                user!!.reauthenticate(credential)
-                    .addOnCompleteListener { task ->
-                        if(task.isSuccessful) {
-                            user!!.updatePassword(newPassword).addOnCompleteListener { task ->
-                                if(task.isSuccessful) {
-                                    passwordChangeResult.value = "Password changed successfully!"
-                                    Log.e("updatePassword", "success", task.exception)
-                                } else {
-                                    passwordChangeResult.value = "Error! Couldn't change password"
-                                    Log.e("updatePassword", "error", task.exception)
+                if (credential != null) {
+                    user.reauthenticate(credential)
+                        .addOnCompleteListener { task ->
+                            if(task.isSuccessful) {
+                                user.updatePassword(newPassword).addOnCompleteListener { operation ->
+                                    if(operation.isSuccessful) {
+                                        passwordChangeResult.value = "Password changed successfully!"
+                                        Log.e("updatePassword", "success", operation.exception)
+                                    } else {
+                                        passwordChangeResult.value = "Error! Couldn't change password"
+                                        Log.e("updatePassword", "error", operation.exception)
+                                    }
                                 }
+                            } else {
+                                passwordChangeResult.value = "Error! Couldn't authenticate user"
+                                Log.e("updatePassword", "error", task.exception)
                             }
-                        } else {
-                            passwordChangeResult.value = "Error! Couldn't authenticate user"
-                            Log.e("updatePassword", "error", task.exception)
-                        }
                     }
+                }
             }
 
-
         }
-
     }
 }

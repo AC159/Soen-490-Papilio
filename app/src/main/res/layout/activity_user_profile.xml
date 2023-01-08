@@ -43,8 +43,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:text="John Doe"
-                    android:textSize="20dp"
+                    android:text="@string/example_full_name"
+                    android:textSize="20sp"
                     android:textStyle="bold"
                     android:textColor="@color/black">
                 </TextView>
@@ -54,7 +54,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:text="Edit Profile"
+                    android:text="@string/edit_profile_button_text"
                     android:textStyle="bold"
                     android:textColor="@color/light_sea_green"
                     android:textSize="12sp"
@@ -71,7 +71,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:text="@string/placeholder_bio"
-                    android:textSize="17dp"
+                    android:textSize="17sp"
                     android:textAlignment="center"
                     android:textColor="@color/black"
 
@@ -111,7 +111,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="LANGUAGE"
+                                android:text="@string/language_header"
                                 android:textColor="@color/light_sea_green">
 
                             </TextView>
@@ -119,7 +119,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Eng, Fra"
+                                android:text="@string/example_languages"
                                 android:textColor="@color/black"
                                 android:paddingTop="10dp">
 
@@ -137,7 +137,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="LOCATION"
+                                android:text="@string/location_header"
                                 android:textColor="@color/light_sea_green"
                                 >
 
@@ -146,7 +146,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Montreal, QC"
+                                android:text="@string/example_location_montreal"
                                 android:textColor="@color/black"
                                 android:paddingTop="10dp">
 
@@ -164,7 +164,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="ACTIVITIES"
+                                android:text="@string/activities_header"
                                 android:textColor="@color/light_sea_green">
 
                             </TextView>
@@ -172,7 +172,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="5"
+                                android:text="@string/activity_count_example"
                                 android:textColor="@color/black"
                                 android:paddingTop="10dp">
                             </TextView>
@@ -184,6 +184,7 @@
                 </LinearLayout>
 
                 <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/user_profile_personal_info_box"
                     android:layout_width="match_parent"
                     android:layout_height="135dp"
                     app:strokeColor="@color/light_sea_green"
@@ -205,10 +206,10 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Personal Information"
+                            android:text="@string/personal_information_title"
                             android:textAlignment="center"
                             android:textColor="@color/light_sea_green"
-                            android:textSize="18dp"
+                            android:textSize="18sp"
                             android:layout_margin="5dp">
                         </TextView>
 
@@ -216,7 +217,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:id="@+id/user_profile_email"
-                            android:text="Email: john.doe@email.ca"
+                            android:text="@string/example_email"
                             android:textColor="@color/black"
                             android:textAlignment="center"
                             android:textSize="16sp">
@@ -236,7 +237,7 @@
                                 android:layout_height="wrap_content"
                                 android:id="@+id/user_profile_phone"
                                 android:layout_gravity="center_vertical"
-                                android:text="Phone: +14384532313"
+                                android:text="@string/example_phone_number"
                                 android:textColor="@color/black"
                                 android:textSize="16sp">
                             </TextView>
@@ -257,7 +258,7 @@
                             android:layout_height="35dp"
                             android:padding="5dp"
                             android:textSize="11sp"
-                            android:text="Add Phone Number"
+                            android:text="@string/add_phone_number"
                             android:layout_gravity="center_horizontal"
                             app:backgroundTint="@color/light_sea_green"
                             />
@@ -268,7 +269,7 @@
                             android:layout_height="35dp"
                             android:padding="5dp"
                             android:textSize="11sp"
-                            android:text="Change Password"
+                            android:text="@string/change_password"
                             android:layout_gravity="center_horizontal"
                             app:backgroundTint="@color/light_sea_green"
                             android:visibility="gone"
@@ -282,6 +283,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/user_profile_activities_box"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:orientation="vertical"
@@ -292,7 +294,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="PAST ACTIVITIES"
+                android:text="@string/past_activities"
                 android:textColor="@color/white"
                 android:textSize="15sp"
                 android:textStyle="bold"

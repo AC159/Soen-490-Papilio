@@ -1,12 +1,13 @@
 package com.soen490chrysalis.papilio.utility
 
+import androidx.core.util.PatternsCompat
 import java.util.regex.Pattern
 
 class UtilityFunctions {
     companion object{
         fun validatePhoneNumber(number : String): String?
         {
-            if(number.length < 10)
+            if(number.length != 10)
             {
                 return "Please enter a valid phone number (10 digits)"
             }
@@ -44,6 +45,35 @@ class UtilityFunctions {
             }
             return "Password must contain at least 1 digit, 1 lowercase character, " +
                     "1 uppercase character, 1 special character, no white spaces & a minimum of 6 characters!"
+        }
+
+        fun validateFirstName(firstName : String) : String?
+        {
+            if (firstName.length in 1..25)
+            {
+                return null
+            }
+            return "First name must be between 1 and 25 characters long!"
+        }
+
+        fun validateLastName(lastName : String) : String?
+        {
+            if (lastName.length in 1..25)
+            {
+                return null
+            }
+            return "Last name must be between 1 and 25 characters long!"
+        }
+
+        fun validateEmailAddress(emailAddress : String) : String?
+        {
+            if (emailAddress.isNotEmpty() && PatternsCompat.EMAIL_ADDRESS.matcher(emailAddress)
+                    .matches()
+            )
+            {
+                return null
+            }
+            return "Not a valid email!"
         }
 
         fun confirmPassword(password : String, password2 : String) : String?

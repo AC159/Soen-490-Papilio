@@ -33,8 +33,6 @@ class UserProfileActivity : AppCompatActivity() {
     private lateinit var binding: ActivityUserProfileBinding
     private lateinit var userProfileViewModel: UserProfileViewModel
     private var isEditing: Boolean = false
-    private var isGoogleAccount: Boolean = false
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         //Get the binding for the User Profile Activity
@@ -153,7 +151,7 @@ class UserProfileActivity : AppCompatActivity() {
                 if (this.currentFocus != null) {
                     val inputMethodManager =
                         getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-                    inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0)
+                    inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
                 }
                 binding.userProfileBioEdit.visibility = View.GONE
                 binding.userProfileBio.visibility = View.VISIBLE
@@ -202,7 +200,7 @@ class UserProfileActivity : AppCompatActivity() {
             val messageText = TextView(this)
             messageText.setTextColor(Color.RED)
 
-            val layout = LinearLayoutCreator(
+            val layout = linearLayoutCreator(
                 arrayOf(
                     currentPasswordInput,
                     newPasswordInput,
@@ -210,7 +208,7 @@ class UserProfileActivity : AppCompatActivity() {
                     messageText
                 )
             )
-            val builder = DialogBuilderCreator("Change Password", layout)
+            val builder = dialogBuilderCreator("Change Password", layout)
 
             val dialog = builder.create()
             dialog.show()
@@ -219,9 +217,9 @@ class UserProfileActivity : AppCompatActivity() {
 
                 var closeDialog = false
 
-                var passwordQualityCheck: String? =
+                val passwordQualityCheck: String? =
                     UtilityFunctions.validatePassword(newPasswordInput.text.toString())
-                var passwordEqualityCheck: String? = UtilityFunctions.confirmPassword(
+                val passwordEqualityCheck: String? = UtilityFunctions.confirmPassword(
                     newPasswordInput.text.toString(),
                     newPasswordConfirmInput.text.toString()
                 )
@@ -259,8 +257,8 @@ class UserProfileActivity : AppCompatActivity() {
             val messageText = TextView(this)
             messageText.setTextColor(Color.RED)
 
-            val layout = LinearLayoutCreator(arrayOf(countryCodeInput, phoneInput, messageText))
-            val builder = DialogBuilderCreator("Add Phone Number", layout)
+            val layout = linearLayoutCreator(arrayOf(countryCodeInput, phoneInput, messageText))
+            val builder = dialogBuilderCreator("Add Phone Number", layout)
             builder.setView(layout)
 
             val dialog = builder.create()
@@ -276,9 +274,9 @@ class UserProfileActivity : AppCompatActivity() {
                     UtilityFunctions.validatePhoneNumber(phoneInput.text.toString())
 
                 if (countryCodeValidationCheck != null) {
-                    messageText.setText(countryCodeValidationCheck)
+                    messageText.text = countryCodeValidationCheck
                 } else if (phoneNumberValidationCheck != null) {
-                    messageText.setText(phoneNumberValidationCheck)
+                    messageText.text = phoneNumberValidationCheck
                 } else {
                     userProfileViewModel.addEditedField(
                         "countryCode",
@@ -322,32 +320,36 @@ class UserProfileActivity : AppCompatActivity() {
 
         val rootLayout = binding.relativeLayoutUserProfile
 
-        if (resultCode == Activity.RESULT_OK) {
+        when (resultCode) {
+            Activity.RESULT_OK -> {
 
-            val uri: Uri = data?.data!!
+                val uri: Uri = data?.data!!
 
-            Glide.with(this)
-                .load(uri)
-                .circleCrop()
-                .into(binding.userProfilePicture)
+                Glide.with(this)
+                    .load(uri)
+                    .circleCrop()
+                    .into(binding.userProfilePicture)
 
-            displaySnackBar(
-                rootLayout,
-                "Profile Picture Successfully Changed!"
-            )
+                displaySnackBar(
+                    rootLayout,
+                    "Profile Picture Successfully Changed!"
+                )
 
-        } else if (resultCode == ImagePicker.RESULT_ERROR) {
+            }
+            ImagePicker.RESULT_ERROR -> {
 
-            displaySnackBar(
-                rootLayout,
-                ImagePicker.getError(data)
-            )
-        } else {
+                displaySnackBar(
+                    rootLayout,
+                    ImagePicker.getError(data)
+                )
+            }
+            else -> {
 
-            displaySnackBar(
-                rootLayout,
-                "Cancelled"
-            )
+                displaySnackBar(
+                    rootLayout,
+                    "Cancelled"
+                )
+            }
         }
     }
 
@@ -367,7 +369,7 @@ class UserProfileActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    fun LinearLayoutCreator(viewsToAdd: Array<View>): LinearLayout {
+    private fun linearLayoutCreator(viewsToAdd: Array<View>): LinearLayout {
         val params = LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.MATCH_PARENT
@@ -390,13 +392,13 @@ class UserProfileActivity : AppCompatActivity() {
         return newLayout
     }
 
-    fun DialogBuilderCreator(title: String, layout: LinearLayout): AlertDialog.Builder {
+    private fun dialogBuilderCreator(title: String, layout: LinearLayout): AlertDialog.Builder {
         val builder = AlertDialog.Builder(this)
         builder.setTitle(title)
         builder.setView(layout)
         builder.setPositiveButton(
             "Save",
-            DialogInterface.OnClickListener { dialog_: DialogInterface, _: Int ->
+            DialogInterface.OnClickListener { _: DialogInterface, _: Int ->
 
             })
 

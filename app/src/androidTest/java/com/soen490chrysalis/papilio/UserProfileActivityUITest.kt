@@ -33,18 +33,6 @@ class UserProfileActivityUITest
     @get:Rule
     val intentsTestRule = IntentsTestRule(UserProfileActivity::class.java)
 
-    @Before
-    fun setUp()
-    {
-        //Might be filled later so keeping it
-    }
-
-    @After
-    fun finish()
-    {
-        //Might be filled later so keeping it
-    }
-
     @Test
     fun confirmAllBasicUserProfileElementsPresentOnScreen()
     {

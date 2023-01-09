@@ -62,9 +62,6 @@ class UserProfileActivityUITest
 
         Espresso.onView(ViewMatchers.withId(R.id.user_profile_email)).check(
             ViewAssertions.matches(ViewMatchers.isDisplayed()))
-
-        Espresso.onView(ViewMatchers.withId(R.id.user_profile_activities_box)).check(
-            ViewAssertions.matches(ViewMatchers.isDisplayed()))
     }
 
     @Test

@@ -15,6 +15,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
@@ -335,7 +336,7 @@ class UserProfileActivity : AppCompatActivity()
         userProfileViewModel.passwordChangeResult.observe(this, Observer {
             if (userProfileViewModel.passwordChangeResult.value != null)
             {
-                val coordinatorLayout = binding.relativeLayoutUserProfile
+                val coordinatorLayout = binding.coordinatorLayoutUserProfile
                 displaySnackBar(
                     coordinatorLayout,
                     userProfileViewModel.passwordChangeResult.value.toString()
@@ -348,7 +349,7 @@ class UserProfileActivity : AppCompatActivity()
     {
         super.onActivityResult(requestCode, resultCode, data)
 
-        val rootLayout = binding.relativeLayoutUserProfile
+        val rootLayout = binding.coordinatorLayoutUserProfile
 
         when (resultCode)
         {
@@ -388,7 +389,7 @@ class UserProfileActivity : AppCompatActivity()
     }
 
     // Utility function that displays a snackbar in case of errors
-    private fun displaySnackBar(coordinatorLayout : RelativeLayout, errorMessage : String)
+    private fun displaySnackBar(coordinatorLayout : CoordinatorLayout, errorMessage : String)
     {
         Snackbar.make(coordinatorLayout, errorMessage, Snackbar.LENGTH_LONG).show()
     }

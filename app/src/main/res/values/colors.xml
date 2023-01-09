@@ -12,4 +12,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="edit_text_grey">#DADADA</color>
     <color name="semi_transparent_white">#80ffffff</color>
+    <color name="light_sea_green">#52A89F</color>
 </resources>

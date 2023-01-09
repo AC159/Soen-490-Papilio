@@ -19,6 +19,7 @@ import com.google.android.gms.tasks.Task
 import com.google.android.material.snackbar.Snackbar
 import com.soen490chrysalis.papilio.R
 import com.soen490chrysalis.papilio.databinding.ActivitySignUpBinding
+import com.soen490chrysalis.papilio.utility.UtilityFunctions
 import com.soen490chrysalis.papilio.viewModel.AuthResponse
 import com.soen490chrysalis.papilio.viewModel.LoginViewModel
 import com.soen490chrysalis.papilio.viewModel.factories.LoginViewModelFactory
@@ -120,25 +121,25 @@ class SignUpActivity : AppCompatActivity()
             val password : String = binding.userPassword.text.toString()
 
             // Take the user input from all the input fields and validate them
-            val firstNameValidation = loginViewModel.validateFirstName(firstName)
+            val firstNameValidation = UtilityFunctions.validateFirstName(firstName)
             if (firstNameValidation != null)
             {
                 binding.userFirstName.error = firstNameValidation
             }
 
-            val lastNameValidation = loginViewModel.validateLastName(lastName)
+            val lastNameValidation = UtilityFunctions.validateLastName(lastName)
             if (lastNameValidation != null)
             {
                 binding.userLastName.error = lastNameValidation
             }
 
-            val emailValidation = loginViewModel.validateEmailAddress(email)
+            val emailValidation = UtilityFunctions.validateEmailAddress(email)
             if (emailValidation != null)
             {
                 binding.userEmailAddress.error = emailValidation
             }
 
-            val passwordValidation = loginViewModel.validatePassword(password)
+            val passwordValidation = UtilityFunctions.validatePassword(password)
             if (passwordValidation != null)
             {
                 binding.userPassword.error = passwordValidation

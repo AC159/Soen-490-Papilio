@@ -22,3 +22,15 @@ data class UserRequest(
     val user : User
 )
 
+data class Identifier(
+    @Json(name = "firebase_id")
+    val firebaseId : String
+)
+
+data class UserUpdate(
+    @Json(name = "identifier")
+    val identifier : Identifier,
+
+    @Json(name = "update")
+    val update : Map<String, kotlin.Any>
+)

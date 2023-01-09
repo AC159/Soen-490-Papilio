@@ -2,6 +2,7 @@ package com.soen490chrysalis.papilio.services.network
 
 import com.soen490chrysalis.papilio.BuildConfig
 import com.soen490chrysalis.papilio.services.network.requests.UserRequest
+import com.soen490chrysalis.papilio.services.network.requests.UserUpdate
 import com.soen490chrysalis.papilio.services.network.responses.GetUserByFirebaseIdResponse
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -48,6 +49,11 @@ interface IUserApiService
     @POST("createUser")
     suspend fun createUser(
         @Body user : UserRequest
+    ) : Response<Void>
+
+    @PUT("updateUserProfile")
+    suspend fun updateUser(
+        @Body user : UserUpdate
     ) : Response<Void>
 }
 

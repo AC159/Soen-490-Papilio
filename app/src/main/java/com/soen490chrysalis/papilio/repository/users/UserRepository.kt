@@ -2,25 +2,15 @@ package com.soen490chrysalis.papilio.repository.users
 
 import android.util.Log
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.firebase.auth.AuthResult
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
-import com.google.firebase.auth.FirebaseAuthInvalidUserException
-import com.google.firebase.auth.FirebaseAuthUserCollisionException
-import com.google.firebase.auth.FirebaseAuthWeakPasswordException
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.auth.UserProfileChangeRequest
+import com.google.firebase.auth.*
 import com.soen490chrysalis.papilio.services.network.*
-import com.soen490chrysalis.papilio.services.network.requests.User
-import com.soen490chrysalis.papilio.services.network.requests.UserRequest
+import com.soen490chrysalis.papilio.services.network.requests.*
 import com.soen490chrysalis.papilio.services.network.responses.GetUserByFirebaseIdResponse
-import kotlinx.coroutines.tasks.await
-import retrofit2.Response
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
-
+import retrofit2.Response
 
 /*
     DESCRIPTION:
@@ -36,6 +26,7 @@ import kotlinx.coroutines.withContext
     Author: Anastassy Cap
     Date: October 5, 2022
 */
+
 class UserRepository(
     private var firebaseAuth : FirebaseAuth,
     private val userService : IUserApiService,
@@ -120,6 +111,32 @@ class UserRepository(
         Log.d(logTag, "Create simple user: $response")
 
         return response
+    }
+
+    /*
+       DESCRIPTION:
+       Utility function that makes a request to the backend to update a user.
+
+       The key (and only) argument for this function is "variableMap", which is a MutableMap object that contains a map of all the
+       edited fields in the user profile page. In short, all fields that the user changed in the user profile get updated in one single PUT request
+       and all the edited fields are kept in the aforementioned MutableMap, which gets sent along with the PUT request as the Body of the request.
+
+       Author: Anas Peerzada
+       Date: January 1st, 2023
+    */
+    override suspend fun updateUser(
+        variableMap : Map<String, kotlin.Any>
+    ) : Response<Void>
+    {
+        return withContext(coroutineDispatcher)
+        {
+            val firebaseId = firebaseAuth.currentUser!!.uid
+
+            val response = userService.updateUser(UserUpdate(Identifier(firebaseId), variableMap))
+
+            Log.d(logTag, "Update user: $response")
+            return@withContext response
+        }
     }
 
     override suspend fun firebaseAuthWithGoogle(idToken : String) : Pair<Boolean, String>

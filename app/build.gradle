@@ -102,6 +102,7 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.14.2'
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.4"
+    implementation 'com.github.dhaval2404:imagepicker:2.1'
 
     // Dependencies for retrofit library for network requests
     def retrofit_version = '2.9.0'

@@ -39,7 +39,8 @@ class MockUserRepository : IUserRepository
             null,
             null,
             "November 13 2022",
-            "November 13 2022"
+            "November 13 2022",
+            "Hello! It's me, firstName!"
         )
         return GetUserByFirebaseIdResponse(true, user)
     }
@@ -49,6 +50,13 @@ class MockUserRepository : IUserRepository
         updateDisplayName : Boolean,
         firstName : String?,
         lastName : String?
+    ) : Response<Void>
+    {
+        return Response.success(null)
+    }
+
+    override suspend fun updateUser(
+        variableMap : Map<String, kotlin.Any>
     ) : Response<Void>
     {
         return Response.success(null)

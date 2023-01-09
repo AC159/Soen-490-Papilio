@@ -19,6 +19,7 @@ import com.soen490chrysalis.papilio.R
 import com.soen490chrysalis.papilio.databinding.ActivityLoginBinding
 import com.soen490chrysalis.papilio.viewModel.AuthResponse
 import com.soen490chrysalis.papilio.viewModel.LoginViewModelFactory
+import com.soen490chrysalis.papilio.utility.UtilityFunctions
 
 
 class LoginActivity : AppCompatActivity()
@@ -94,13 +95,13 @@ class LoginActivity : AppCompatActivity()
             val email : String = binding.userEmailAddress.text.toString()
             val password : String = binding.userPassword.text.toString()
 
-            val emailValidation = loginViewModel.validateEmailAddress(email)
+            val emailValidation = UtilityFunctions.validateEmailAddress(email)
             if (emailValidation != null)
             {
                 binding.userEmailAddress.error = emailValidation
             }
 
-            val passwordValidation = loginViewModel.validatePassword(password)
+            val passwordValidation = UtilityFunctions.validatePassword(password)
             if (passwordValidation != null)
             {
                 binding.userPassword.error = passwordValidation

@@ -116,5 +116,21 @@
     </string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="placeholder_bio">Enjoy meeting new people and exploring my city. If you’re down to meet a friendly guy who knows how to have fun come join me at my activities.</string>
+    <string name="placeholder_bio">loading bio...</string>
+    <string name="add_phone_number">Add Phone Number</string>
+    <string name="change_password">Change Password</string>
+    <string name="past_activities">PAST ACTIVITIES</string>
+    <string name="example_phone_number">Phone: +14384532313</string>
+    <string name="example_email">Email: john.doe@email.ca</string>
+    <string name="personal_information_title">Account Information</string>
+    <string name="activity_count_example">5</string>
+    <string name="activities_header">ACTIVITIES</string>
+    <string name="example_location_montreal">Montreal, QC</string>
+    <string name="location_header">LOCATION</string>
+    <string name="example_languages">Eng, Fra</string>
+    <string name="language_header">LANGUAGE</string>
+    <string name="edit_profile_button_text">Edit Profile</string>
+    <string name="example_full_name">John Doe</string>
+    <string name="bio_hint">Your bio goes here!</string>
+    <string name="bio_edit_hint">Write your bio here…</string>
 </resources>

@@ -11,12 +11,14 @@ import org.junit.runners.JUnit4
 import org.mockito.Mockito
 
 @RunWith(JUnit4::class)
-class UserProfileViewModelFactoryTest {
+class UserProfileViewModelFactoryTest
+{
     @get:Rule
     val rule = InstantTaskExecutorRule()
 
     @Test
-    fun createViewModel() {
+    fun createViewModel()
+    {
         // Mock firebase
         val firebaseAuthMock = Mockito.mock(FirebaseAuth::class.java)
 

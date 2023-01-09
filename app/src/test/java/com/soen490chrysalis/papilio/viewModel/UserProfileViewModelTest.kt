@@ -33,7 +33,8 @@ import org.mockito.kotlin.times
 */
 
 @RunWith(JUnit4::class)
-class UserProfileViewModelTest {
+class UserProfileViewModelTest
+{
     private val mockUserRepository = MockUserRepository()
     private val userProfileViewModel = UserProfileViewModel(mockUserRepository)
     private val mockFirebaseAuth = Mockito.mock(FirebaseAuth::class.java)
@@ -48,7 +49,8 @@ class UserProfileViewModelTest {
     val coroutineRule = MainCoroutineRule()
 
     @Before
-    fun setUp() {
+    fun setUp()
+    {
         mockkStatic(Log::class)
         every { Log.v(any(), any()) } returns 0
         every { Log.d(any(), any()) } returns 0
@@ -102,7 +104,7 @@ class UserProfileViewModelTest {
         every { mockedTask.isSuccessful } returns true
         every { mockedTask.exception } returns null
         Mockito.`when`(mockFirebaseUser.reauthenticate(mockEmailAuthCredential))
-            .thenReturn(mockedTask)
+                .thenReturn(mockedTask)
         Mockito.`when`(mockFirebaseUser.updatePassword("new password")).thenReturn(mockedTask)
 
         val slot = slot<OnCompleteListener<Void>>()

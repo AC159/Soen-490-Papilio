@@ -24,7 +24,7 @@ data class UserRequest(
 
 data class Identifier(
     @Json(name = "firebase_id")
-    val firebaseId: String
+    val firebaseId : String
 )
 
 data class UserUpdate(
@@ -32,5 +32,5 @@ data class UserUpdate(
     val identifier : Identifier,
 
     @Json(name = "update")
-    val update: Map<String, kotlin.Any>
+    val update : Map<String, kotlin.Any>
 )

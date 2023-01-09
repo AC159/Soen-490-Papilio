@@ -28,12 +28,14 @@ import com.soen490chrysalis.papilio.viewModel.UserProfileViewModel
 import com.soen490chrysalis.papilio.viewModel.UserProfileViewModelFactory
 import com.soen490chrysalis.papilio.utility.UtilityFunctions
 
-class UserProfileActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityUserProfileBinding
-    private lateinit var userProfileViewModel: UserProfileViewModel
-    private var isEditing: Boolean = false
+class UserProfileActivity : AppCompatActivity()
+{
+    private lateinit var binding : ActivityUserProfileBinding
+    private lateinit var userProfileViewModel : UserProfileViewModel
+    private var isEditing : Boolean = false
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState : Bundle?)
+    {
         //Get the binding for the User Profile Activity
         binding = ActivityUserProfileBinding.inflate(layoutInflater)
         val view = binding.root
@@ -48,7 +50,8 @@ class UserProfileActivity : AppCompatActivity() {
         val user = FirebaseAuth.getInstance().currentUser
 
         // If the Google account exists (which means the user used Google to log in / sign up
-        if (user?.providerId == "google.com") {
+        if (user?.providerId == "google.com")
+        {
             // Need this to access the profile pic url for the user's Google account
             val acct = GoogleSignIn.getLastSignedInAccount(this)
 
@@ -56,15 +59,17 @@ class UserProfileActivity : AppCompatActivity() {
             val googleProfilePicture = acct?.photoUrl
 
             // if the user's google profile picture exists then display it on the user profile activity
-            if (googleProfilePicture == null) {
+            if (googleProfilePicture == null)
+            {
                 binding.userProfilePicture.setImageResource(R.drawable.user_pfp_example)
-            } else // If the user's google profile picture does not exist, then display just the placeholder image on the profile
+            }
+            else // If the user's google profile picture does not exist, then display just the placeholder image on the profile
             {
                 // Here we use the Glide library to import the pfp from the google account of the logged in user
                 Glide.with(this)
-                    .load(acct?.photoUrl)
-                    .circleCrop()
-                    .into(binding.userProfilePicture)
+                        .load(acct?.photoUrl)
+                        .circleCrop()
+                        .into(binding.userProfilePicture)
             }
 
             // Also display the full name and email from the user's Google account on the profile
@@ -77,7 +82,8 @@ class UserProfileActivity : AppCompatActivity() {
                 val countryCode = userProfileViewModel.userObject.value?.userObject?.countryCode
                 val phone = userProfileViewModel.userObject.value?.userObject?.phone
 
-                if (phone != null) {
+                if (phone != null)
+                {
                     binding.userProfileAddPhoneButton.visibility = View.GONE
                     binding.userProfilePhoneLayout.visibility = View.VISIBLE
                     binding.userProfilePhone.text = ("Phone: +"
@@ -87,7 +93,8 @@ class UserProfileActivity : AppCompatActivity() {
                 }
             })
 
-        } else // If the google account does not exist, then it means the user logged in with their firebase account
+        }
+        else // If the google account does not exist, then it means the user logged in with their firebase account
         {
             // Get the firebase user from FireBaseAuth
             val firebaseUser = FirebaseAuth.getInstance().currentUser
@@ -106,7 +113,8 @@ class UserProfileActivity : AppCompatActivity() {
                     val countryCode = userProfileViewModel.userObject.value?.userObject?.countryCode
                     val phone = userProfileViewModel.userObject.value?.userObject?.phone
 
-                    if (phone != null) {
+                    if (phone != null)
+                    {
                         binding.userProfileAddPhoneButton.visibility = View.GONE
                         binding.userProfilePhoneLayout.visibility = View.VISIBLE
                         binding.userProfilePhone.text = ("Phone: +"
@@ -123,7 +131,8 @@ class UserProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         // if Action Bar is not null, then put a back button on it as well as put the "User Profile" title on it
-        if (actionBar != null) {
+        if (actionBar != null)
+        {
             actionBar.setDisplayHomeAsUpEnabled(true)
             actionBar.title = "User Profile"
         }
@@ -140,14 +149,18 @@ class UserProfileActivity : AppCompatActivity() {
                 binding.userProfilePicture.setImageResource(R.drawable.user_pfp_example)
 
                 // only display the "Change Password" button if the current account is not a Google account.
-                if (FirebaseAuth.getInstance().currentUser?.providerId != "google.com") {
+                if (FirebaseAuth.getInstance().currentUser?.providerId != "google.com")
+                {
                     binding.userProfilePasswordButton.visibility = View.VISIBLE
                 }
 
                 isEditing = true // now we are in editing mode
-            } else { // if we are already in editing mode, then save the changes made by the user to their profile, and call the viewmodel function that sends this info through a PUT request
+            }
+            else
+            { // if we are already in editing mode, then save the changes made by the user to their profile, and call the viewmodel function that sends this info through a PUT request
 
-                if (this.currentFocus != null) {
+                if (this.currentFocus != null)
+                {
                     val inputMethodManager =
                         getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
                     inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
@@ -158,7 +171,8 @@ class UserProfileActivity : AppCompatActivity() {
                 binding.editProfileButton.text = "Edit Profile"
                 binding.userProfilePicture.setImageResource(R.drawable.user_pfp_example)
 
-                if (user?.providerId != "google.com") {
+                if (user?.providerId != "google.com")
+                {
                     binding.userProfilePasswordButton.visibility = View.GONE
                 }
 
@@ -166,7 +180,8 @@ class UserProfileActivity : AppCompatActivity() {
 
                 // The following if-statements are all about adding the edited fields to a map in the view model
 
-                if (binding.userProfileBio.text != binding.userProfileBioEdit.text) {
+                if (binding.userProfileBio.text != binding.userProfileBioEdit.text)
+                {
                     userProfileViewModel.addEditedField(
                         "bio",
                         binding.userProfileBioEdit.text.toString()
@@ -174,7 +189,8 @@ class UserProfileActivity : AppCompatActivity() {
                 }
 
                 // If at least one field was edited by the user, then send the PUT request to the backend so that the user's changes can be saved
-                if (!userProfileViewModel.isEditedFieldsEmpty()) {
+                if (!userProfileViewModel.isEditedFieldsEmpty())
+                {
                     userProfileViewModel.updateUserProfile()
                 }
             }
@@ -217,20 +233,27 @@ class UserProfileActivity : AppCompatActivity() {
 
                 var closeDialog = false
 
-                val passwordQualityCheck: String? =
+                val passwordQualityCheck : String? =
                     UtilityFunctions.validatePassword(newPasswordInput.text.toString())
-                val passwordEqualityCheck: String? = UtilityFunctions.confirmPassword(
+                val passwordEqualityCheck : String? = UtilityFunctions.confirmPassword(
                     newPasswordInput.text.toString(),
                     newPasswordConfirmInput.text.toString()
                 )
 
-                if (passwordQualityCheck != null) {
+                if (passwordQualityCheck != null)
+                {
                     messageText.text = passwordQualityCheck
-                } else if (passwordEqualityCheck != null) {
+                }
+                else if (passwordEqualityCheck != null)
+                {
                     messageText.text = passwordEqualityCheck
-                } else if (currentPasswordInput.text == null) {
+                }
+                else if (currentPasswordInput.text == null)
+                {
                     messageText.text = "Please enter current password"
-                } else {
+                }
+                else
+                {
                     userProfileViewModel.changeUserPassword(
                         currentPasswordInput.text.toString(),
                         newPasswordConfirmInput.text.toString()
@@ -273,11 +296,16 @@ class UserProfileActivity : AppCompatActivity() {
                 val phoneNumberValidationCheck =
                     UtilityFunctions.validatePhoneNumber(phoneInput.text.toString())
 
-                if (countryCodeValidationCheck != null) {
+                if (countryCodeValidationCheck != null)
+                {
                     messageText.text = countryCodeValidationCheck
-                } else if (phoneNumberValidationCheck != null) {
+                }
+                else if (phoneNumberValidationCheck != null)
+                {
                     messageText.text = phoneNumberValidationCheck
-                } else {
+                }
+                else
+                {
                     userProfileViewModel.addEditedField(
                         "countryCode",
                         countryCodeInput.text.toString()
@@ -297,15 +325,16 @@ class UserProfileActivity : AppCompatActivity() {
             if (isEditing && user?.providerId != "google.com") // if we are not already in editing mode, change the text of the button and make all editable fields visible and available for editing
             {
                 ImagePicker.with(this)
-                    .crop()
-                    .compress(1024)
-                    .galleryOnly()
-                    .start()
+                        .crop()
+                        .compress(1024)
+                        .galleryOnly()
+                        .start()
             }
         }
 
         userProfileViewModel.passwordChangeResult.observe(this, Observer {
-            if (userProfileViewModel.passwordChangeResult.value != null) {
+            if (userProfileViewModel.passwordChangeResult.value != null)
+            {
                 val coordinatorLayout = binding.relativeLayoutUserProfile
                 displaySnackBar(
                     coordinatorLayout,
@@ -315,20 +344,23 @@ class UserProfileActivity : AppCompatActivity() {
         })
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    override fun onActivityResult(requestCode : Int, resultCode : Int, data : Intent?)
+    {
         super.onActivityResult(requestCode, resultCode, data)
 
         val rootLayout = binding.relativeLayoutUserProfile
 
-        when (resultCode) {
-            Activity.RESULT_OK -> {
+        when (resultCode)
+        {
+            Activity.RESULT_OK ->
+            {
 
-                val uri: Uri = data?.data!!
+                val uri : Uri = data?.data!!
 
                 Glide.with(this)
-                    .load(uri)
-                    .circleCrop()
-                    .into(binding.userProfilePicture)
+                        .load(uri)
+                        .circleCrop()
+                        .into(binding.userProfilePicture)
 
                 displaySnackBar(
                     rootLayout,
@@ -336,14 +368,16 @@ class UserProfileActivity : AppCompatActivity() {
                 )
 
             }
-            ImagePicker.RESULT_ERROR -> {
+            ImagePicker.RESULT_ERROR ->
+            {
 
                 displaySnackBar(
                     rootLayout,
                     ImagePicker.getError(data)
                 )
             }
-            else -> {
+            else ->
+            {
 
                 displaySnackBar(
                     rootLayout,
@@ -354,14 +388,18 @@ class UserProfileActivity : AppCompatActivity() {
     }
 
     // Utility function that displays a snackbar in case of errors
-    private fun displaySnackBar(coordinatorLayout: RelativeLayout, errorMessage: String) {
+    private fun displaySnackBar(coordinatorLayout : RelativeLayout, errorMessage : String)
+    {
         Snackbar.make(coordinatorLayout, errorMessage, Snackbar.LENGTH_LONG).show()
     }
 
     // This is the function that's called when the back button on the action bar is pressed
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            android.R.id.home -> {
+    override fun onOptionsItemSelected(item : MenuItem) : Boolean
+    {
+        when (item.itemId)
+        {
+            android.R.id.home ->
+            {
                 finish()
                 return true
             }
@@ -369,7 +407,8 @@ class UserProfileActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun linearLayoutCreator(viewsToAdd: Array<View>): LinearLayout {
+    private fun linearLayoutCreator(viewsToAdd : Array<View>) : LinearLayout
+    {
         val params = LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.MATCH_PARENT
@@ -382,7 +421,8 @@ class UserProfileActivity : AppCompatActivity() {
 
         val newLayout = LinearLayout(this)
         newLayout.layoutParams = params
-        for (view in viewsToAdd) {
+        for (view in viewsToAdd)
+        {
             view.layoutParams = subViewParams
             newLayout.addView(view)
         }
@@ -392,19 +432,20 @@ class UserProfileActivity : AppCompatActivity() {
         return newLayout
     }
 
-    private fun dialogBuilderCreator(title: String, layout: LinearLayout): AlertDialog.Builder {
+    private fun dialogBuilderCreator(title : String, layout : LinearLayout) : AlertDialog.Builder
+    {
         val builder = AlertDialog.Builder(this)
         builder.setTitle(title)
         builder.setView(layout)
         builder.setPositiveButton(
             "Save",
-            DialogInterface.OnClickListener { _: DialogInterface, _: Int ->
+            DialogInterface.OnClickListener { _ : DialogInterface, _ : Int ->
 
             })
 
         builder.setNegativeButton(
             "Cancel",
-            DialogInterface.OnClickListener { dialog: DialogInterface, _: Int ->
+            DialogInterface.OnClickListener { dialog : DialogInterface, _ : Int ->
                 run {
                     // When the "Accept button is pressed, simply dismiss the dialog
                     dialog.dismiss()

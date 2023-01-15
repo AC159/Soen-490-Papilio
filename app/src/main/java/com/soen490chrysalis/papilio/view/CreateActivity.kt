@@ -217,6 +217,10 @@ class CreateActivity : AppCompatActivity()
 
         // Listen on request response when the user sends a new activity
         createActivityViewModel.postNewUserActivityResponse.observe(this) { _response ->
+            pictures.clear() // we clear this list so as to avoid having IO exceptions on already close input file streams
+            binding.chosenFilesTv.visibility = View.GONE
+            binding.chosenFilesTv.text = null
+
             displaySnackBar(binding.coordinatorLayoutCreateActivity, _response.msg)
             if (_response.isSuccess)
             {

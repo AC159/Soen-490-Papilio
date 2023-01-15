@@ -5,7 +5,6 @@ import com.google.firebase.auth.FirebaseUser
 import com.soen490chrysalis.papilio.repository.users.IUserRepository
 import com.soen490chrysalis.papilio.services.network.responses.GetUserByFirebaseIdResponse
 import com.soen490chrysalis.papilio.services.network.responses.UserObject
-import okhttp3.ResponseBody
 import org.mockito.Mockito
 import retrofit2.Response
 
@@ -56,7 +55,7 @@ class MockUserRepository : IUserRepository
     }
 
     override suspend fun updateUser(
-        variableMap : Map<String, kotlin.Any>
+        variableMap : Map<String, Any>
     ) : Response<Void>
     {
         return Response.success(null)

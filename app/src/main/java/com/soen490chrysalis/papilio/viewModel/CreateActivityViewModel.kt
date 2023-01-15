@@ -1,15 +1,22 @@
 package com.soen490chrysalis.papilio.viewModel
 
-import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mapbox.search.autofill.*
 import com.soen490chrysalis.papilio.BuildConfig
+import com.soen490chrysalis.papilio.repository.activities.IActivityRepository
+import com.soen490chrysalis.papilio.view.dialogs.EventDate
+import com.soen490chrysalis.papilio.view.dialogs.EventTime
 import kotlinx.coroutines.launch
+import java.io.InputStream
+import java.util.*
+import kotlin.collections.ArrayList
 
-class CreateActivityViewModel : ViewModel()
+data class PostNewUserActivityResponse(var isSuccess : Boolean, var msg : String)
+
+class CreateActivityViewModel(private val activityRepository : IActivityRepository) : ViewModel()
 {
     private val logTag = CreateActivityViewModel::class.java.simpleName
     var activityAddressSuggestions : MutableLiveData<List<String>> =
@@ -19,6 +26,9 @@ class CreateActivityViewModel : ViewModel()
        which will be useful when we want to display the activity location on a map
     */
     private var fullActivityAddresses : List<AddressAutofillSuggestion> = ArrayList()
+
+    var postNewUserActivityResponse : MutableLiveData<PostNewUserActivityResponse> =
+        MutableLiveData()
 
     fun validateActivityTitle(title : String) : String?
     {
@@ -46,10 +56,35 @@ class CreateActivityViewModel : ViewModel()
         return "Number of participants must be greater than 0!"
     }
 
-    fun validateActivityPictureUris(pictures : List<Uri>) : String?
+    fun validateActivityPictureUris(pictures : List<Pair<String, InputStream>>) : String?
     {
         if (pictures.isNotEmpty()) return null
         return "Don't forget to add some pictures!"
+    }
+
+    fun validateActivityDate( date : String ) : String?
+    {
+        println("Date validation: ${date.trim(' ').lowercase(Locale.getDefault())}")
+        if ( date.trim(' ').lowercase(Locale.getDefault()) != "select date" ) return null
+        return "You must select a date!"
+    }
+
+    fun validateStartTime( startTime : EventTime ) : String?
+    {
+        if ( startTime.hourOfDay != -1 && startTime.minute != -1 ) return null
+        return "You must select a start time!"
+    }
+
+    fun validateEndTime( endTime : EventTime ) : String?
+    {
+        if ( endTime.hourOfDay != -1 && endTime.minute != -1 ) return null
+        return "You must select an end time!"
+    }
+
+    fun validateActivityAddress() : String?
+    {
+        if (activityAddressSuggestions.value?.isNotEmpty() == true) return null
+        return "You must select an address from the dropdown!"
     }
 
     fun getMapBoxAddressSuggestions(query : Query)
@@ -92,6 +127,46 @@ class CreateActivityViewModel : ViewModel()
                     // No suggestions
                 }
 
+            }
+        }
+    }
+
+    fun postNewActivity(
+        activityTitle : String,
+        description : String,
+        groupSize : Int,
+        pictures : List<Pair<String, InputStream>>,
+        activityDate : EventDate,
+        startTime : EventTime,
+        endTime : EventTime
+    )
+    {
+        viewModelScope.launch {
+            try
+            {
+                val response = activityRepository.postNewUserActivity(
+                    activityTitle,
+                    description,
+                    groupSize,
+                    pictures,
+                    activityDate,
+                    startTime,
+                    endTime,
+                    activityAddressSuggestions.value!![0]
+                )
+
+                postNewUserActivityResponse.value = PostNewUserActivityResponse(
+                    response.isSuccessful,
+                    if (response.isSuccessful) "Activity successfully created!" else "Oops, something went wrong"
+                )
+            }
+            catch (e : Exception)
+            {
+                Log.d(logTag, "activityRepository.postNewUserActivity - exception:\n $e")
+                postNewUserActivityResponse.value = PostNewUserActivityResponse(
+                    false,
+                    "Oops, something went wrong!"
+                )
             }
         }
     }

@@ -6,6 +6,7 @@ import com.soen490chrysalis.papilio.services.network.requests.UserUpdate
 import com.soen490chrysalis.papilio.services.network.responses.GetUserByFirebaseIdResponse
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -54,6 +55,15 @@ interface IUserApiService
     @PUT("updateUserProfile")
     suspend fun updateUser(
         @Body user : UserUpdate
+    ) : Response<Void>
+
+    @Multipart
+    @POST("addActivity/{firebaseId}")
+    @JvmSuppressWildcards
+    suspend fun postNewUserActivity(
+        @Path("firebaseId") firebaseId : String?,
+        @PartMap activity : Map<String, Any>,
+        @Part images : List<MultipartBody.Part>
     ) : Response<Void>
 }
 

@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
-import android.graphics.PorterDuff
 import android.icu.util.Calendar
 import android.os.Bundle
 import android.provider.MediaStore
@@ -21,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -314,9 +314,6 @@ class CreateActivity : AppCompatActivity()
                 )
             val progressIndicatorDrawable =
                 IndeterminateDrawable.createCircularDrawable(this, spec)
-
-            // todo: fix this color of the icon
-            progressIndicatorDrawable.setColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY)
             binding.createActivityBtn.icon = progressIndicatorDrawable
 
             // disable the 'create activity' button while we process the request

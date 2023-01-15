@@ -12,7 +12,6 @@ import com.soen490chrysalis.papilio.services.network.responses.UserObject
 import com.soen490chrysalis.papilio.testUtils.MainCoroutineRule
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import io.mockk.core.ValueClassSupport.boxedValue
 import io.mockk.every
 import io.mockk.mockkStatic
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -66,12 +65,10 @@ class UserRepositoryTest
             mockAuthTask as Task<AuthResult>?
         )
 
-        /*
-            The next 3 lines are very important when it comes to calling functions that return tasks
+        /*  The next 3 lines are very important when it comes to calling functions that return tasks
             on which we are calling the '.await()' function. In order to not make the '.await()' hang,
             we must return a TaskCompletionSource<AuthResult> that will return a task which will not make
-            the '.await()' function block anymore.
-         */
+            the '.await()' function block anymore. */
         val taskCompletionSource = TaskCompletionSource<AuthResult>()
         taskCompletionSource.setResult(mockAuthResult)
         Mockito.`when`(mockFirebaseAuth.createUserWithEmailAndPassword(email, password))
@@ -85,7 +82,7 @@ class UserRepositoryTest
         Mockito.`when`(mockFirebaseUser.uid).thenReturn(mockFirebaseUserUid)
 
         mockWebServer.start()
-        println("Webserver has successfully started...")
+        println("Webserver has successfully started for UserRepository test...")
 
         mockRetrofitUserService = Retrofit.Builder()
                 .addConverterFactory(MoshiConverterFactory.create(moshi))
@@ -93,7 +90,7 @@ class UserRepositoryTest
                 .build()
                 .create(IUserApiService::class.java)
 
-        println("Instantiated mockRetrofitUserService!")
+        println("Instantiated mockRetrofitUserService for UserRepository test!")
 
         // Important to initialize the user repository here since the mockRetrofitUserService needs to be create beforehand
         userRepository = Mockito.spy(UserRepository(mockFirebaseAuth, mockRetrofitUserService))

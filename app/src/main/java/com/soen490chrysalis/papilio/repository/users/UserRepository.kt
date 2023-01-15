@@ -125,7 +125,7 @@ class UserRepository(
        Date: January 1st, 2023
     */
     override suspend fun updateUser(
-        variableMap : Map<String, kotlin.Any>
+        variableMap : Map<String, Any>
     ) : Response<Void>
     {
         return withContext(coroutineDispatcher)

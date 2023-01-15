@@ -1,7 +1,6 @@
 package com.soen490chrysalis.papilio.viewModel
 
 import android.util.Log
-import androidx.core.util.PatternsCompat
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import androidx.lifecycle.MutableLiveData
@@ -10,7 +9,6 @@ import com.google.firebase.auth.FirebaseUser
 import com.soen490chrysalis.papilio.repository.users.IUserRepository
 import com.soen490chrysalis.papilio.services.network.responses.UserObject
 import kotlinx.coroutines.launch
-import java.util.regex.Pattern
 
 /*
     DESCRIPTION:

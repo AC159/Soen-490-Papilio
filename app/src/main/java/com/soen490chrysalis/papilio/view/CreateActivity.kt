@@ -3,7 +3,6 @@ package com.soen490chrysalis.papilio.view
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.icu.util.Calendar
 import android.os.Bundle
 import android.provider.MediaStore
@@ -20,7 +19,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -222,12 +220,6 @@ class CreateActivity : AppCompatActivity()
             binding.chosenFilesTv.text = null
 
             displaySnackBar(binding.coordinatorLayoutCreateActivity, _response.msg)
-            if (_response.isSuccess)
-            {
-                // Redirect if the user successfully created an activity
-                startActivity(Intent(this, MainActivity::class.java))
-                finish()
-            }
         }
     }
 

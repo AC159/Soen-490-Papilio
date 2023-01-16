@@ -102,7 +102,7 @@ class ActivityRepository(
             activityRequestBody["activity[startTime]"] = activityStartTime
             activityRequestBody["activity[endTime]"] = activityEndTime
             activityRequestBody["activity[address]"] = activityAddress
-            activityRequestBody["activity[groupSize]"] = groupSize.toString()
+            activityRequestBody["activity[groupSize]"] = groupSize
 
             Log.d(logTag, "Finished converting images to a Multipart request body")
 

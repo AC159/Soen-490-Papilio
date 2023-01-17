@@ -46,7 +46,7 @@
                             <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:scrollbars="none">
+                                android:scrollbars="horizontal">
 
                                 <include layout="@layout/activity_acticities_box" />
 

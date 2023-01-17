@@ -114,8 +114,31 @@
             </ul><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
         ]]>
     </string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="create_activity">+ Create Activity</string>
+    <string name="import_pictures">Import Pictures:</string>
+    <string name="import_media">Import</string>
+    <string name="ex_10">ex: 10</string>
+    <string name="maximum_number_of_participants">Maximum number of participants:</string>
+    <string name="description">Description...</string>
+    <string name="event_description">Event Description:</string>
+    <string name="ex_23h00">ex: 23h00</string>
+    <string name="ex_19h00">ex: 19h00</string>
+    <string name="event_end_time">Event End Time:</string>
+    <string name="event_start_time">Event Start Time:</string>
+    <string name="dd_mm_yyyy">dd-mm-yyyy</string>
+    <string name="event_date">Event Date:</string>
+    <string name="location">Location</string>
+    <string name="event_location">Event Location:</string>
+    <string name="title">Title</string>
+    <string name="event_title">Event Title:</string>
+    <string name="create_your_activity">Create Your Activity</string>
+    <string name="papilio_logo">Papilio logo</string>
+    <string name="select_start_time">Select Start Time</string>
+    <string name="select_end_time">Select End Time</string>
+    <string name="select_date">Select Date</string>
+    <string name="MAPBOX_PUBLIC_ACCESS_TOKEN">pk.eyJ1IjoiYWMyMDAwIiwiYSI6ImNsYzEwdng2YzJpenEzdXBudDR2NWczNW0ifQ.20lZpfiX1vGKx1J8-dodqw</string>
+
     <string name="placeholder_bio">loading bio...</string>
     <string name="add_phone_number">Add Phone Number</string>
     <string name="change_password">Change Password</string>

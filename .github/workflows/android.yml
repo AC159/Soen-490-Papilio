@@ -58,6 +58,11 @@ jobs:
     - name: Add BACKEND_API_URL to local.properties
       run: echo BACKEND_API_URL=http://192.168.1.36:1337/api/user/ > ./local.properties
 
+    - name: Add MAPBOX_SECRET_TOKEN to local.properties
+      env:
+        MAPBOX_SECRET_TOKEN: ${{ secrets.MAPBOX_SECRET_TOKEN }}
+      run: echo MAPBOX_SECRET_TOKEN=$MAPBOX_SECRET_TOKEN >> ./local.properties
+
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 

@@ -22,7 +22,7 @@ import com.soen490chrysalis.papilio.databinding.ActivitySignUpBinding
 import com.soen490chrysalis.papilio.utility.UtilityFunctions
 import com.soen490chrysalis.papilio.viewModel.AuthResponse
 import com.soen490chrysalis.papilio.viewModel.LoginViewModel
-import com.soen490chrysalis.papilio.viewModel.LoginViewModelFactory
+import com.soen490chrysalis.papilio.viewModel.factories.LoginViewModelFactory
 
 class SignUpActivity : AppCompatActivity()
 {
@@ -162,7 +162,7 @@ class SignUpActivity : AppCompatActivity()
     // Utility function that displays a snackbar in case of errors
     private fun displaySnackBar(coordinatorLayout : CoordinatorLayout, errorMessage : String)
     {
-        binding.progressBarSignUp.visibility = View.GONE // Hide the snackbar if there is any error
+        binding.progressBarSignUp.visibility = View.GONE // Hide the progress bar if there is any error
         Snackbar.make(coordinatorLayout, errorMessage, Snackbar.LENGTH_LONG).show()
     }
 

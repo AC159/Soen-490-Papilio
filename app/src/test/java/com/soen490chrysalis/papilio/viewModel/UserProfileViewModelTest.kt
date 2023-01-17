@@ -7,7 +7,7 @@ import com.google.firebase.auth.EmailAuthCredential
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.soen490chrysalis.papilio.repository.MockUserRepository
+import com.soen490chrysalis.papilio.repository.mocks.MockUserRepository
 import com.soen490chrysalis.papilio.testUtils.MainCoroutineRule
 import io.mockk.every
 import io.mockk.mockk

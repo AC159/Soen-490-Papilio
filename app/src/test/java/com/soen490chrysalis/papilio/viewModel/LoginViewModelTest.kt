@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.FirebaseUser
-import com.soen490chrysalis.papilio.repository.MockUserRepository
+import com.soen490chrysalis.papilio.repository.mocks.MockUserRepository
 import com.soen490chrysalis.papilio.testUtils.MainCoroutineRule
 import io.mockk.every
 import io.mockk.mockkStatic
@@ -98,4 +98,13 @@ class LoginViewModelTest
         assert(loginViewModel.getUser() is FirebaseUser)
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun getUserByFirebaseId() = runTest {
+        loginViewModel.getUserByFirebaseId()
+        advanceUntilIdle()
+        assert( loginViewModel.userObject.value != null )
+        assert(loginViewModel.userObject.value!!.requestIsFinished)
+        assert(loginViewModel.userObject.value!!.userObject!!.email == "validEmail@gmail.com")
+    }
 }

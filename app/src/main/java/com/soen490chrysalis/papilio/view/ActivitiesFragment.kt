@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.soen490chrysalis.papilio.create_activity
 import com.soen490chrysalis.papilio.databinding.FragmentActivitiesBinding
 import kotlinx.android.synthetic.main.fragment_activities.view.*
 
@@ -46,10 +45,10 @@ class ActivitiesFragment : Fragment()
     {
         _binding = FragmentActivitiesBinding.inflate(inflater, container, false)
         val view = binding.root
-        val createActivityButton = view.activities_create_activity_button
+        val createActivityButton = view.create_activity_fab_btn
 
         createActivityButton?.setOnClickListener {
-            val intent = Intent(this.activity, create_activity::class.java)
+            val intent = Intent(this.activity, CreateActivity::class.java)
             startActivity(intent)
         }
         return view

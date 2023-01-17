@@ -30,7 +30,7 @@ interface IUserRepository
     ) : Response<Void>
 
     suspend fun updateUser(
-        variableMap : Map<String, kotlin.Any>
+        variableMap : Map<String, Any>
     ) : Response<Void>
 
     suspend fun firebaseAuthWithGoogle(idToken : String) : Pair<Boolean, String>

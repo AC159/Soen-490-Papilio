@@ -42,22 +42,13 @@
             android:exported="true" />
         <activity
             android:name=".create_activity"
-            android:exported="true">
-        </activity>
+            android:exported="true"/>
         <activity
-            android:name=".DisplayAcitivityInfoActivity"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
+            android:name=".view.DisplayAcitivityInfoActivity"
+            android:exported="true"/>
         <activity
             android:name=".view.ActicitiesBoxActivity"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
+            android:exported="true"/>
     </application>
 
 </manifest>

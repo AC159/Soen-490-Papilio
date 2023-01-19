@@ -44,7 +44,7 @@ class HomeFragment : Fragment()
         super.onViewCreated(view, savedInstanceState)
 
         for (iCardView in 0..2) {
-            val idView = resources.getIdentifier("activity_box$iCardView", "id", context!!.packageName)
+            val idView = resources.getIdentifier("activity_box$iCardView", "id", requireContext().packageName)
             val eventView: View = view.findViewById(idView)
             eventView.setOnClickListener { view -> SwitchToDisplayActivityInfo(view)}
         }

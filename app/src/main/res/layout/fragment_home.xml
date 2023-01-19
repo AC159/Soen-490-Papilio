@@ -48,11 +48,11 @@
                                 android:layout_height="match_parent"
                                 android:scrollbars="horizontal">
 
-                                <include layout="@layout/activity_acticities_box" />
+                                <include layout="@layout/activity_activities_box" />
 
-                                <include layout="@layout/activity_acticities_box" />
+                                <include layout="@layout/activity_activities_box" />
 
-                                <include layout="@layout/activity_acticities_box" />
+                                <include layout="@layout/activity_activities_box" />
 
                             </LinearLayout>
                         </HorizontalScrollView>
@@ -68,9 +68,9 @@
 <!--                                android:layout_centerHorizontal="true"-->
 <!--                                app:cardBackgroundColor="@color/semi_transparent_white">-->
 
-<!--                                <include layout="@layout/activity_acticities_box" />-->
+<!--                                <include layout="@layout/activity_activities_box" />-->
 
-<!--                                <include layout="@layout/activity_acticities_box" />-->
+<!--                                <include layout="@layout/activity_activities_box" />-->
 
 <!--                            </androidx.cardview.widget.CardView>-->
 <!--                        </HorizontalScrollView>-->
@@ -85,11 +85,17 @@
                 android:gravity="center"
                 tools:ignore="MissingConstraints">
 
-                <include layout="@layout/activity_acticities_box" />
+                <include
+                    android:id="@+id/activity_box0"
+                    layout="@layout/activity_activities_box" />
 
-                <include layout="@layout/activity_acticities_box" />
+                <include
+                    android:id="@+id/activity_box1"
+                    layout="@layout/activity_activities_box" />
 
-                <include layout="@layout/activity_acticities_box" />
+                <include
+                    android:id="@+id/activity_box2"
+                    layout="@layout/activity_activities_box" />
             </LinearLayout>
         </LinearLayout>
 

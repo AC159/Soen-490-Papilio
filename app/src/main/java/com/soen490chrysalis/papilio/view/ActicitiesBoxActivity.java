@@ -11,6 +11,6 @@ public class ActicitiesBoxActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_acticities_box);
+        setContentView(R.layout.activity_activities_box);
     }
 }

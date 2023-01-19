@@ -1,5 +1,6 @@
 package com.soen490chrysalis.papilio.view
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +18,7 @@ class HomeFragment : Fragment()
     // TODO: Rename and change types of parameters
     private var mParam1 : String? = null
     private var mParam2 : String? = null
+
 
     override fun onCreate(savedInstanceState : Bundle?)
     {
@@ -37,6 +39,24 @@ class HomeFragment : Fragment()
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        for (iCardView in 0..2) {
+            val idView = resources.getIdentifier("activity_box$iCardView", "id", context!!.packageName)
+            val eventView: View = view.findViewById(idView)
+            eventView.setOnClickListener { view -> SwitchToDisplayActivityInfo(view)}
+        }
+    }
+
+
+    fun SwitchToDisplayActivityInfo(view:View?){
+        val intent = Intent (getActivity(), DisplayAcitivityInfoActivity::class.java)
+        getActivity()?.startActivity(intent)
+    }
+
+
 
     companion object
     {

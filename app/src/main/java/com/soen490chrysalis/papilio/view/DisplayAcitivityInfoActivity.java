@@ -15,21 +15,21 @@ public class DisplayAcitivityInfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_display_acitivity_info);
 
 
-        var actionBar = getSupportActionBar();
-
-        if(actionBar != null){
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setTitle("activity Info");
-        }
+//        var actionBar = getSupportActionBar();
+//
+//        if(actionBar != null){
+//            actionBar.setDisplayHomeAsUpEnabled(true);
+//            actionBar.setTitle("activity Info");
+//        }
     }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        int id = item.getItemId();
-
-        if(id == android.R.id.home){
-            this.finish();
-        }
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item){
+//        int id = item.getItemId();
+//
+//        if(id == android.R.id.home){
+//            this.finish();
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
 
 }

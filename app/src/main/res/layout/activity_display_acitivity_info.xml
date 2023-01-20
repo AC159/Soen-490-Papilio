@@ -6,13 +6,133 @@
     android:layout_height="match_parent"
     tools:context=".view.DisplayAcitivityInfoActivity">
 
+    <ScrollView
+        android:id="@+id/scrollView4"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/textView12"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        tools:layout_editor_absoluteX="168dp"
-        tools:layout_editor_absoluteY="183dp"
-        tools:ignore="MissingConstraints" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/black"
+                tools:ignore="Orientation">
+
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="225dp"
+                    android:src="@drawable/example_event_photo" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/info_Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Title"
+                    android:textSize="25dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:gravity="center"/>
+
+                <TextView
+                    android:id="@+id/info_Description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="20dp"
+                    android:paddingLeft="20dp"
+                    android:textColor="@color/black"
+                    android:text="At as in understood an remarkably solicitude. Mean them very seen
+     she she. Use totally written the observe pressed justice. Instantly cordially "/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:paddingTop="25dp">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="120dp"
+                        android:layout_height="90dp"
+                        app:strokeColor="@color/blue"
+                        app:strokeWidth="3dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        app:cardCornerRadius="30dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:textColor="@color/black"
+                            android:textSize="12dp"
+                            android:text="$2/person"/>
+
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="120dp"
+                        android:layout_height="90dp"
+                        app:strokeColor="@color/blue"
+                        app:strokeWidth="3dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        app:cardCornerRadius="30dp">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:textColor="@color/black"
+                                android:textSize="12dp"
+                                android:text="$1/person"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:textSize="10dp"
+                                android:text="Minimum 4 people"/>
+                        </LinearLayout>
+
+
+                    </com.google.android.material.card.MaterialCardView>
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+            <!--            <LinearLayout-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="match_parent"-->
+            <!--                android:paddingTop="100dp"-->
+            <!--                android:background="@color/white">-->
+
+            <!--                <ImageView-->
+            <!--                    android:layout_width="match_parent"-->
+            <!--                    android:layout_height="250dp"-->
+            <!--                    android:src="@drawable/example_event_photo"/>-->
+
+            <!--            </LinearLayout>-->
+        </LinearLayout>
+
+
+    </ScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

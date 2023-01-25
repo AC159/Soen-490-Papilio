@@ -45,10 +45,7 @@ class MockUserRepository : IUserRepository
     }
 
     override suspend fun createUser(
-        user : FirebaseUser?,
-        updateDisplayName : Boolean,
-        firstName : String?,
-        lastName : String?
+        user : FirebaseUser?
     ) : Response<Void>
     {
         return Response.success(null)

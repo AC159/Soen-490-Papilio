@@ -85,18 +85,8 @@ class UserRepository(
     */
     override suspend fun createUser(
         user : FirebaseUser?,
-        updateDisplayName : Boolean,
-        firstName : String?,
-        lastName : String?
     ) : Response<Void>
     {
-        if (updateDisplayName)
-        {
-            val userProfileChangeRequest =
-                UserProfileChangeRequest.Builder().setDisplayName("$firstName $lastName").build()
-            user?.updateProfile(userProfileChangeRequest)
-                    ?.await() // wait for the display name update request to finish before proceeding
-        }
 
         val displayName = user!!.displayName
         val tokens = displayName!!.split(" ")
@@ -149,8 +139,7 @@ class UserRepository(
                 val authResult : AuthResult = firebaseAuth.signInWithCredential(credential).await()
 
                 // Now that we have successfully authenticated, we can create a user in the database
-                val userCreationRes : Response<Void> =
-                    createUser(authResult.user, false, null, null)
+                val userCreationRes : Response<Void> = createUser(authResult.user)
                 Log.d(logTag, "userCreationResponse: $userCreationRes")
 
                 Pair(userCreationRes.isSuccessful, userCreationRes.message())
@@ -194,9 +183,15 @@ class UserRepository(
                 val authResult : AuthResult =
                     firebaseAuth.createUserWithEmailAndPassword(emailAddress, password).await()
 
+                // Update the user's display name
+                val userProfileChangeRequest =
+                    UserProfileChangeRequest.Builder().setDisplayName("$firstName $lastName")
+                            .build()
+                authResult.user?.updateProfile(userProfileChangeRequest)
+                        ?.await() // wait for the display name update request to finish before proceeding
+
                 // Now that we have successfully authenticated, we can create a user in the database
-                val userCreationRes : Response<Void> =
-                    createUser(authResult.user, true, firstName, lastName)
+                val userCreationRes : Response<Void> = createUser(firebaseAuth.currentUser)
 
                 Log.d(logTag, "userCreationResponse: $userCreationRes")
                 Pair(userCreationRes.isSuccessful, userCreationRes.message())
@@ -239,8 +234,7 @@ class UserRepository(
                     firebaseAuth.signInWithEmailAndPassword(emailAddress, password).await()
 
                 // Now that we have successfully authenticated, we can create a user in the database
-                val userCreationRes : Response<Void> =
-                    createUser(authResult.user, false, null, null)
+                val userCreationRes : Response<Void> = createUser(authResult.user)
                 Log.d(logTag, "userCreationResponse: $userCreationRes")
 
                 Pair(userCreationRes.isSuccessful, userCreationRes.message())

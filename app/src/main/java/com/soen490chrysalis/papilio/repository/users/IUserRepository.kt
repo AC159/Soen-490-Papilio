@@ -23,10 +23,7 @@ interface IUserRepository
     suspend fun getUserByFirebaseId() : GetUserByFirebaseIdResponse?
 
     suspend fun createUser(
-        user : FirebaseUser?,
-        updateDisplayName : Boolean,
-        firstName : String?,
-        lastName : String?
+        user : FirebaseUser?
     ) : Response<Void>
 
     suspend fun updateUser(

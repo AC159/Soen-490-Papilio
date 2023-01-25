@@ -77,6 +77,7 @@ class UserRepositoryTest
                 .thenReturn(taskCompletionSource.task)
 
         Mockito.`when`(mockAuthResult.user).thenReturn(mockFirebaseUser)
+        Mockito.`when`(mockFirebaseAuth.currentUser).thenReturn(mockFirebaseUser)
         Mockito.`when`(mockFirebaseUser.displayName).thenReturn("$firstName $lastName")
         Mockito.`when`(mockFirebaseUser.email).thenReturn(email)
         Mockito.`when`(mockFirebaseUser.uid).thenReturn(mockFirebaseUserUid)
@@ -124,6 +125,9 @@ class UserRepositoryTest
     @Test
     fun getUserByFirebaseId() = runTest {
         // Test the route with a firebase id of null
+        Mockito.`when`(mockFirebaseAuth.currentUser).thenReturn(mockFirebaseUser)
+        Mockito.`when`(mockFirebaseUser?.uid).thenReturn(null)
+
         var response = userRepository.getUserByFirebaseId()
         assert(response == null)
 
@@ -166,7 +170,7 @@ class UserRepositoryTest
 
         assert(response!!.user == user)
         Mockito.verify(mockFirebaseAuth, times(2)).currentUser
-        Mockito.verify(mockFirebaseUser, times(1))?.uid
+        Mockito.verify(mockFirebaseUser, times(2))?.uid
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -198,12 +202,12 @@ class UserRepositoryTest
                 email,
                 password
             )
+
         println("Result: $result")
 
         assert(result.first && result.second == "OK")
         Mockito.verify(mockFirebaseAuth, times(1)).createUserWithEmailAndPassword(email, password)
-        Mockito.verify(userRepository, times(1))
-                .createUser(mockFirebaseUser, true, firstName, lastName)
+        Mockito.verify(userRepository, times(1)).createUser(mockFirebaseUser)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -316,7 +320,7 @@ class UserRepositoryTest
 
         assert(result.first && result.second == "OK")
         Mockito.verify(mockFirebaseAuth, times(1)).signInWithEmailAndPassword(email, password)
-        Mockito.verify(userRepository, times(1)).createUser(mockFirebaseUser, false, null, null)
+        Mockito.verify(userRepository, times(1)).createUser(mockFirebaseUser)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)

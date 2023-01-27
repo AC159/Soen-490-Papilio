@@ -49,6 +49,10 @@
         <activity
             android:name=".view.ActicitiesBoxActivity"
             android:exported="true"/>
+
+        <activity
+            android:name=".view.ActivityReviewBoxActivity"
+            android:exported="true"/>
     </application>
 
 </manifest>

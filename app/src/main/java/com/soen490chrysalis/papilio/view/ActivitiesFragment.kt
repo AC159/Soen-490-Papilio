@@ -1,11 +1,13 @@
 package com.soen490chrysalis.papilio.view
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.soen490chrysalis.papilio.R
+import com.soen490chrysalis.papilio.databinding.FragmentActivitiesBinding
+import kotlinx.android.synthetic.main.fragment_activities.view.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -32,13 +34,30 @@ class ActivitiesFragment : Fragment()
         }
     }
 
+    private var _binding : FragmentActivitiesBinding? = null
+    private val binding get() = _binding!!
+
     override fun onCreateView(
-        inflater : LayoutInflater, container : ViewGroup?,
+        inflater : LayoutInflater,
+        container : ViewGroup?,
         savedInstanceState : Bundle?
     ) : View?
     {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_activities, container, false)
+        _binding = FragmentActivitiesBinding.inflate(inflater, container, false)
+        val view = binding.root
+        val createActivityButton = view.create_activity_fab_btn
+
+        createActivityButton?.setOnClickListener {
+            val intent = Intent(this.activity, CreateActivity::class.java)
+            startActivity(intent)
+        }
+        return view
+    }
+
+    override fun onDestroyView()
+    {
+        super.onDestroyView()
+        _binding = null
     }
 
     companion object

@@ -1,18 +1,14 @@
 package com.soen490chrysalis.papilio.viewModel
 
 import android.util.Log
-import androidx.core.util.PatternsCompat
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseUser
 import com.soen490chrysalis.papilio.repository.users.IUserRepository
-import com.soen490chrysalis.papilio.services.network.responses.GetUserByFirebaseIdResponse
 import com.soen490chrysalis.papilio.services.network.responses.UserObject
 import kotlinx.coroutines.launch
-import java.util.regex.Pattern
 
 /*
     DESCRIPTION:
@@ -48,57 +44,6 @@ class LoginViewModel(private val userRepository : IUserRepository) : ViewModel()
             val userResponse = userRepository.getUserByFirebaseId()
             userObject.value = GetUserResponse(true, userResponse?.user)
         }
-    }
-
-    fun validateFirstName(firstName : String) : String?
-    {
-        if (firstName.length in 1..25)
-        {
-            return null
-        }
-        return "First name must be between 1 and 25 characters long!"
-    }
-
-    fun validateLastName(lastName : String) : String?
-    {
-        if (lastName.length in 1..25)
-        {
-            return null
-        }
-        return "Last name must be between 1 and 25 characters long!"
-    }
-
-    fun validateEmailAddress(emailAddress : String) : String?
-    {
-        if (emailAddress.isNotEmpty() && PatternsCompat.EMAIL_ADDRESS.matcher(emailAddress)
-                        .matches()
-        )
-        {
-            return null
-        }
-        return "Not a valid email!"
-    }
-
-    fun validatePassword(password : String) : String?
-    {
-        val passwordREGEX = Pattern.compile(
-            "^" +
-                    "(?=.*[0-9])" +         // at least 1 digit
-                    "(?=.*[a-z])" +         // at least 1 lower case letter
-                    "(?=.*[A-Z])" +         // at least 1 upper case letter
-                    "(?=.*[a-zA-Z])" +      // any letter
-                    "(?=.*[!@#$%^&*()_+])" +// at least 1 special character
-                    "(?=\\S+$)" +           // no white spaces
-                    ".{6,}" +               // at least 6 characters
-                    "$"
-        )
-
-        if (password.length in 6..20 && passwordREGEX.matcher(password).matches())
-        {
-            return null
-        }
-        return "Password must contain at least 1 digit, 1 lowercase character, " +
-                "1 uppercase character, 1 special character, no white spaces & a minimum of 6 characters!"
     }
 
     fun handleAuthResult(authResult : Boolean, errorMessage : String)

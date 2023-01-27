@@ -9,7 +9,6 @@ import androidx.test.espresso.action.ViewActions.scrollTo
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
-import androidx.test.espresso.intent.matcher.IntentMatchers.anyIntent
 import androidx.test.espresso.intent.rule.IntentsTestRule
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.ext.junit.rules.ActivityScenarioRule
@@ -186,37 +185,6 @@ class LoginActivityUITest
         Espresso.onView(ViewMatchers.withId(R.id.user_password))
                 .check(ViewAssertions.matches(hasNoErrorText()))
     }
-
-//    @Test
-//    fun verifyRedirectionOnLoginWithEmail()
-//    {
-//        // Let's start by filling the input fields with correct information
-//        // Fill a valid email
-//        Espresso.onView(ViewMatchers.withId(R.id.user_email_address)).perform(
-//            ViewActions.clearText(),
-//            ViewActions.typeText(
-//                validEmail
-//            ),
-//            ViewActions.closeSoftKeyboard() // important to close the keyboard otherwise the login button is not visible!
-//        )
-//
-//        // Fill a valid password
-//        Espresso.onView(ViewMatchers.withId(R.id.user_password)).perform(
-//            ViewActions.clearText(),
-//            ViewActions.typeText(
-//                validPassword
-//            ),
-//            ViewActions.closeSoftKeyboard() // important to close the keyboard otherwise the login button is not visible!
-//        )
-//
-//        // Stub the Main activity intent
-//        val intentResult = Instrumentation.ActivityResult(Activity.RESULT_OK, null)
-//
-//        // Verify that the activity is going to redirect towards the MainActivity
-//        Intents.intending(anyIntent()).respondWith(intentResult)
-//
-//        Espresso.onView(ViewMatchers.withText(R.string.login)).perform(ViewActions.click())
-//    }
 
     @Test
     fun continueWithGoogleCanceledIntent()

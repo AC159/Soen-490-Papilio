@@ -12,7 +12,6 @@ import com.soen490chrysalis.papilio.services.network.responses.UserObject
 import com.soen490chrysalis.papilio.testUtils.MainCoroutineRule
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import io.mockk.core.ValueClassSupport.boxedValue
 import io.mockk.every
 import io.mockk.mockkStatic
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -66,12 +65,10 @@ class UserRepositoryTest
             mockAuthTask as Task<AuthResult>?
         )
 
-        /*
-            The next 3 lines are very important when it comes to calling functions that return tasks
+        /*  The next 3 lines are very important when it comes to calling functions that return tasks
             on which we are calling the '.await()' function. In order to not make the '.await()' hang,
             we must return a TaskCompletionSource<AuthResult> that will return a task which will not make
-            the '.await()' function block anymore.
-         */
+            the '.await()' function block anymore. */
         val taskCompletionSource = TaskCompletionSource<AuthResult>()
         taskCompletionSource.setResult(mockAuthResult)
         Mockito.`when`(mockFirebaseAuth.createUserWithEmailAndPassword(email, password))
@@ -80,12 +77,13 @@ class UserRepositoryTest
                 .thenReturn(taskCompletionSource.task)
 
         Mockito.`when`(mockAuthResult.user).thenReturn(mockFirebaseUser)
+        Mockito.`when`(mockFirebaseAuth.currentUser).thenReturn(mockFirebaseUser)
         Mockito.`when`(mockFirebaseUser.displayName).thenReturn("$firstName $lastName")
         Mockito.`when`(mockFirebaseUser.email).thenReturn(email)
         Mockito.`when`(mockFirebaseUser.uid).thenReturn(mockFirebaseUserUid)
 
         mockWebServer.start()
-        println("Webserver has successfully started...")
+        println("Webserver has successfully started for UserRepository test...")
 
         mockRetrofitUserService = Retrofit.Builder()
                 .addConverterFactory(MoshiConverterFactory.create(moshi))
@@ -93,9 +91,9 @@ class UserRepositoryTest
                 .build()
                 .create(IUserApiService::class.java)
 
-        println("Instantiated mockRetrofitUserService!")
+        println("Instantiated mockRetrofitUserService for UserRepository test!")
 
-        // Important to initialize the user rempository here since the mockRetrofitUserService needs to be create beforehand
+        // Important to initialize the user repository here since the mockRetrofitUserService needs to be create beforehand
         userRepository = Mockito.spy(UserRepository(mockFirebaseAuth, mockRetrofitUserService))
         userRepository.initialize(mockGoogleSignInClient) // this line is just to get more test coverage
 
@@ -127,8 +125,10 @@ class UserRepositoryTest
     @Test
     fun getUserByFirebaseId() = runTest {
         // Test the route with a firebase id of null
+        Mockito.`when`(mockFirebaseAuth.currentUser).thenReturn(mockFirebaseUser)
+        Mockito.`when`(mockFirebaseUser?.uid).thenReturn(null)
+
         var response = userRepository.getUserByFirebaseId()
-        println("Response: $response")
         assert(response == null)
 
         // Let's test the route with a valid firebase id
@@ -140,7 +140,8 @@ class UserRepositoryTest
             "1",
             null,
             "2022-11-14T02:07:02.585Z",
-            "2022-11-14T02:07:02.585Z"
+            "2022-11-14T02:07:02.585Z",
+            "Hello! It's me, firstName!"
         )
 
         val mockServerResponse = MockResponse().setResponseCode(200).setBody(
@@ -154,7 +155,8 @@ class UserRepositoryTest
                     "        \"phone\": null,\n" +
                     "        \"email\": \"validEmail@gmail.com\",\n" +
                     "        \"createdAt\": \"2022-11-14T02:07:02.585Z\",\n" +
-                    "        \"updatedAt\": \"2022-11-14T02:07:02.585Z\"\n" +
+                    "        \"updatedAt\": \"2022-11-14T02:07:02.585Z\",\n" +
+                    "        \"bio\": \"Hello! It's me, firstName!\"\n" +
                     "    }\n" +
                     "}"
         )
@@ -168,7 +170,7 @@ class UserRepositoryTest
 
         assert(response!!.user == user)
         Mockito.verify(mockFirebaseAuth, times(2)).currentUser
-        Mockito.verify(mockFirebaseUser, times(1))?.uid
+        Mockito.verify(mockFirebaseUser, times(2))?.uid
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -200,12 +202,12 @@ class UserRepositoryTest
                 email,
                 password
             )
+
         println("Result: $result")
 
         assert(result.first && result.second == "OK")
         Mockito.verify(mockFirebaseAuth, times(1)).createUserWithEmailAndPassword(email, password)
-        Mockito.verify(userRepository, times(1))
-                .createUser(mockFirebaseUser, true, firstName, lastName)
+        Mockito.verify(userRepository, times(1)).createUser(mockFirebaseUser)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -318,7 +320,7 @@ class UserRepositoryTest
 
         assert(result.first && result.second == "OK")
         Mockito.verify(mockFirebaseAuth, times(1)).signInWithEmailAndPassword(email, password)
-        Mockito.verify(userRepository, times(1)).createUser(mockFirebaseUser, false, null, null)
+        Mockito.verify(userRepository, times(1)).createUser(mockFirebaseUser)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)

@@ -1,11 +1,10 @@
-package com.soen490chrysalis.papilio.repository
+package com.soen490chrysalis.papilio.repository.mocks
 
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.FirebaseUser
 import com.soen490chrysalis.papilio.repository.users.IUserRepository
 import com.soen490chrysalis.papilio.services.network.responses.GetUserByFirebaseIdResponse
 import com.soen490chrysalis.papilio.services.network.responses.UserObject
-import okhttp3.ResponseBody
 import org.mockito.Mockito
 import retrofit2.Response
 
@@ -39,16 +38,21 @@ class MockUserRepository : IUserRepository
             null,
             null,
             "November 13 2022",
-            "November 13 2022"
+            "November 13 2022",
+            "Hello! It's me, firstName!"
         )
         return GetUserByFirebaseIdResponse(true, user)
     }
 
     override suspend fun createUser(
-        user : FirebaseUser?,
-        updateDisplayName : Boolean,
-        firstName : String?,
-        lastName : String?
+        user : FirebaseUser?
+    ) : Response<Void>
+    {
+        return Response.success(null)
+    }
+
+    override suspend fun updateUser(
+        variableMap : Map<String, Any>
     ) : Response<Void>
     {
         return Response.success(null)

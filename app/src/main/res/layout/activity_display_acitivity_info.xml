@@ -20,7 +20,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/black"
                 tools:ignore="Orientation">
 
                 <ImageView
@@ -34,7 +33,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:gravity="center">
 
                 <TextView
                     android:id="@+id/info_Title"
@@ -61,7 +61,8 @@
                     android:layout_height="match_parent"
                     android:orientation="horizontal"
                     android:gravity="center"
-                    android:paddingTop="25dp">
+                    android:paddingTop="25dp"
+                    android:paddingBottom="25dp">
 
                     <com.google.android.material.card.MaterialCardView
                         android:layout_width="120dp"
@@ -71,15 +72,27 @@
                         android:layout_marginLeft="20dp"
                         android:layout_marginRight="20dp"
                         app:cardCornerRadius="30dp">
-
-                        <TextView
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:textColor="@color/black"
-                            android:textSize="12dp"
-                            android:text="$2/person"/>
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:textColor="@color/black"
+                                android:textSize="12dp"
+                                android:textStyle="bold"
+                                android:text="Single"/>
 
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:textColor="@color/black"
+                                android:textSize="12dp"
+                                android:text="$2/person"/>
+                        </LinearLayout>
 
                     </com.google.android.material.card.MaterialCardView>
 
@@ -101,6 +114,14 @@
                                 android:gravity="center"
                                 android:textColor="@color/black"
                                 android:textSize="12dp"
+                                android:textStyle="bold"
+                                android:text="Group"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:textColor="@color/black"
+                                android:textSize="12dp"
                                 android:text="$1/person"/>
                             <TextView
                                 android:layout_width="match_parent"
@@ -112,24 +133,71 @@
 
 
                     </com.google.android.material.card.MaterialCardView>
+
                 </LinearLayout>
 
+                <Button
+                    android:id="@+id/join_button"
+                    android:layout_width="192dp"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/orange"
+                    android:elevation="5dp"
+                    android:text="Join"
+                    android:textColor="@color/white"
+                    android:visibility="visible"
+                    app:cornerRadius="100dp" />
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="15dp"
+                    android:text="Location:"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:gravity="left"/>
+
+                <TextView
+                    android:id="@+id/info_Location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="15dp"
+                    android:text="address"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:gravity="left"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="15dp"
+                    android:paddingLeft="15dp"
+                    android:text="Reviews:"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:gravity="left"/>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="374dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    app:cardCornerRadius="30dp"
+                    app:cardBackgroundColor="@color/light_blue"
+                    app:strokeWidth="3dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:layout_marginBottom="15dp">
+
+                        <include layout="@layout/activity_review_box" />
+                        <include layout="@layout/activity_review_box" />
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
-
-
-            <!--            <LinearLayout-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="match_parent"-->
-            <!--                android:paddingTop="100dp"-->
-            <!--                android:background="@color/white">-->
-
-            <!--                <ImageView-->
-            <!--                    android:layout_width="match_parent"-->
-            <!--                    android:layout_height="250dp"-->
-            <!--                    android:src="@drawable/example_event_photo"/>-->
-
-            <!--            </LinearLayout>-->
         </LinearLayout>
 
 

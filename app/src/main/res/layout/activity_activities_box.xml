@@ -37,7 +37,7 @@
                 android:layout_height="130dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                tools:srcCompat="@tools:sample/backgrounds/scenic" />
+                tools:srcCompat="@drawable/example_event_photo" />
 
             <TextView
                 android:id="@+id/activity_box_address"

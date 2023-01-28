@@ -190,7 +190,8 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:gravity="center"
-                        android:layout_marginBottom="15dp">
+                        android:layout_marginBottom="15dp"
+                        android:layout_marginTop="15dp">
 
                         <include layout="@layout/activity_review_box" />
                         <include layout="@layout/activity_review_box" />

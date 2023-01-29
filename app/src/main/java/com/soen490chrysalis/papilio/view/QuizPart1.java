@@ -35,22 +35,10 @@ public class QuizPart1 extends AppCompatActivity {
         title = (TextView) findViewById(R.id.textView4);
         skip = (TextView) findViewById(R.id.skip);
 
-        firstClick = true;
-
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (firstClick == true) {
-                    firstClick = false;
-                    question.setText("Which of the following do you enjoy more?");
-                    choice1.setText("OUTDOOR ACTIVITIES");
-                    choice2.setText("INDOOR ACTIVITIES");
-                    choice2.setBackgroundResource(R.drawable.outdoor);
-                    title.setVisibility(View.GONE);
-
-                } else {
-                    startActivity(new Intent(QuizPart1.this, QuizPart2Activity.class));
-                }
+                startActivity(new Intent(QuizPart1.this, QuizPart2Activity.class));
             }
         });
 

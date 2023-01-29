@@ -43,7 +43,7 @@
             android:name=".view.UserProfileActivity"
             android:exported="true" />
         <activity
-            android:name=".create_activity"
+            android:name=".view.CreateActivity"
             android:exported="true"/>
         <activity
             android:name=".view.DisplayAcitivityInfoActivity"
@@ -55,9 +55,6 @@
         <activity
             android:name=".view.ActivityReviewBoxActivity"
             android:exported="true"/>
-            android:name=".view.CreateActivity"
-            android:exported="true">
-        </activity>
     </application>
 
 </manifest>

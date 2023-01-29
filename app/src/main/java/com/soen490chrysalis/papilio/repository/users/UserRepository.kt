@@ -2,25 +2,15 @@ package com.soen490chrysalis.papilio.repository.users
 
 import android.util.Log
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.firebase.auth.AuthResult
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
-import com.google.firebase.auth.FirebaseAuthInvalidUserException
-import com.google.firebase.auth.FirebaseAuthUserCollisionException
-import com.google.firebase.auth.FirebaseAuthWeakPasswordException
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.auth.UserProfileChangeRequest
+import com.google.firebase.auth.*
 import com.soen490chrysalis.papilio.services.network.*
-import com.soen490chrysalis.papilio.services.network.requests.User
-import com.soen490chrysalis.papilio.services.network.requests.UserRequest
+import com.soen490chrysalis.papilio.services.network.requests.*
 import com.soen490chrysalis.papilio.services.network.responses.GetUserByFirebaseIdResponse
-import kotlinx.coroutines.tasks.await
-import retrofit2.Response
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
-
+import retrofit2.Response
 
 /*
     DESCRIPTION:
@@ -36,6 +26,7 @@ import kotlinx.coroutines.withContext
     Author: Anastassy Cap
     Date: October 5, 2022
 */
+
 class UserRepository(
     private var firebaseAuth : FirebaseAuth,
     private val userService : IUserApiService,
@@ -94,18 +85,8 @@ class UserRepository(
     */
     override suspend fun createUser(
         user : FirebaseUser?,
-        updateDisplayName : Boolean,
-        firstName : String?,
-        lastName : String?
     ) : Response<Void>
     {
-        if (updateDisplayName)
-        {
-            val userProfileChangeRequest =
-                UserProfileChangeRequest.Builder().setDisplayName("$firstName $lastName").build()
-            user?.updateProfile(userProfileChangeRequest)
-                    ?.await() // wait for the display name update request to finish before proceeding
-        }
 
         val displayName = user!!.displayName
         val tokens = displayName!!.split(" ")
@@ -122,6 +103,32 @@ class UserRepository(
         return response
     }
 
+    /*
+       DESCRIPTION:
+       Utility function that makes a request to the backend to update a user.
+
+       The key (and only) argument for this function is "variableMap", which is a MutableMap object that contains a map of all the
+       edited fields in the user profile page. In short, all fields that the user changed in the user profile get updated in one single PUT request
+       and all the edited fields are kept in the aforementioned MutableMap, which gets sent along with the PUT request as the Body of the request.
+
+       Author: Anas Peerzada
+       Date: January 1st, 2023
+    */
+    override suspend fun updateUser(
+        variableMap : Map<String, Any>
+    ) : Response<Void>
+    {
+        return withContext(coroutineDispatcher)
+        {
+            val firebaseId = firebaseAuth.currentUser!!.uid
+
+            val response = userService.updateUser(UserUpdate(Identifier(firebaseId), variableMap))
+
+            Log.d(logTag, "Update user: $response")
+            return@withContext response
+        }
+    }
+
     override suspend fun firebaseAuthWithGoogle(idToken : String) : Pair<Boolean, String>
     {
         return withContext(coroutineDispatcher)
@@ -132,8 +139,7 @@ class UserRepository(
                 val authResult : AuthResult = firebaseAuth.signInWithCredential(credential).await()
 
                 // Now that we have successfully authenticated, we can create a user in the database
-                val userCreationRes : Response<Void> =
-                    createUser(authResult.user, false, null, null)
+                val userCreationRes : Response<Void> = createUser(authResult.user)
                 Log.d(logTag, "userCreationResponse: $userCreationRes")
 
                 Pair(userCreationRes.isSuccessful, userCreationRes.message())
@@ -177,9 +183,15 @@ class UserRepository(
                 val authResult : AuthResult =
                     firebaseAuth.createUserWithEmailAndPassword(emailAddress, password).await()
 
+                // Update the user's display name
+                val userProfileChangeRequest =
+                    UserProfileChangeRequest.Builder().setDisplayName("$firstName $lastName")
+                            .build()
+                authResult.user?.updateProfile(userProfileChangeRequest)
+                        ?.await() // wait for the display name update request to finish before proceeding
+
                 // Now that we have successfully authenticated, we can create a user in the database
-                val userCreationRes : Response<Void> =
-                    createUser(authResult.user, true, firstName, lastName)
+                val userCreationRes : Response<Void> = createUser(firebaseAuth.currentUser)
 
                 Log.d(logTag, "userCreationResponse: $userCreationRes")
                 Pair(userCreationRes.isSuccessful, userCreationRes.message())
@@ -222,8 +234,7 @@ class UserRepository(
                     firebaseAuth.signInWithEmailAndPassword(emailAddress, password).await()
 
                 // Now that we have successfully authenticated, we can create a user in the database
-                val userCreationRes : Response<Void> =
-                    createUser(authResult.user, false, null, null)
+                val userCreationRes : Response<Void> = createUser(authResult.user)
                 Log.d(logTag, "userCreationResponse: $userCreationRes")
 
                 Pair(userCreationRes.isSuccessful, userCreationRes.message())

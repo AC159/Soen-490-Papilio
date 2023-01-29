@@ -27,11 +27,13 @@ android {
         debug {
             testCoverageEnabled true
             buildConfigField("String", "BACKEND_API_URL", "\"" + localProperties['BACKEND_API_URL'] + "\"")
+            buildConfigField("String", "MAPBOX_SECRET_TOKEN", "\"" + localProperties['MAPBOX_SECRET_TOKEN'] + "\"")
         }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             buildConfigField("String", "BACKEND_API_URL", "\"" + localProperties['BACKEND_API_URL'] + "\"")
+            buildConfigField("String", "MAPBOX_SECRET_TOKEN", "\"" + localProperties['MAPBOX_SECRET_TOKEN'] + "\"")
         }
     }
     compileOptions {
@@ -102,6 +104,10 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.14.2'
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.4"
+    implementation 'com.github.dhaval2404:imagepicker:2.1'
+
+    // For Mapbox address autofill & other stuff
+    implementation "com.mapbox.search:mapbox-search-android-ui:1.0.0-beta.43"
 
     // Dependencies for retrofit library for network requests
     def retrofit_version = '2.9.0'

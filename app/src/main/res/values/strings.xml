@@ -114,7 +114,46 @@
             </ul><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
         ]]>
     </string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="placeholder_bio">Enjoy meeting new people and exploring my city. If you’re down to meet a friendly guy who knows how to have fun come join me at my activities.</string>
+
+    <string name="create_activity">+ Create Activity</string>
+    <string name="import_pictures">Import Pictures:</string>
+    <string name="import_media">Import</string>
+    <string name="ex_10">ex: 10</string>
+    <string name="maximum_number_of_participants">Maximum number of participants:</string>
+    <string name="description">Description...</string>
+    <string name="event_description">Event Description:</string>
+    <string name="ex_23h00">ex: 23h00</string>
+    <string name="ex_19h00">ex: 19h00</string>
+    <string name="event_end_time">Event End Time:</string>
+    <string name="event_start_time">Event Start Time:</string>
+    <string name="dd_mm_yyyy">dd-mm-yyyy</string>
+    <string name="event_date">Event Date:</string>
+    <string name="location">Location</string>
+    <string name="event_location">Event Location:</string>
+    <string name="title">Title</string>
+    <string name="event_title">Event Title:</string>
+    <string name="create_your_activity">Create Your Activity</string>
+    <string name="papilio_logo">Papilio logo</string>
+    <string name="select_start_time">Select Start Time</string>
+    <string name="select_end_time">Select End Time</string>
+    <string name="select_date">Select Date</string>
+    <string name="MAPBOX_PUBLIC_ACCESS_TOKEN">pk.eyJ1IjoiYWMyMDAwIiwiYSI6ImNsYzEwdng2YzJpenEzdXBudDR2NWczNW0ifQ.20lZpfiX1vGKx1J8-dodqw</string>
+
+    <string name="placeholder_bio">loading bio...</string>
+    <string name="add_phone_number">Add Phone Number</string>
+    <string name="change_password">Change Password</string>
+    <string name="past_activities">PAST ACTIVITIES</string>
+    <string name="example_phone_number">Phone: +14384532313</string>
+    <string name="example_email">Email: john.doe@email.ca</string>
+    <string name="personal_information_title">Account Information</string>
+    <string name="activity_count_example">5</string>
+    <string name="activities_header">ACTIVITIES</string>
+    <string name="example_location_montreal">Montreal, QC</string>
+    <string name="location_header">LOCATION</string>
+    <string name="example_languages">Eng, Fra</string>
+    <string name="language_header">LANGUAGE</string>
+    <string name="edit_profile_button_text">Edit Profile</string>
+    <string name="example_full_name">John Doe</string>
+    <string name="bio_hint">Your bio goes here!</string>
+    <string name="bio_edit_hint">Write your bio here…</string>
 </resources>

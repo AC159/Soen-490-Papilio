@@ -6,9 +6,11 @@
     <color name="light_blue">#9FE7F5</color>
     <color name="yellow">#F7AD19</color>
     <color name="orange">#F27F0C</color>
+    <color name="turquoise">#52A79E</color>
 
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="edit_text_grey">#DADADA</color>
     <color name="semi_transparent_white">#80ffffff</color>
+    <color name="light_sea_green">#52A89F</color>
 </resources>

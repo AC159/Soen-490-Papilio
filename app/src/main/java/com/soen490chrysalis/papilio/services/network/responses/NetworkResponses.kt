@@ -18,7 +18,8 @@ data class UserObject(
     val countryCode : String?,
     val phone : String?,
     val createdAt : String,
-    val updatedAt : String
+    val updatedAt : String,
+    val bio : String
 )
 
 // Response object for the /api/user/get/:firebaseId endpoint

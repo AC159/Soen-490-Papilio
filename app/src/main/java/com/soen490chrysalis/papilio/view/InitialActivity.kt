@@ -6,12 +6,11 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseUser
 import com.soen490chrysalis.papilio.databinding.ActivityInitialBinding
 import com.soen490chrysalis.papilio.viewModel.GetUserResponse
 import com.soen490chrysalis.papilio.viewModel.LoginViewModel
-import com.soen490chrysalis.papilio.viewModel.LoginViewModelFactory
+import com.soen490chrysalis.papilio.viewModel.factories.LoginViewModelFactory
 
 class InitialActivity : AppCompatActivity()
 {

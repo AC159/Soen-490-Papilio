@@ -1,6 +1,8 @@
 package com.soen490chrysalis.papilio.services.network.responses
 
+import android.app.Activity
 import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
 /*
     File that will hold all the data classes for response objects
@@ -20,6 +22,30 @@ data class UserObject(
     val createdAt : String,
     val updatedAt : String,
     val bio : String
+)
+
+data class ActivityObject(
+    val id: String?,
+    val title: String?,
+    val description: String?,
+    val costPerIndividual: String?,
+    val costPerGroup: String?,
+    val groupSize: String?,
+    val images: List<String>?,
+    val startTime: String?,
+    val endTime: String?,
+    val address: String?,
+    val createdAt: String?,
+    val updatedAt: String?,
+    val businessId: String?,
+    val userId: String?
+)
+
+data class ActivityResponse(
+    val count: String,
+    val rows: List<ActivityObject>,
+    val currentPage: String,
+    val totalPages: String
 )
 
 // Response object for the /api/user/get/:firebaseId endpoint

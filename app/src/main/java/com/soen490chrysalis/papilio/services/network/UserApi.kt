@@ -47,6 +47,11 @@ interface IUserApiService
         @Path("firebaseId") firebaseId : String?
     ) : Response<GetUserByFirebaseIdResponse>
 
+    @GET("get/{id}/activities")
+    suspend fun getUserActivities(
+        @Path("firebaseId") firebaseId : String?
+    ) : Response<GetUserByFirebaseIdResponse>
+
     @POST("createUser")
     suspend fun createUser(
         @Body user : UserRequest

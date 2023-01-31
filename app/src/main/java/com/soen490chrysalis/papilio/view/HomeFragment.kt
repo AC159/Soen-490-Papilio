@@ -2,11 +2,17 @@ package com.soen490chrysalis.papilio.view
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.soen490chrysalis.papilio.R
+import com.soen490chrysalis.papilio.services.network.responses.ActivityObject
+import com.soen490chrysalis.papilio.viewModel.HomeFragmentViewModel
+import com.soen490chrysalis.papilio.viewModel.factories.HomeFragmentViewModelFactory
 
 /**
  * A simple [Fragment] subclass.
@@ -15,19 +21,14 @@ import com.soen490chrysalis.papilio.R
  */
 class HomeFragment : Fragment()
 {
-    // TODO: Rename and change types of parameters
-    private var mParam1 : String? = null
-    private var mParam2 : String? = null
-
+    private lateinit var homeFragmentViewModel : HomeFragmentViewModel
+    private lateinit var activityList: List<ActivityObject>
 
     override fun onCreate(savedInstanceState : Bundle?)
     {
         super.onCreate(savedInstanceState)
-        if (arguments != null)
-        {
-            mParam1 = arguments?.getString(ARG_PARAM1)
-            mParam2 = arguments?.getString(ARG_PARAM2)
-        }
+
+
     }
 
     override fun onCreateView(
@@ -36,12 +37,26 @@ class HomeFragment : Fragment()
         savedInstanceState : Bundle?
     ) : View?
     {
+
+
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val homeFragmentVMFactory = HomeFragmentViewModelFactory()
+        homeFragmentViewModel = ViewModelProvider(this, homeFragmentVMFactory)[HomeFragmentViewModel::class.java]
+
+        homeFragmentViewModel.getAllActivities("1", "20")
+
+        homeFragmentViewModel.activityResponse.observe(viewLifecycleOwner, Observer{
+
+            activityList = homeFragmentViewModel.activityResponse.value!!.rows
+            Log.d("getAllActivities", activityList.toString())
+
+        })
 
         for (iCardView in 0..2) {
             val idView = resources.getIdentifier("activity_box$iCardView", "id", requireContext().packageName)

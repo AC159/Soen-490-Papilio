@@ -77,26 +77,33 @@
                     </LinearLayout>
                 </LinearLayout>
 
-
-            <LinearLayout
+            <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center"
-                tools:ignore="MissingConstraints">
+                android:id="@+id/activityFeedRV">
 
-                <include
-                    android:id="@+id/activity_box0"
-                    layout="@layout/activity_activities_box" />
 
-                <include
-                    android:id="@+id/activity_box1"
-                    layout="@layout/activity_activities_box" />
+            </androidx.recyclerview.widget.RecyclerView>
 
-                <include
-                    android:id="@+id/activity_box2"
-                    layout="@layout/activity_activities_box" />
-            </LinearLayout>
+<!--            <LinearLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:orientation="vertical"-->
+<!--                android:gravity="center"-->
+<!--                tools:ignore="MissingConstraints">-->
+
+<!--                <include-->
+<!--                    android:id="@+id/activity_box0"-->
+<!--                    layout="@layout/activity_activities_box" />-->
+
+<!--                <include-->
+<!--                    android:id="@+id/activity_box1"-->
+<!--                    layout="@layout/activity_activities_box" />-->
+
+<!--                <include-->
+<!--                    android:id="@+id/activity_box2"-->
+<!--                    layout="@layout/activity_activities_box" />-->
+<!--            </LinearLayout>-->
         </LinearLayout>
 
 

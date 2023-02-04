@@ -9,8 +9,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.soen490chrysalis.papilio.R
 import com.soen490chrysalis.papilio.services.network.responses.ActivityObject
+import com.soen490chrysalis.papilio.view.dialogs.FeedAdapter
 import com.soen490chrysalis.papilio.viewModel.HomeFragmentViewModel
 import com.soen490chrysalis.papilio.viewModel.factories.HomeFragmentViewModelFactory
 
@@ -19,10 +22,16 @@ import com.soen490chrysalis.papilio.viewModel.factories.HomeFragmentViewModelFac
  * Use the [HomeFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
+
+
+class ActivityObject2(var title: String, var address: String, var startTime: String)
+
 class HomeFragment : Fragment()
 {
     private lateinit var homeFragmentViewModel : HomeFragmentViewModel
     private lateinit var activityList: List<ActivityObject>
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: FeedAdapter
 
     override fun onCreate(savedInstanceState : Bundle?)
     {
@@ -45,6 +54,14 @@ class HomeFragment : Fragment()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+//        activityList = listOf<ActivityObject>()
+//        (
+//            ActivityObject2("something","Montreal", "2032-01-07"),
+//            ActivityObject2("Soccer","Laval", "2022-01-07"),
+//            ActivityObject2("hello","Laval", "2032-06-23"),
+//            ActivityObject2("please","Montreal", "1999-01-05"),
+//
+//        )
 
         val homeFragmentVMFactory = HomeFragmentViewModelFactory()
         homeFragmentViewModel = ViewModelProvider(this, homeFragmentVMFactory)[HomeFragmentViewModel::class.java]
@@ -55,14 +72,45 @@ class HomeFragment : Fragment()
 
             activityList = homeFragmentViewModel.activityResponse.value!!.rows
             Log.d("getAllActivities", activityList.toString())
+            val layoutManager = LinearLayoutManager(context)
+            recyclerView = view.findViewById(R.id.activityFeedRV)
+            recyclerView.layoutManager = layoutManager
+            recyclerView.setHasFixedSize(false)
+            adapter = FeedAdapter(activityList)
+            recyclerView.adapter = adapter
+            adapter.setOnItemClickListener(object : FeedAdapter.onItemClickListener{
+                override fun onItemClick(position: Int) {
+
+                    val intent = Intent(getActivity(), DisplayAcitivityInfoActivity::class.java)
+                    intent.putExtra("title", activityList[position].title)
+                    intent.putExtra("description", activityList[position].description)
+                    intent.putExtra("individualCost", activityList[position].costPerIndividual)
+                    intent.putExtra("groupCost", activityList[position].costPerGroup)
+                    intent.putExtra("location", activityList[position].address)
+                    if(activityList[position].images != null || activityList[position].images?.size != 0){
+                        intent.putExtra("images", activityList[position].images?.get(0))
+                        Log.d("hello ",activityList[position].images?.get(0).toString())
+                    }else{
+                        intent.putExtra("images", "")
+                    }
+
+                    startActivity(intent)
+                }
+            })
 
         })
 
-        for (iCardView in 0..2) {
-            val idView = resources.getIdentifier("activity_box$iCardView", "id", requireContext().packageName)
-            val eventView: View = view.findViewById(idView)
-            eventView.setOnClickListener { view -> SwitchToDisplayActivityInfo(view)}
-        }
+
+
+
+
+
+
+//        for (iCardView in 0..2) {
+//            val idView = resources.getIdentifier("activity_box$iCardView", "id", requireContext().packageName)
+//            val eventView: View = view.findViewById(idView)
+//            eventView.setOnClickListener { view -> SwitchToDisplayActivityInfo(view)}
+//        }
     }
 
 
@@ -99,4 +147,7 @@ class HomeFragment : Fragment()
             return fragment
         }
     }
+
+
 }
+

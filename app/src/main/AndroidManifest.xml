@@ -46,10 +46,10 @@
             android:name=".view.CreateActivity"
             android:exported="true"/>
         <activity
-            android:name=".view.DisplayAcitivityInfoActivity"
+            android:name=".view.DisplayActivityInfoActivity"
             android:exported="true"/>
         <activity
-            android:name=".view.ActicitiesBoxActivity"
+            android:name=".view.ActivitiesBoxActivity"
             android:exported="true"/>
 
         <activity

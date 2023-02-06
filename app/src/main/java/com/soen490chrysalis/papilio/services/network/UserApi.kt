@@ -19,7 +19,7 @@ import retrofit2.http.*
     Date: November 11, 2022
  */
 
-private const val BASE_URL = BuildConfig.BACKEND_API_URL
+private const val BASE_URL = BuildConfig.USER_API_URL
 
 // Build the Moshi object with Kotlin adapter factory that Retrofit will be using
 private val moshi = Moshi.Builder()

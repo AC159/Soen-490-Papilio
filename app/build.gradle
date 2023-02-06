@@ -26,7 +26,8 @@ android {
     buildTypes {
         debug {
             testCoverageEnabled true
-            buildConfigField("String", "BACKEND_API_URL", "\"" + localProperties['BACKEND_API_URL'] + "\"")
+            buildConfigField("String", "USER_API_URL", "\"" + localProperties['USER_API_URL'] + "\"")
+            buildConfigField("String", "ACTIVITY_API_URL", "\"" + localProperties['ACTIVITY_API_URL'] + "\"")
             buildConfigField("String", "MAPBOX_SECRET_TOKEN", "\"" + localProperties['MAPBOX_SECRET_TOKEN'] + "\"")
         }
         release {

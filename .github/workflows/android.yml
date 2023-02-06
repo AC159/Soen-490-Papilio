@@ -56,10 +56,10 @@ jobs:
       run: echo $GOOGLE_SERVICES_FILE > $GITHUB_WORKSPACE/app/google-services.json
 
     - name: Add USER_API_URL to local.properties
-      run: echo USER_API_URL=http://192.168.1.36:1337/api/user/ >> ./local.properties
+      run: echo USER_API_URL=http://localhost:1337/api/user/ >> ./local.properties
 
     - name: Add ACTIVITY_API_URL to local.properties
-      run: echo ACTIVITY_API_URL=http://192.168.1.36:1337/api/activity/ >> ./local.properties
+      run: echo ACTIVITY_API_URL=http://localhost:1337/api/activity/ >> ./local.properties
 
     - name: Add MAPBOX_SECRET_TOKEN to local.properties
       env:

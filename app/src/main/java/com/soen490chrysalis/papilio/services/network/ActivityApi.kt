@@ -2,7 +2,6 @@ package com.soen490chrysalis.papilio.services.network
 
 import com.soen490chrysalis.papilio.BuildConfig
 import com.soen490chrysalis.papilio.services.network.responses.ActivityResponse
-import com.soen490chrysalis.papilio.services.network.responses.GetUserByFirebaseIdResponse
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Response
@@ -17,7 +16,7 @@ import retrofit2.http.*
     Date: January 29th, 2023
  */
 
-private const val BASE_URL = BuildConfig.BACKEND_API_URL
+private const val BASE_URL = BuildConfig.ACTIVITY_API_URL
 
 // Build the Moshi object with Kotlin adapter factory that Retrofit will be using
 private val moshi = Moshi.Builder()
@@ -27,7 +26,7 @@ private val moshi = Moshi.Builder()
 // The Retrofit object with the Moshi converter.
 private val retrofit = Retrofit.Builder()
         .addConverterFactory(MoshiConverterFactory.create(moshi))
-        .baseUrl("http://localhost:1337/api/activity/")
+        .baseUrl(BASE_URL)
         .build()
 
 /*

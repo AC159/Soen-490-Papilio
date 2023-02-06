@@ -24,20 +24,18 @@ import com.soen490chrysalis.papilio.viewModel.factories.HomeFragmentViewModelFac
  */
 
 
-class ActivityObject2(var title: String, var address: String, var startTime: String)
+class ActivityObject2(var title : String, var address : String, var startTime : String)
 
 class HomeFragment : Fragment()
 {
     private lateinit var homeFragmentViewModel : HomeFragmentViewModel
-    private lateinit var activityList: List<ActivityObject>
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: FeedAdapter
+    private lateinit var activityList : List<ActivityObject>
+    private lateinit var recyclerView : RecyclerView
+    private lateinit var adapter : FeedAdapter
 
     override fun onCreate(savedInstanceState : Bundle?)
     {
         super.onCreate(savedInstanceState)
-
-
     }
 
     override fun onCreateView(
@@ -46,13 +44,12 @@ class HomeFragment : Fragment()
         savedInstanceState : Bundle?
     ) : View?
     {
-
-
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view : View, savedInstanceState : Bundle?)
+    {
         super.onViewCreated(view, savedInstanceState)
 //        activityList = listOf<ActivityObject>()
 //        (
@@ -64,11 +61,12 @@ class HomeFragment : Fragment()
 //        )
 
         val homeFragmentVMFactory = HomeFragmentViewModelFactory()
-        homeFragmentViewModel = ViewModelProvider(this, homeFragmentVMFactory)[HomeFragmentViewModel::class.java]
+        homeFragmentViewModel =
+            ViewModelProvider(this, homeFragmentVMFactory)[HomeFragmentViewModel::class.java]
 
         homeFragmentViewModel.getAllActivities("1", "20")
 
-        homeFragmentViewModel.activityResponse.observe(viewLifecycleOwner, Observer{
+        homeFragmentViewModel.activityResponse.observe(viewLifecycleOwner, Observer {
 
             activityList = homeFragmentViewModel.activityResponse.value!!.rows
             Log.d("getAllActivities", activityList.toString())
@@ -78,33 +76,31 @@ class HomeFragment : Fragment()
             recyclerView.setHasFixedSize(false)
             adapter = FeedAdapter(activityList)
             recyclerView.adapter = adapter
-            adapter.setOnItemClickListener(object : FeedAdapter.onItemClickListener{
-                override fun onItemClick(position: Int) {
-
-                    val intent = Intent(getActivity(), DisplayAcitivityInfoActivity::class.java)
+            adapter.setOnItemClickListener(object : FeedAdapter.onItemClickListener
+            {
+                override fun onItemClick(position : Int)
+                {
+                    val intent = Intent(activity, DisplayActivityInfoActivity::class.java)
                     intent.putExtra("title", activityList[position].title)
                     intent.putExtra("description", activityList[position].description)
                     intent.putExtra("individualCost", activityList[position].costPerIndividual)
                     intent.putExtra("groupCost", activityList[position].costPerGroup)
                     intent.putExtra("location", activityList[position].address)
-                    if(activityList[position].images != null || activityList[position].images?.size != 0){
+
+                    if (activityList[position].images != null && activityList[position].images?.isNotEmpty() == true)
+                    {
                         intent.putExtra("images", activityList[position].images?.get(0))
-                        Log.d("hello ",activityList[position].images?.get(0).toString())
-                    }else{
+                        Log.d("hello ", activityList[position].images?.get(0).toString())
+                    }
+                    else
+                    {
                         intent.putExtra("images", "")
                     }
 
                     startActivity(intent)
                 }
             })
-
         })
-
-
-
-
-
-
 
 //        for (iCardView in 0..2) {
 //            val idView = resources.getIdentifier("activity_box$iCardView", "id", requireContext().packageName)
@@ -114,11 +110,11 @@ class HomeFragment : Fragment()
     }
 
 
-    fun SwitchToDisplayActivityInfo(view:View?){
-        val intent = Intent (getActivity(), DisplayAcitivityInfoActivity::class.java)
+    fun SwitchToDisplayActivityInfo(view : View?)
+    {
+        val intent = Intent(getActivity(), DisplayActivityInfoActivity::class.java)
         getActivity()?.startActivity(intent)
     }
-
 
 
     companion object
@@ -147,7 +143,4 @@ class HomeFragment : Fragment()
             return fragment
         }
     }
-
-
 }
-

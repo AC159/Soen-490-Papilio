@@ -18,7 +18,7 @@ class CreateActivityViewModelFactory : ViewModelProvider.NewInstanceFactory()
         // Initialize Firebase Auth and inject it into the user repository
         val firebaseAuth = FirebaseAuth.getInstance()
         val activityRepository : IActivityRepository =
-            ActivityRepository(firebaseAuth, userAPIService = UserApi.retrofitService, ActivityApi.retrofitService)
+            ActivityRepository(firebaseAuth, userAPIService = UserApi.retrofitService, activityAPIService = ActivityApi.retrofitService)
 
         return CreateActivityViewModel(activityRepository) as T
     }

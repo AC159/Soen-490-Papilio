@@ -3,19 +3,22 @@ package com.soen490chrysalis.papilio.view.dialogs
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.soen490chrysalis.papilio.R
 import com.soen490chrysalis.papilio.services.network.responses.ActivityObject
+import com.soen490chrysalis.papilio.view.HomeFragment
 
-class FeedAdapter(private val feedList: List<ActivityObject>): RecyclerView.Adapter<FeedAdapter.FeedViewHolder>() {
-    private lateinit var activityListener: onItemClickListener
+class FeedAdapter(private val feedList: List<ActivityObject>, private val homeFragment: HomeFragment): RecyclerView.Adapter<FeedAdapter.FeedViewHolder>() {
+    private lateinit var activityListener: OnItemClickListener
 
-    interface onItemClickListener{
+    interface OnItemClickListener{
         fun onItemClick(position: Int)
     }
 
-    fun setOnItemClickListener(listener: onItemClickListener)
+    fun setOnItemClickListener(listener: OnItemClickListener)
     {
         activityListener = listener
     }
@@ -28,11 +31,15 @@ class FeedAdapter(private val feedList: List<ActivityObject>): RecyclerView.Adap
 
     override fun onBindViewHolder(holder: FeedViewHolder, position: Int) {
         val currentItem = feedList[position]
-//        holder.boxId.id = currentItem.id.toIntOrNull()
         holder.boxTitle.text = currentItem.title
-//        holder.boxImage.setImageURI(currentItem.images?.get(0))
+
+
         holder.boxAddress.text = currentItem.address
         holder.boxStartTime.text = currentItem.startTime
+
+        if (currentItem.images != null && currentItem.images?.isNotEmpty() == true){
+            Glide.with(homeFragment).load(currentItem.images?.get(0)).into(holder.boxImage)
+        }
 
 
     }
@@ -40,10 +47,9 @@ class FeedAdapter(private val feedList: List<ActivityObject>): RecyclerView.Adap
         return feedList.size
     }
 
-    class FeedViewHolder(itemView: View, listener: onItemClickListener): RecyclerView.ViewHolder(itemView){
-//        val boxId: RelativeLayout = itemView.findViewById(R.id.activity_box)
+    class FeedViewHolder(itemView: View, listener: OnItemClickListener): RecyclerView.ViewHolder(itemView){
         val boxTitle: TextView = itemView.findViewById(R.id.activity_box_title)
-//        val boxImage: ShapeableImageView = itemView.findViewById(R.id.activity_box_image)
+        val boxImage: ImageView = itemView.findViewById(R.id.activity_box_image)
         val boxAddress: TextView = itemView.findViewById(R.id.activity_box_address)
         val boxStartTime: TextView = itemView.findViewById(R.id.activity_box_start_time)
 
@@ -54,7 +60,3 @@ class FeedAdapter(private val feedList: List<ActivityObject>): RecyclerView.Adap
         }
     }
 }
-
-//private fun ShapeableImageView.setImageResource(pair: Pair<String, InputStream>) {
-//
-//}

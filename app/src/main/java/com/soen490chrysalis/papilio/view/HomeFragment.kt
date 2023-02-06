@@ -23,9 +23,6 @@ import com.soen490chrysalis.papilio.viewModel.factories.HomeFragmentViewModelFac
  * create an instance of this fragment.
  */
 
-
-class ActivityObject2(var title : String, var address : String, var startTime : String)
-
 class HomeFragment : Fragment()
 {
     private lateinit var homeFragmentViewModel : HomeFragmentViewModel
@@ -51,14 +48,6 @@ class HomeFragment : Fragment()
     override fun onViewCreated(view : View, savedInstanceState : Bundle?)
     {
         super.onViewCreated(view, savedInstanceState)
-//        activityList = listOf<ActivityObject>()
-//        (
-//            ActivityObject2("something","Montreal", "2032-01-07"),
-//            ActivityObject2("Soccer","Laval", "2022-01-07"),
-//            ActivityObject2("hello","Laval", "2032-06-23"),
-//            ActivityObject2("please","Montreal", "1999-01-05"),
-//
-//        )
 
         val homeFragmentVMFactory = HomeFragmentViewModelFactory()
         homeFragmentViewModel =
@@ -74,13 +63,14 @@ class HomeFragment : Fragment()
             recyclerView = view.findViewById(R.id.activityFeedRV)
             recyclerView.layoutManager = layoutManager
             recyclerView.setHasFixedSize(false)
-            adapter = FeedAdapter(activityList)
+            adapter = FeedAdapter(activityList, this)
             recyclerView.adapter = adapter
-            adapter.setOnItemClickListener(object : FeedAdapter.onItemClickListener
+            adapter.setOnItemClickListener(object : FeedAdapter.OnItemClickListener
             {
                 override fun onItemClick(position : Int)
                 {
                     val intent = Intent(activity, DisplayActivityInfoActivity::class.java)
+                    intent.putExtra("id", activityList[position].id)
                     intent.putExtra("title", activityList[position].title)
                     intent.putExtra("description", activityList[position].description)
                     intent.putExtra("individualCost", activityList[position].costPerIndividual)
@@ -89,31 +79,30 @@ class HomeFragment : Fragment()
 
                     if (activityList[position].images != null && activityList[position].images?.isNotEmpty() == true)
                     {
-                        intent.putExtra("images", activityList[position].images?.get(0))
-                        Log.d("hello ", activityList[position].images?.get(0).toString())
+                        intent.putExtra("images", true)
+                        var x = 0
+                        Log.d("Size", activityList[position].images!!.size.toString())
+                        for(i in activityList[position].images!!){
+                            intent.putExtra("images$x", i)
+                            x++
+
+                        }
+                        if(x != 5){
+                            for(e in x until 5){
+                                intent.putExtra("images$e", "")
+                                x++
+                            }
+                        }
                     }
                     else
                     {
-                        intent.putExtra("images", "")
+                        intent.putExtra("images", false)
                     }
 
                     startActivity(intent)
                 }
             })
         })
-
-//        for (iCardView in 0..2) {
-//            val idView = resources.getIdentifier("activity_box$iCardView", "id", requireContext().packageName)
-//            val eventView: View = view.findViewById(idView)
-//            eventView.setOnClickListener { view -> SwitchToDisplayActivityInfo(view)}
-//        }
-    }
-
-
-    fun SwitchToDisplayActivityInfo(view : View?)
-    {
-        val intent = Intent(getActivity(), DisplayActivityInfoActivity::class.java)
-        getActivity()?.startActivity(intent)
     }
 
 

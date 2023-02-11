@@ -44,7 +44,7 @@ class QuizPart2Activity : AppCompatActivity()
         genreViewModel = ViewModelProvider(this, viewModelFactory)[GenreViewModel::class.java]
         genreViewModel.getAllGenres(category = "sport")
         genreViewModel.genreObject.observe(this, Observer {
-            genreList = genreViewModel.genreObject.value?.rows!!
+            genreList = genreViewModel.genreObject.value!!
             Log.d("getAllGenres", genreList.toString())
         })
         val buttonArray = arrayOf(

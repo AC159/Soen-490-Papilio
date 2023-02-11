@@ -5,11 +5,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.soen490chrysalis.papilio.repository.Genre.IGenreRepository
+import com.soen490chrysalis.papilio.services.network.responses.GenreObject
 import com.soen490chrysalis.papilio.services.network.responses.GenreObjectResponse
 import kotlinx.coroutines.launch
 
 class GenreViewModel(private val genreRepository: IGenreRepository) : ViewModel() {
-    var genreObject: MutableLiveData<GenreObjectResponse> = MutableLiveData<GenreObjectResponse>()
+    var genreObject: MutableLiveData<List<GenreObject>> = MutableLiveData<List<GenreObject>>()
 
     fun getAllGenres(category : String?){
            viewModelScope.launch {

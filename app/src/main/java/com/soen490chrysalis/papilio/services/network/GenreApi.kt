@@ -1,5 +1,6 @@
 package com.soen490chrysalis.papilio.services.network
 
+import com.soen490chrysalis.papilio.services.network.responses.GenreObject
 import com.soen490chrysalis.papilio.services.network.responses.GenreObjectResponse
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -32,7 +33,7 @@ interface IGenreApiService
     @GET ("all")
     suspend fun getAllGenres(
         @Query("category") category : String?
-    ) : Response<GenreObjectResponse>
+    ) : Response<List<GenreObject>>
 }
 
 object GenreApi{

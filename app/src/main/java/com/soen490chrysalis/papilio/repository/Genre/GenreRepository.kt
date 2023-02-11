@@ -2,6 +2,7 @@ package com.soen490chrysalis.papilio.repository.Genre
 
 import android.util.Log
 import com.soen490chrysalis.papilio.services.network.IGenreApiService
+import com.soen490chrysalis.papilio.services.network.responses.GenreObject
 import com.soen490chrysalis.papilio.services.network.responses.GenreObjectResponse
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -15,7 +16,7 @@ class GenreRepository(
 {
     override suspend fun getAllGenres(
         category: String?
-    ) : Response<GenreObjectResponse>
+    ) : Response<List<GenreObject>>
     {
         return withContext(coroutineDispatcher)
         {

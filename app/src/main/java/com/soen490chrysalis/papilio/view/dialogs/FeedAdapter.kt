@@ -37,8 +37,10 @@ class FeedAdapter(private val feedList: List<ActivityObject>, private val homeFr
         holder.boxAddress.text = currentItem.address
         holder.boxStartTime.text = currentItem.startTime
 
-        if (currentItem.images != null && currentItem.images?.isNotEmpty() == true){
-            Glide.with(homeFragment).load(currentItem.images?.get(0)).into(holder.boxImage)
+        if (currentItem.images != null && currentItem.images.isNotEmpty()){
+            Glide.with(homeFragment).load(currentItem.images[0]).into(holder.boxImage)
+        }else{
+            holder.boxImage.setImageResource(R.drawable.example_event_photo)
         }
 
 

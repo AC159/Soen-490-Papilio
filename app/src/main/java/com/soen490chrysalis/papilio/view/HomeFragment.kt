@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -16,6 +17,7 @@ import com.soen490chrysalis.papilio.services.network.responses.ActivityObject
 import com.soen490chrysalis.papilio.view.dialogs.FeedAdapter
 import com.soen490chrysalis.papilio.viewModel.HomeFragmentViewModel
 import com.soen490chrysalis.papilio.viewModel.factories.HomeFragmentViewModelFactory
+import kotlin.properties.Delegates
 
 /**
  * A simple [Fragment] subclass.
@@ -26,14 +28,12 @@ import com.soen490chrysalis.papilio.viewModel.factories.HomeFragmentViewModelFac
 class HomeFragment : Fragment()
 {
     private lateinit var homeFragmentViewModel : HomeFragmentViewModel
-    private lateinit var activityList : List<ActivityObject>
+    private lateinit var activityList : MutableList<ActivityObject>
+    private lateinit var addActivityList : List<ActivityObject>
     private lateinit var recyclerView : RecyclerView
     private lateinit var adapter : FeedAdapter
-
-    override fun onCreate(savedInstanceState : Bundle?)
-    {
-        super.onCreate(savedInstanceState)
-    }
+    private var totalPage by Delegates.notNull<Int>()
+    private var currentPage by Delegates.notNull<Int>()
 
     override fun onCreateView(
         inflater : LayoutInflater,
@@ -48,6 +48,7 @@ class HomeFragment : Fragment()
     override fun onViewCreated(view : View, savedInstanceState : Bundle?)
     {
         super.onViewCreated(view, savedInstanceState)
+        var count = 1
 
         val homeFragmentVMFactory = HomeFragmentViewModelFactory()
         homeFragmentViewModel =
@@ -57,51 +58,110 @@ class HomeFragment : Fragment()
 
         homeFragmentViewModel.activityResponse.observe(viewLifecycleOwner, Observer {
 
-            activityList = homeFragmentViewModel.activityResponse.value!!.rows
+            currentPage = 1
+            totalPage = homeFragmentViewModel.activityResponse.value!!.totalPages.toInt()
+
+            activityList = homeFragmentViewModel.activityResponse.value!!.rows.toMutableList()
             Log.d("getAllActivities", activityList.toString())
-            val layoutManager = LinearLayoutManager(context)
-            recyclerView = view.findViewById(R.id.activityFeedRV)
-            recyclerView.layoutManager = layoutManager
-            recyclerView.setHasFixedSize(false)
-            adapter = FeedAdapter(activityList, this)
-            recyclerView.adapter = adapter
-            adapter.setOnItemClickListener(object : FeedAdapter.OnItemClickListener
-            {
-                override fun onItemClick(position : Int)
-                {
-                    val intent = Intent(activity, DisplayActivityInfoActivity::class.java)
-                    intent.putExtra("id", activityList[position].id)
-                    intent.putExtra("title", activityList[position].title)
-                    intent.putExtra("description", activityList[position].description)
-                    intent.putExtra("individualCost", activityList[position].costPerIndividual)
-                    intent.putExtra("groupCost", activityList[position].costPerGroup)
-                    intent.putExtra("location", activityList[position].address)
 
-                    if (activityList[position].images != null && activityList[position].images?.isNotEmpty() == true)
-                    {
-                        intent.putExtra("images", true)
-                        var x = 0
-                        Log.d("Size", activityList[position].images!!.size.toString())
-                        for(i in activityList[position].images!!){
-                            intent.putExtra("images$x", i)
-                            x++
+            if(count == 1) {
+                val layoutManager = LinearLayoutManager(context)
+                recyclerView = view.findViewById(R.id.activityFeedRV)
+                recyclerView.layoutManager = layoutManager
+                recyclerView.setHasFixedSize(false)
+                adapter = FeedAdapter(activityList, this)
+                recyclerView.adapter = adapter
 
-                        }
-                        if(x != 5){
-                            for(e in x until 5){
-                                intent.putExtra("images$e", "")
+                count++
+
+                adapter.setOnItemClickListener(object : FeedAdapter.OnItemClickListener {
+                    override fun onItemClick(position: Int) {
+                        val intent = Intent(activity, DisplayActivityInfoActivity::class.java)
+                        intent.putExtra("id", activityList[position].id)
+                        intent.putExtra("title", activityList[position].title)
+                        intent.putExtra("description", activityList[position].description)
+                        intent.putExtra("individualCost", activityList[position].costPerIndividual)
+                        intent.putExtra("groupCost", activityList[position].costPerGroup)
+                        intent.putExtra("location", activityList[position].address)
+
+                        if (activityList[position].images != null && activityList[position].images?.isNotEmpty() == true) {
+                            intent.putExtra("images", true)
+                            var x = 0
+                            Log.d("Size", activityList[position].images!!.size.toString())
+                            for (i in activityList[position].images!!) {
+                                intent.putExtra("images$x", i)
                                 x++
+
                             }
+                            if (x != 5) {
+                                for (e in x until 5) {
+                                    intent.putExtra("images$e", "")
+                                    x++
+                                }
+                            }
+                        } else {
+                            intent.putExtra("images", false)
                         }
+
+                        startActivity(intent)
                     }
-                    else
-                    {
-                        intent.putExtra("images", false)
+                })
+            }
+
+            var viewMore: TextView = view.findViewById(R.id.feed_View_More)
+            viewMore.setOnClickListener{
+                if(currentPage <= totalPage){
+                    currentPage++
+                    homeFragmentViewModel.getAllActivities(currentPage.toString(), "20")
+                    addActivityList = homeFragmentViewModel.activityResponse.value!!.rows
+
+                    var index = activityList.size
+                    addActivityList.forEach { item ->
+                        activityList.add(item)
                     }
 
-                    startActivity(intent)
+                    adapter.notifyItemRangeInserted(index-1, addActivityList.size)
+                    adapter.setOnItemClickListener(object : FeedAdapter.OnItemClickListener
+                    {
+                        override fun onItemClick(position : Int)
+                        {
+                            val intent = Intent(activity, DisplayActivityInfoActivity::class.java)
+                            intent.putExtra("id", activityList[position].id)
+                            intent.putExtra("title", activityList[position].title)
+                            intent.putExtra("description", activityList[position].description)
+                            intent.putExtra("individualCost", activityList[position].costPerIndividual)
+                            intent.putExtra("groupCost", activityList[position].costPerGroup)
+                            intent.putExtra("location", activityList[position].address)
+
+                            if (activityList[position].images != null && activityList[position].images?.isNotEmpty() == true)
+                            {
+                                intent.putExtra("images", true)
+                                var x = 0
+                                Log.d("Size", activityList[position].images!!.size.toString())
+                                for(i in activityList[position].images!!){
+                                    intent.putExtra("images$x", i)
+                                    x++
+
+                                }
+                                if(x != 5){
+                                    for(e in x until 5){
+                                        intent.putExtra("images$e", "")
+                                        x++
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                intent.putExtra("images", false)
+                            }
+
+                            startActivity(intent)
+                        }
+                    })
+
                 }
-            })
+            }
+
         })
     }
 

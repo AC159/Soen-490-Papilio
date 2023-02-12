@@ -39,7 +39,8 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:scrollbars="horizontal">
+                            android:scrollbars="horizontal"
+                            android:gravity="center">
 
                             <ImageView
                                 android:id="@+id/info_imageView0"
@@ -48,22 +49,22 @@
                                 android:src="@drawable/example_event_photo" />
                             <ImageView
                                 android:id="@+id/info_imageView1"
-                                android:layout_width="match_parent"
+                                android:layout_width="400dp"
                                 android:layout_height="225dp"
                                 android:visibility="gone" />
                             <ImageView
                                 android:id="@+id/info_imageView2"
-                                android:layout_width="match_parent"
+                                android:layout_width="400dp"
                                 android:layout_height="225dp"
                                 android:visibility="gone" />
                             <ImageView
                                 android:id="@+id/info_imageView3"
-                                android:layout_width="match_parent"
+                                android:layout_width="400dp"
                                 android:layout_height="225dp"
                                 android:visibility="gone"/>
                             <ImageView
                                 android:id="@+id/info_imageView4"
-                                android:layout_width="match_parent"
+                                android:layout_width="400dp"
                                 android:layout_height="225dp"
                                 android:visibility="gone" />
 

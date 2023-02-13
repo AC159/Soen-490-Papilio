@@ -44,8 +44,8 @@ data class ActivityObject(
 data class ActivityResponse(
     val count: String,
     val rows: List<ActivityObject>,
-    val currentPage: String,
-    val totalPages: String
+    val totalPages: String,
+    val currentPage: String
 )
 
 // Response object for the /api/user/get/:firebaseId endpoint

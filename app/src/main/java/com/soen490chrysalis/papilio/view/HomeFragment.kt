@@ -17,7 +17,6 @@ import com.soen490chrysalis.papilio.services.network.responses.ActivityObject
 import com.soen490chrysalis.papilio.view.dialogs.FeedAdapter
 import com.soen490chrysalis.papilio.viewModel.HomeFragmentViewModel
 import com.soen490chrysalis.papilio.viewModel.factories.HomeFragmentViewModelFactory
-import kotlin.properties.Delegates
 
 /**
  * A simple [Fragment] subclass.
@@ -28,12 +27,16 @@ import kotlin.properties.Delegates
 class HomeFragment : Fragment()
 {
     private lateinit var homeFragmentViewModel : HomeFragmentViewModel
-    private lateinit var activityList : MutableList<ActivityObject>
-    private lateinit var addActivityList : List<ActivityObject>
     private lateinit var recyclerView : RecyclerView
     private lateinit var adapter : FeedAdapter
-    private var totalPage by Delegates.notNull<Int>()
-    private var currentPage by Delegates.notNull<Int>()
+    private var isRecyclerViewInitialized = false
+
+    // todo: these variables should be in the view model not in the fragment or activity
+    private lateinit var activityList : MutableList<ActivityObject>
+    private lateinit var addActivityList : List<ActivityObject>
+    private var totalPage : Int = 1
+    private var currentPage : Int = 1
+    private var pageSize : Int = 5
 
     override fun onCreateView(
         inflater : LayoutInflater,
@@ -48,34 +51,50 @@ class HomeFragment : Fragment()
     override fun onViewCreated(view : View, savedInstanceState : Bundle?)
     {
         super.onViewCreated(view, savedInstanceState)
-        var count = 1
 
         val homeFragmentVMFactory = HomeFragmentViewModelFactory()
         homeFragmentViewModel =
             ViewModelProvider(this, homeFragmentVMFactory)[HomeFragmentViewModel::class.java]
 
-        homeFragmentViewModel.getAllActivities("1", "20")
+        // Fetch the first set of activities to display
+        homeFragmentViewModel.getAllActivities(currentPage.toString(), pageSize.toString())
 
         homeFragmentViewModel.activityResponse.observe(viewLifecycleOwner, Observer {
+            Log.d("RECEIVED NEW DATA", it.rows.size.toString())
 
-            currentPage = 1
-            totalPage = homeFragmentViewModel.activityResponse.value!!.totalPages.toInt()
+            if ( isRecyclerViewInitialized )
+            {
+                addActivityList = it.rows
 
-            activityList = homeFragmentViewModel.activityResponse.value!!.rows.toMutableList()
-            Log.d("getAllActivities", activityList.toString())
+                val index = activityList.size
+                addActivityList.forEach { item ->
+                    activityList.add(item)
+                }
 
-            if(count == 1) {
+                Log.d("NOTIFYING RECYCLER VIEW OF NEWLY INSERTED DATA", activityList.size.toString())
+                adapter.notifyItemRangeInserted(index - 1, addActivityList.size)
+            }
+
+            if ( !isRecyclerViewInitialized )
+            {
+                // Extract the received data
+                activityList = it.rows.toMutableList() // initialize the activityList variable
+
+                // Initialize the recycler view only once
                 val layoutManager = LinearLayoutManager(context)
                 recyclerView = view.findViewById(R.id.activityFeedRV)
                 recyclerView.layoutManager = layoutManager
+                recyclerView.itemAnimator = null
                 recyclerView.setHasFixedSize(false)
                 adapter = FeedAdapter(activityList, this)
                 recyclerView.adapter = adapter
 
-                count++
-
-                adapter.setOnItemClickListener(object : FeedAdapter.OnItemClickListener {
-                    override fun onItemClick(position: Int) {
+                // todo: we should probably put this observer initialization in its own
+                //  function to make it more readable
+                adapter.setOnItemClickListener(object : FeedAdapter.OnItemClickListener
+                {
+                    override fun onItemClick(position : Int)
+                    {
                         val intent = Intent(activity, DisplayActivityInfoActivity::class.java)
                         intent.putExtra("id", activityList[position].id)
                         intent.putExtra("title", activityList[position].title)
@@ -84,87 +103,49 @@ class HomeFragment : Fragment()
                         intent.putExtra("groupCost", activityList[position].costPerGroup)
                         intent.putExtra("location", activityList[position].address)
 
-                        if (activityList[position].images != null && activityList[position].images?.isNotEmpty() == true) {
+                        if (activityList[position].images != null && activityList[position].images?.isNotEmpty() == true)
+                        {
                             intent.putExtra("images", true)
                             var x = 0
                             Log.d("Size", activityList[position].images!!.size.toString())
-                            for (i in activityList[position].images!!) {
+                            for (i in activityList[position].images!!)
+                            {
                                 intent.putExtra("images$x", i)
                                 x++
-
                             }
-                            if (x != 5) {
-                                for (e in x until 5) {
+                            if (x != 5)
+                            {
+                                for (e in x until 5)
+                                {
                                     intent.putExtra("images$e", "")
                                     x++
                                 }
                             }
-                        } else {
-                            intent.putExtra("images", false)
                         }
+                        else intent.putExtra("images", false)
 
                         startActivity(intent)
                     }
                 })
+
+                totalPage = it.totalPages.toInt()
+                Log.d("TOTAL NBR OF PAGES", totalPage.toString())
+
+                // important to set this variable because we only want to initialize the recycler view once
+                isRecyclerViewInitialized = true
             }
-
-            var viewMore: TextView = view.findViewById(R.id.feed_View_More)
-            viewMore.setOnClickListener{
-                if(currentPage <= totalPage){
-                    currentPage++
-                    homeFragmentViewModel.getAllActivities(currentPage.toString(), "20")
-                    addActivityList = homeFragmentViewModel.activityResponse.value!!.rows
-
-                    var index = activityList.size
-                    addActivityList.forEach { item ->
-                        activityList.add(item)
-                    }
-
-                    adapter.notifyItemRangeInserted(index-1, addActivityList.size)
-                    adapter.setOnItemClickListener(object : FeedAdapter.OnItemClickListener
-                    {
-                        override fun onItemClick(position : Int)
-                        {
-                            val intent = Intent(activity, DisplayActivityInfoActivity::class.java)
-                            intent.putExtra("id", activityList[position].id)
-                            intent.putExtra("title", activityList[position].title)
-                            intent.putExtra("description", activityList[position].description)
-                            intent.putExtra("individualCost", activityList[position].costPerIndividual)
-                            intent.putExtra("groupCost", activityList[position].costPerGroup)
-                            intent.putExtra("location", activityList[position].address)
-
-                            if (activityList[position].images != null && activityList[position].images?.isNotEmpty() == true)
-                            {
-                                intent.putExtra("images", true)
-                                var x = 0
-                                Log.d("Size", activityList[position].images!!.size.toString())
-                                for(i in activityList[position].images!!){
-                                    intent.putExtra("images$x", i)
-                                    x++
-
-                                }
-                                if(x != 5){
-                                    for(e in x until 5){
-                                        intent.putExtra("images$e", "")
-                                        x++
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                intent.putExtra("images", false)
-                            }
-
-                            startActivity(intent)
-                        }
-                    })
-
-                }
-            }
-
         })
-    }
 
+        val viewMore : TextView = view.findViewById(R.id.feed_View_More)
+        viewMore.setOnClickListener {
+            if (currentPage <= totalPage)
+            {
+                ++currentPage
+                // fetch more activities upon button click
+                homeFragmentViewModel.getAllActivities(currentPage.toString(), pageSize.toString())
+            }
+        }
+    }
 
     companion object
     {

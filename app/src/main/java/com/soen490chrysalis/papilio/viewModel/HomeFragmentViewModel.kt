@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.soen490chrysalis.papilio.repository.activities.IActivityRepository
 import com.soen490chrysalis.papilio.services.network.responses.ActivityResponse
 import kotlinx.coroutines.launch
-import retrofit2.Response
 
 class HomeFragmentViewModel(private val activityRepository: IActivityRepository) : ViewModel() {
 

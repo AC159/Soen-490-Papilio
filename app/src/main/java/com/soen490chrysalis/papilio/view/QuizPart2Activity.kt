@@ -47,6 +47,8 @@ class QuizPart2Activity : AppCompatActivity()
             genreList = genreViewModel.genreObject.value!!
             Log.d("getAllGenres", genreList.toString())
         })
+
+        //For testing purposes. Must repurpose this button array to actual activities found in backend
         val buttonArray = arrayOf(
             ButtonObject(
                 1,
@@ -67,6 +69,46 @@ class QuizPart2Activity : AppCompatActivity()
             ButtonObject(
                 3,
                 "Test to see",
+                null,
+                "sport",
+                "2023-01-18T03:50:10.550Z",
+                "2023-01-18T03:50:10.550Z"
+            ),
+            ButtonObject(
+                4,
+                "Test4",
+                null,
+                "sport",
+                "2023-01-18T03:50:10.550Z",
+                "2023-01-18T03:50:10.550Z"
+            ),
+            ButtonObject(
+                5,
+                "Test5",
+                null,
+                "sport",
+                "2023-01-18T03:50:10.550Z",
+                "2023-01-18T03:50:10.550Z"
+            ),
+            ButtonObject(
+                6,
+                "Test6",
+                null,
+                "sport",
+                "2023-01-18T03:50:10.550Z",
+                "2023-01-18T03:50:10.550Z"
+            ),
+            ButtonObject(
+                7,
+                "Test7",
+                null,
+                "sport",
+                "2023-01-18T03:50:10.550Z",
+                "2023-01-18T03:50:10.550Z"
+            ),
+            ButtonObject(
+                8,
+                "Test8",
                 null,
                 "sport",
                 "2023-01-18T03:50:10.550Z",

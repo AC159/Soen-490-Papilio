@@ -35,12 +35,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 tools:ignore="MissingConstraints"></TextView>
 
-<!--            <LinearLayout-->
-<!--                android:id="@+id/container"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:orientation="vertical"></LinearLayout>-->
-
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/linearLayout6"
                 android:layout_width="402dp"
@@ -53,75 +47,18 @@
                 tools:layout_conversion_absoluteHeight="338dp"
                 tools:layout_conversion_absoluteWidth="392dp">
 
-<!--                <Button-->
-<!--                    android:id="@+id/choise1"-->
-<!--                    android:layout_width="338dp"-->
-<!--                    android:layout_height="76dp"-->
-<!--                    android:backgroundTint="@color/dark_blue"-->
-<!--                    android:gravity="bottom|center"-->
-<!--                    android:text="SOCCER"-->
-<!--                    android:textColor="#fff"-->
-<!--                    android:textSize="20dp"-->
-<!--                    app:layout_constraintBottom_toTopOf="@+id/choise2"-->
-<!--                    app:layout_constraintEnd_toEndOf="parent"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintTop_toBottomOf="@+id/constraintLayout2"-->
-<!--                    tools:layout_conversion_absoluteHeight="74dp"-->
-<!--                    tools:layout_conversion_absoluteWidth="344dp"></Button>-->
-
-<!--                <Button-->
-<!--                    android:id="@+id/choise2"-->
-<!--                    android:layout_width="338dp"-->
-<!--                    android:layout_height="76dp"-->
-<!--                    android:backgroundTint="@color/dark_blue"-->
-<!--                    android:gravity="bottom|center"-->
-<!--                    android:text="BASKETBALL"-->
-<!--                    android:textColor="#fff"-->
-<!--                    android:textSize="20dp"-->
-<!--                    app:layout_constraintBottom_toTopOf="@+id/choise3"-->
-<!--                    app:layout_constraintEnd_toEndOf="parent"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintTop_toBottomOf="@+id/choise1"-->
-<!--                    tools:layout_conversion_absoluteHeight="75dp"-->
-<!--                    tools:layout_conversion_absoluteWidth="344dp"></Button>-->
-
-<!--                <Button-->
-<!--                    android:id="@+id/choise3"-->
-<!--                    android:layout_width="338dp"-->
-<!--                    android:layout_height="76dp"-->
-<!--                    android:backgroundTint="@color/dark_blue"-->
-<!--                    android:gravity="bottom|center"-->
-<!--                    android:text="ROCK CLIMBING"-->
-<!--                    android:textColor="#fff"-->
-<!--                    android:textSize="20dp"-->
-<!--                    app:layout_constraintBottom_toTopOf="@+id/choise4"-->
-<!--                    app:layout_constraintEnd_toEndOf="@+id/constraintLayout2"-->
-<!--                    app:layout_constraintStart_toStartOf="@+id/constraintLayout2"-->
-<!--                    app:layout_constraintTop_toBottomOf="@+id/choise2"-->
-<!--                    tools:layout_conversion_absoluteHeight="74dp"-->
-<!--                    tools:layout_conversion_absoluteWidth="344dp"></Button>-->
-
-<!--                <Button-->
-<!--                    android:id="@+id/choise4"-->
-<!--                    android:layout_width="338dp"-->
-<!--                    android:layout_height="76dp"-->
-<!--                    android:backgroundTint="@color/dark_blue"-->
-<!--                    android:gravity="bottom|center"-->
-<!--                    android:text="VOLLEYBALL"-->
-<!--                    android:textColor="#fff"-->
-<!--                    android:textSize="20dp"-->
-<!--                    app:layout_constraintBottom_toTopOf="@+id/other"-->
-<!--                    app:layout_constraintEnd_toEndOf="parent"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintTop_toBottomOf="@+id/choise3"-->
-<!--                    tools:layout_conversion_absoluteHeight="74dp"-->
-<!--                    tools:layout_conversion_absoluteWidth="344dp"></Button>-->
-                <LinearLayout
-                    android:id="@+id/container"
+                <ScrollView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:gravity="center"></LinearLayout>
+                    android:layout_height="match_parent">
+                    <LinearLayout
+                        android:id="@+id/container"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:gravity="center">
+                    </LinearLayout>
+                </ScrollView>
+
 
 <!--                Option to add "other" input field in future upgrade:-->
 <!--                <Button-->
@@ -157,7 +94,6 @@
                     app:layout_constraintVertical_bias="0.0">
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
-
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

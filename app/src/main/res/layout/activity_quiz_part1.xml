@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/quiz_part1"
@@ -17,9 +18,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Take the Activity Quiz"
+        android:textColor="@color/dark_blue"
         android:textSize="20dp"
         android:textStyle="bold"
-        android:textColor="@color/dark_blue"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -31,13 +32,13 @@
         android:layout_marginTop="18dp"
         android:padding="8dp"
         android:text="Which of the following do you enjoy?"
-        android:textStyle="bold"
         android:textColor="@color/dark_blue"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_conversion_absoluteHeight="70dp"
-        tools:layout_conversion_absoluteWidth="411dp"></TextView>
+        tools:layout_conversion_absoluteWidth="411dp" />
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -55,7 +56,7 @@
 
 
         <Button
-            android:id="@+id/choise1"
+            android:id="@+id/choice1"
             android:layout_width="338dp"
             android:layout_height="107dp"
             android:backgroundTint="@color/dark_blue"
@@ -63,32 +64,31 @@
             android:text="Outdoor Activities"
             android:textColor="#fff"
             android:textSize="20dp"
-            app:layout_constraintBottom_toTopOf="@+id/choise2"
+            app:layout_constraintBottom_toTopOf="@+id/choice2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:layout_conversion_absoluteHeight="74dp"
-            tools:layout_conversion_absoluteWidth="344dp"></Button>
+            tools:layout_conversion_absoluteWidth="344dp" />
 
 
         <Button
-            android:id="@+id/choise2"
+            android:id="@+id/choice2"
             android:layout_width="338dp"
             android:layout_height="107dp"
+            android:backgroundTint="@color/dark_blue"
             android:padding="8dp"
             android:text="Indoor Activities"
             android:textColor="#fff"
-            android:backgroundTint="@color/dark_blue"
             android:textSize="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/choise1"
+            app:layout_constraintTop_toBottomOf="@+id/choice1"
             tools:layout_conversion_absoluteHeight="75dp"
-            tools:layout_conversion_absoluteWidth="344dp">
-        </Button>
+            tools:layout_conversion_absoluteWidth="344dp" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -175,16 +175,15 @@
                 android:id="@+id/skip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
                 android:text="Skip"
                 android:textColor="@color/dark_blue"
                 android:textStyle="bold"
-                android:layout_marginLeft="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/textView8" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

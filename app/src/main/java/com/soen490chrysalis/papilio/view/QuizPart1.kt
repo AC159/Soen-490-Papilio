@@ -3,32 +3,31 @@ package com.soen490chrysalis.papilio.view
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.TextView
 import android.os.Bundle
-import com.soen490chrysalis.papilio.R
 import android.content.Intent
 import android.view.MenuItem
-import android.view.View
 import android.widget.Button
+import com.soen490chrysalis.papilio.databinding.ActivityQuizPart1Binding
 
 class QuizPart1 : AppCompatActivity()
 {
-    var next : Button? = null
-    var choice1 : Button? = null
-    var choice2 : Button? = null
-    var question : TextView? = null
-    var title : TextView? = null
-    var skip : TextView? = null
-    var firstClick = false
+    private lateinit var binding : ActivityQuizPart1Binding
+    private lateinit var next : Button
+    private lateinit var choice1 : Button
+    private lateinit var choice2 : Button
+    private lateinit var question : TextView
+
     override fun onCreate(savedInstanceState : Bundle?)
     {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_quiz_part1)
-        next = findViewById<View>(R.id.next) as Button
-        choice1 = findViewById<View>(R.id.choise1) as Button
-        choice2 = findViewById<View>(R.id.choise2) as Button
-        question = findViewById<View>(R.id.question) as TextView
-        title = findViewById<View>(R.id.textView4) as TextView
-        skip = findViewById<View>(R.id.skip) as TextView
-        next!!.setOnClickListener {
+        binding = ActivityQuizPart1Binding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        next = binding.next
+        choice1 = binding.choice1
+        choice2 = binding.choice2
+        question = binding.question
+
+        next.setOnClickListener {
             startActivity(
                 Intent(
                     this@QuizPart1,
@@ -36,14 +35,7 @@ class QuizPart1 : AppCompatActivity()
                 )
             )
         }
-        skip!!.setOnClickListener {
-            startActivity(
-                Intent(
-                    this@QuizPart1,
-                    MainActivity::class.java
-                )
-            )
-        }
+
         val actionBar = supportActionBar
         if (actionBar != null)
         {

@@ -41,6 +41,7 @@
                             android:id="@+id/info_imageView0"
                             android:layout_width="400dp"
                             android:layout_height="225dp"
+                            android:layout_marginEnd="15dp"
                             android:scaleType="center"
                             android:src="@drawable/example_event_photo" />
 
@@ -48,6 +49,7 @@
                             android:id="@+id/info_imageView1"
                             android:layout_width="400dp"
                             android:layout_height="225dp"
+                            android:layout_marginEnd="15dp"
                             android:scaleType="center"
                             android:visibility="gone" />
 
@@ -55,6 +57,7 @@
                             android:id="@+id/info_imageView2"
                             android:layout_width="400dp"
                             android:layout_height="225dp"
+                            android:layout_marginEnd="15dp"
                             android:scaleType="center"
                             android:visibility="gone" />
 
@@ -62,6 +65,7 @@
                             android:id="@+id/info_imageView3"
                             android:layout_width="400dp"
                             android:layout_height="225dp"
+                            android:layout_marginEnd="15dp"
                             android:scaleType="center"
                             android:visibility="gone" />
 
@@ -87,19 +91,6 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center">
-
-                        <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:clickable="true"
-                            android:paddingLeft="5dp"
-                            android:src="@drawable/heart_regular" />
-                    </LinearLayout>
 
                     <TextView
                         android:id="@+id/info_Title"
@@ -140,7 +131,7 @@
                         android:layout_height="90dp"
                         android:layout_marginLeft="20dp"
                         android:layout_marginRight="20dp"
-                        app:cardCornerRadius="30dp"
+                        app:cardCornerRadius="20dp"
                         app:strokeColor="@color/blue"
                         app:strokeWidth="3dp">
 
@@ -171,27 +162,11 @@
                                 android:orientation="horizontal">
 
                                 <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:gravity="center"
-                                    android:text="$"
-                                    android:textColor="@color/black"
-                                    android:textSize="12dp" />
-
-                                <TextView
                                     android:id="@+id/individualCost"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:gravity="center"
                                     android:text="2"
-                                    android:textColor="@color/black"
-                                    android:textSize="12dp" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:gravity="center"
-                                    android:text="/person"
                                     android:textColor="@color/black"
                                     android:textSize="12dp" />
                             </LinearLayout>
@@ -206,7 +181,7 @@
                         android:layout_height="90dp"
                         android:layout_marginLeft="20dp"
                         android:layout_marginRight="20dp"
-                        app:cardCornerRadius="30dp"
+                        app:cardCornerRadius="20dp"
                         app:strokeColor="@color/orange"
                         app:strokeWidth="3dp">
 
@@ -237,14 +212,6 @@
                                 android:orientation="horizontal">
 
                                 <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:gravity="center"
-                                    android:text="$"
-                                    android:textColor="@color/black"
-                                    android:textSize="12dp" />
-
-                                <TextView
                                     android:id="@+id/groupCost"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -253,13 +220,6 @@
                                     android:textColor="@color/black"
                                     android:textSize="12dp" />
 
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:gravity="center"
-                                    android:text="/person"
-                                    android:textColor="@color/black"
-                                    android:textSize="12dp" />
                             </LinearLayout>
 
                             <TextView
@@ -275,17 +235,33 @@
 
                 </LinearLayout>
 
-                <Button
-                    android:id="@+id/join_button"
-                    android:layout_width="192dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="15dp"
-                    android:backgroundTint="@color/orange"
-                    android:elevation="5dp"
-                    android:text="Join"
-                    android:textColor="@color/white"
-                    android:visibility="visible"
-                    app:cornerRadius="100dp" />
+                    android:layout_marginBottom="30dp"
+                    android:gravity="center"
+                    android:paddingStart="35dp"
+                    android:paddingEnd="5dp">
+
+                    <Button
+                        android:id="@+id/join_button"
+                        android:layout_width="192dp"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/orange"
+                        android:text="Join"
+                        android:textColor="@color/white"
+                        android:visibility="visible"
+                        app:cornerRadius="100dp" />
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="10dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:src="@drawable/heart_regular" />
+
+                </LinearLayout>
 
 
                 <LinearLayout
@@ -317,6 +293,23 @@
                         android:paddingLeft="10dp"
                         android:text="address"
                         android:textColor="@color/black" />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <com.mapbox.maps.MapView xmlns:mapbox="http://schemas.android.com/apk/res-auto"
+                        android:id="@+id/mapView"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        mapbox:mapbox_cameraTargetLat="59.31"
+                        mapbox:mapbox_cameraTargetLng="18.06"
+                        mapbox:mapbox_cameraZoom="9.0"
+                        mapbox:mapbox_resourcesAccessToken="@string/MAPBOX_PUBLIC_ACCESS_TOKEN" />
+
                 </LinearLayout>
 
 

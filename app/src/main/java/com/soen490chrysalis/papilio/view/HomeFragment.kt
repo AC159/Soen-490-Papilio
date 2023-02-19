@@ -103,11 +103,14 @@ class HomeFragment : Fragment() {
             }
         })
 
+
         scrollListener()
 
     }
 
+
     companion object {
+        // Not sure if this should be removed
         // TODO: Rename parameter arguments, choose names that match
         // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
         private const val ARG_PARAM1 = "param1"
@@ -139,8 +142,14 @@ class HomeFragment : Fragment() {
                 intent.putExtra("id", activityList[position].id)
                 intent.putExtra("title", activityList[position].title)
                 intent.putExtra("description", activityList[position].description)
-                intent.putExtra("individualCost", activityList[position].costPerIndividual)
-                intent.putExtra("groupCost", activityList[position].costPerGroup)
+                intent.putExtra(
+                    "individualCost",
+                    if (activityList[position].costPerIndividual == "0") "FREE" else ("$" + activityList[position].costPerIndividual + "/person")
+                )
+                intent.putExtra(
+                    "groupCost",
+                    if (activityList[position].costPerGroup == "0") "FREE" else ("$" + activityList[position].costPerGroup + "/group")
+                )
                 intent.putExtra("location", activityList[position].address)
 
                 if (activityList[position].images != null && activityList[position].images?.isNotEmpty() == true) {

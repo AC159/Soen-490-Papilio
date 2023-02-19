@@ -9,7 +9,7 @@
     android:gravity="center">
 
     <androidx.cardview.widget.CardView
-        android:layout_width="330dp"
+        android:layout_width="400dp"
         android:layout_height="210dp"
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="20dp"

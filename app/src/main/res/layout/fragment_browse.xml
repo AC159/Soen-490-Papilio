@@ -38,6 +38,8 @@
                 android:background="@color/white"
                 />
 
+
+
         </LinearLayout>
 
         <LinearLayout
@@ -55,11 +57,41 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/no_activity_found_box"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="15dp"
+                app:cardBackgroundColor="@color/orange"
+                android:visibility="gone"
+                >
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="No Activities Found!"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:padding="30dp">
+
+                </TextView>
+            </com.google.android.material.card.MaterialCardView>
+
         </LinearLayout>
 
+        <ScrollView
+            android:id="@+id/activity_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
+            <LinearLayout
+                android:id="@+id/activity_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="15dp">
+            </LinearLayout>
 
-
+        </ScrollView>
 
     </LinearLayout>
 

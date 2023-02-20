@@ -7,18 +7,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.LinearLayout
-import android.widget.ProgressBar
-import androidx.core.content.ContextCompat.getSystemService
+import android.widget.*
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
+import com.google.android.material.card.MaterialCardView
 import com.soen490chrysalis.papilio.R
 import com.soen490chrysalis.papilio.viewModel.BrowseFragmentViewModel
-import com.soen490chrysalis.papilio.viewModel.HomeFragmentViewModel
 import com.soen490chrysalis.papilio.viewModel.factories.BrowseFragmentViewModelFactory
-import com.soen490chrysalis.papilio.viewModel.factories.HomeFragmentViewModelFactory
+import org.w3c.dom.Text
 
 
 /**
@@ -39,6 +37,8 @@ class BrowseFragment : Fragment()
 
     private lateinit var searchBar : EditText
     private lateinit var searchButton : ImageButton
+    private lateinit var layoutActivityList : ScrollView
+    private lateinit var activityContainer : LinearLayout
 
     override fun onCreate(savedInstanceState : Bundle?)
     {
@@ -63,6 +63,9 @@ class BrowseFragment : Fragment()
         val browseFragmentVMFactory = BrowseFragmentViewModelFactory()
         browseFragmentViewModel = ViewModelProvider(this, browseFragmentVMFactory)[BrowseFragmentViewModel::class.java]
 
+        layoutActivityList = view.findViewById(R.id.activity_container)
+        activityContainer = view.findViewById(R.id.activity_list)
+
         progressCircle = view.findViewById(R.id.progressBar1)
         progressCircleContainer = view.findViewById(R.id.progressBarContainer)
         searchBar = view.findViewById(R.id.search_bar)
@@ -74,12 +77,63 @@ class BrowseFragment : Fragment()
             browseFragmentViewModel.searchActivities(searchBar.text.toString());
         }
 
-    }
+        browseFragmentViewModel.activityResponse.observe(viewLifecycleOwner, Observer {
 
+            val noResultsBox = view.findViewById<MaterialCardView>(R.id.no_activity_found_box)
+            noResultsBox.visibility = View.GONE
+            progressCircle.visibility = View.VISIBLE
+
+            displayProgressCircle(false)
+
+            val data = browseFragmentViewModel.activityResponse.value
+
+            activityContainer.removeAllViews()
+
+            val layoutInflater : LayoutInflater? = activity?.layoutInflater
+
+            if(data?.count == "0")
+            {
+                displayProgressCircle(true)
+                noResultsBox.visibility = View.VISIBLE
+                progressCircle.visibility = View.GONE
+            }
+            else
+            {
+                for(activity in browseFragmentViewModel.activityResponse.value?.rows!!)
+                {
+                    val newActivityBoxLayout = layoutInflater?.inflate(R.layout.activity_activities_box, null);
+                    val activityBoxImage = newActivityBoxLayout?.findViewById<ImageView>(R.id.activity_box_image)
+                    val activityBoxTitle = newActivityBoxLayout?.findViewById<TextView>(R.id.activity_box_title)
+                    val activityBoxDesc = newActivityBoxLayout?.findViewById<TextView>(R.id.activity_box_address)
+                    newActivityBoxLayout?.findViewById<TextView>(R.id.activity_box_start_time)?.visibility = View.GONE
+
+                    if(activity.images != null)
+                    {
+                        if (activityBoxImage != null) {
+                            Glide.with(this)
+                                .load(activity.images)
+                                .into(activityBoxImage)
+                        }
+                    }
+
+                    if (activityBoxTitle != null) {
+                        activityBoxTitle.text = activity.title
+                    }
+                    if (activityBoxDesc != null) {
+                        activityBoxDesc.text = activity.description
+                    }
+
+                    activityContainer.addView(newActivityBoxLayout)
+                }
+            }
+
+        })
+    }
 
     fun displayProgressCircle(shouldDisplay : Boolean)
     {
         progressCircleContainer.visibility = if(shouldDisplay) View.VISIBLE else View.GONE
+        layoutActivityList.visibility = if(shouldDisplay) View.GONE else View.VISIBLE
     }
 
 

@@ -16,17 +16,17 @@ import com.mapbox.search.*
 import com.mapbox.search.result.SearchResult
 import com.mapbox.search.result.SearchSuggestion
 import com.soen490chrysalis.papilio.R
-import com.soen490chrysalis.papilio.databinding.ActivityDisplayAcitivityInfoBinding
+import com.soen490chrysalis.papilio.databinding.ActivityDisplayActivityInfoBinding
 
 class DisplayActivityInfoActivity : AppCompatActivity()
 {
     private val logTag = DisplayActivityInfoActivity::class.java.simpleName
-    private lateinit var binding : ActivityDisplayAcitivityInfoBinding
+    private lateinit var binding : ActivityDisplayActivityInfoBinding
 
     override fun onCreate(savedInstanceState : Bundle?)
     {
         super.onCreate(savedInstanceState)
-        binding = ActivityDisplayAcitivityInfoBinding.inflate(layoutInflater)
+        binding = ActivityDisplayActivityInfoBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         // Create Action Bar val so we can 1) display it with a proper title and 2) put a working back button on it

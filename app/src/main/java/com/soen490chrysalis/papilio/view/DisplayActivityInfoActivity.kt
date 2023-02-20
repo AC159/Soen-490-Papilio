@@ -1,6 +1,7 @@
 package com.soen490chrysalis.papilio.view
 
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.TextView
@@ -19,6 +20,7 @@ import com.soen490chrysalis.papilio.databinding.ActivityDisplayAcitivityInfoBind
 
 class DisplayActivityInfoActivity : AppCompatActivity()
 {
+    private val logTag = DisplayActivityInfoActivity::class.java.simpleName
     private lateinit var binding : ActivityDisplayAcitivityInfoBinding
 
     override fun onCreate(savedInstanceState : Bundle?)
@@ -115,6 +117,8 @@ class DisplayActivityInfoActivity : AppCompatActivity()
                 suggestion : SearchSuggestion, result : SearchResult, responseInfo : ResponseInfo
             )
             {
+                Log.d(logTag, "Received mapbox suggestion for map view ${result.coordinate}")
+
                 // The activity's location in (latitude, longitude) format
                 val coordinates = result.coordinate
 
@@ -122,13 +126,13 @@ class DisplayActivityInfoActivity : AppCompatActivity()
                 // In other words, making sure that we can't pan away from the activity's location. This ensures that the map is always centered at the activity location
                 val cameraBoundsOptions = CameraBoundsOptions.Builder().bounds(
                     CoordinateBounds(
-                        coordinates, coordinates, false
+                        coordinates, coordinates, true
                     )
                 ).minZoom(4.0).build()
 
                 // Actually creating the map camera and assigning it to our MapView element in the activity display info layout.
                 mapView.getMapboxMap().setCamera(
-                    CameraOptions.Builder().center(coordinates).zoom(15.0).build()
+                    CameraOptions.Builder().center(coordinates).build()
                 )
 
                 // Assigning the camera bounds we created above to the camera we created just above.
@@ -164,6 +168,7 @@ class DisplayActivityInfoActivity : AppCompatActivity()
             override fun onError(e : Exception)
             {
                 // Empty for now, maybe stuff will be added here later.
+                Log.d(logTag, "Mapview error: $e")
             }
         }
 
@@ -187,7 +192,7 @@ class DisplayActivityInfoActivity : AppCompatActivity()
         }
 
         // Take the activity's location string and fetch a Suggestion object from the MapBox Search API
-        val task = location?.let {
+        location?.let {
             searchEngine.search(
                 it, SearchOptions(limit = 1), // making sure we only get 1 suggestion,
                 searchCallback
@@ -207,5 +212,4 @@ class DisplayActivityInfoActivity : AppCompatActivity()
         }
         return super.onOptionsItemSelected(item)
     }
-
 }

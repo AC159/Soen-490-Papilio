@@ -9,6 +9,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.soen490chrysalis.papilio.repository.activities.ActivityRepository
 import com.soen490chrysalis.papilio.repository.activities.IActivityRepository
 import com.soen490chrysalis.papilio.repository.users.UserRepository
+import com.soen490chrysalis.papilio.services.network.IActivityApiService
 import com.soen490chrysalis.papilio.services.network.IUserApiService
 import com.soen490chrysalis.papilio.testUtils.MainCoroutineRule
 import com.soen490chrysalis.papilio.view.dialogs.EventDate
@@ -40,6 +41,7 @@ class ActivityRepositoryTest
 {
     private var mockWebServer = MockWebServer()
     private lateinit var mockRetrofitUserService : IUserApiService
+    private lateinit var mockRetrofitActivityService : IActivityApiService
     private val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
 
     private val mockFirebaseAuth = Mockito.mock(FirebaseAuth::class.java)
@@ -68,11 +70,17 @@ class ActivityRepositoryTest
                 .build()
                 .create(IUserApiService::class.java)
 
+        mockRetrofitActivityService = Retrofit.Builder()
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .baseUrl(mockWebServer.url("/")) // note the URL is different from production one
+            .build()
+            .create(IActivityApiService::class.java)
+
         println("Instantiated mockRetrofitUserService for UserRepository test!")
 
         // Important to initialize the user repository here since the mockRetrofitUserService needs to be create beforehand
         activityRepository =
-            Mockito.spy(ActivityRepository(mockFirebaseAuth, mockRetrofitUserService))
+            Mockito.spy(ActivityRepository(mockFirebaseAuth, mockRetrofitUserService, mockRetrofitActivityService))
 
         // Mock all log calls
         mockkStatic(Log::class)

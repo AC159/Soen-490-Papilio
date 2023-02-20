@@ -3,6 +3,8 @@ package com.soen490chrysalis.papilio.repository.activities
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.soen490chrysalis.papilio.services.network.IUserApiService
+import com.soen490chrysalis.papilio.services.network.IActivityApiService
+import com.soen490chrysalis.papilio.services.network.responses.ActivityResponse
 import com.soen490chrysalis.papilio.view.dialogs.EventDate
 import com.soen490chrysalis.papilio.view.dialogs.EventTime
 import kotlinx.coroutines.CoroutineDispatcher
@@ -25,6 +27,7 @@ import kotlin.collections.HashMap
 class ActivityRepository(
     private var firebaseAuth : FirebaseAuth,
     private val userAPIService : IUserApiService,
+    private val activityAPIService: IActivityApiService,
     private val coroutineDispatcher : CoroutineDispatcher = Dispatchers.IO
 ) : IActivityRepository
 {
@@ -112,6 +115,16 @@ class ActivityRepository(
                     activityRequestBody,
                     images
                 )
+            Log.d(logTag, "Post new user activity: $response")
+
+            return@withContext response
+        }
+    }
+
+    override suspend fun getAllActivities(page: String, size: String): Response<ActivityResponse> {
+        return withContext(coroutineDispatcher)
+        {
+            val response = activityAPIService.getAllActivities(page, size)
             Log.d(logTag, "Post new user activity: $response")
 
             return@withContext response

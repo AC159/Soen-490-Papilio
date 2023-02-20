@@ -1,5 +1,6 @@
 package com.soen490chrysalis.papilio.repository.activities
 
+import com.soen490chrysalis.papilio.services.network.responses.ActivityResponse
 import com.soen490chrysalis.papilio.view.dialogs.EventDate
 import com.soen490chrysalis.papilio.view.dialogs.EventTime
 import retrofit2.Response
@@ -24,4 +25,9 @@ interface IActivityRepository
         endTime : EventTime,
         activityAddress : String
     ) : Response<Void>
+
+    suspend fun getAllActivities(
+        page: String,
+        size: String
+    ) : Response<ActivityResponse>
 }

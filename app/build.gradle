@@ -26,13 +26,15 @@ android {
     buildTypes {
         debug {
             testCoverageEnabled true
-            buildConfigField("String", "BACKEND_API_URL", "\"" + localProperties['BACKEND_API_URL'] + "\"")
+            buildConfigField("String", "USER_API_URL", "\"" + localProperties['USER_API_URL'] + "\"")
+            buildConfigField("String", "ACTIVITY_API_URL", "\"" + localProperties['ACTIVITY_API_URL'] + "\"")
             buildConfigField("String", "MAPBOX_SECRET_TOKEN", "\"" + localProperties['MAPBOX_SECRET_TOKEN'] + "\"")
         }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            buildConfigField("String", "BACKEND_API_URL", "\"" + localProperties['BACKEND_API_URL'] + "\"")
+            buildConfigField("String", "USER_API_URL", "\"" + localProperties['USER_API_URL'] + "\"")
+            buildConfigField("String", "ACTIVITY_API_URL", "\"" + localProperties['ACTIVITY_API_URL'] + "\"")
             buildConfigField("String", "MAPBOX_SECRET_TOKEN", "\"" + localProperties['MAPBOX_SECRET_TOKEN'] + "\"")
         }
     }
@@ -108,6 +110,8 @@ dependencies {
 
     // For Mapbox address autofill & other stuff
     implementation "com.mapbox.search:mapbox-search-android-ui:1.0.0-beta.43"
+    implementation 'com.mapbox.maps:android:10.11.0'
+
 
     // Dependencies for retrofit library for network requests
     def retrofit_version = '2.9.0'

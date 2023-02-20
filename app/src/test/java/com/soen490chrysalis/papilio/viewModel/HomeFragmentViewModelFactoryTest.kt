@@ -22,7 +22,8 @@ class HomeFragmentViewModelFactoryTest
         every { FirebaseAuth.getInstance() } returns firebaseAuthMock
 
         val homeFragmentViewModelFactory = HomeFragmentViewModelFactory()
-        val homeFragmentViewModel = homeFragmentViewModelFactory.create(HomeFragmentViewModel::class.java)
+        val homeFragmentViewModel =
+            homeFragmentViewModelFactory.create(HomeFragmentViewModel::class.java)
 
         println(homeFragmentViewModel.javaClass.simpleName)
         println(HomeFragmentViewModel::class.java.simpleName)

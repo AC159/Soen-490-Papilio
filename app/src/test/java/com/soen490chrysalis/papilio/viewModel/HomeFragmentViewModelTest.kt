@@ -2,10 +2,7 @@ package com.soen490chrysalis.papilio.viewModel
 
 import android.util.Log
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.MutableLiveData
 import com.soen490chrysalis.papilio.repository.mocks.MockActivityRepository
-import com.soen490chrysalis.papilio.services.network.responses.ActivityObject
-import com.soen490chrysalis.papilio.services.network.responses.ActivityResponse
 import com.soen490chrysalis.papilio.testUtils.MainCoroutineRule
 import io.mockk.every
 import io.mockk.mockkStatic
@@ -17,8 +14,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
-import org.mockito.Mockito
-import retrofit2.Response
 
 @RunWith(JUnit4::class)
 class HomeFragmentViewModelTest
@@ -58,9 +53,5 @@ class HomeFragmentViewModelTest
         advanceUntilIdle()
 
         assert(homeFragmentViewModel.activityResponse.value?.rows?.size == 10)
-
     }
-
-
-
 }

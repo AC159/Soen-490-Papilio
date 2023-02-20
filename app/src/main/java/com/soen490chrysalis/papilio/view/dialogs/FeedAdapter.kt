@@ -12,20 +12,24 @@ import com.soen490chrysalis.papilio.services.network.responses.ActivityObject
 import com.soen490chrysalis.papilio.view.HomeFragment
 
 class FeedAdapter(
-    private val feedList: List<ActivityObject>,
-    private val homeFragment: HomeFragment
-) : RecyclerView.Adapter<FeedAdapter.FeedViewHolder>() {
-    private lateinit var activityListener: OnItemClickListener
+    private val feedList : List<ActivityObject>,
+    private val homeFragment : HomeFragment
+) : RecyclerView.Adapter<FeedAdapter.FeedViewHolder>()
+{
+    private lateinit var activityListener : OnItemClickListener
 
-    interface OnItemClickListener {
-        fun onItemClick(position: Int)
+    interface OnItemClickListener
+    {
+        fun onItemClick(position : Int)
     }
 
-    fun setOnItemClickListener(listener: OnItemClickListener) {
+    fun setOnItemClickListener(listener : OnItemClickListener)
+    {
         activityListener = listener
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FeedViewHolder {
+    override fun onCreateViewHolder(parent : ViewGroup, viewType : Int) : FeedViewHolder
+    {
         val itemView = LayoutInflater.from(parent.context).inflate(
             R.layout.activity_activities_box,
             parent, false
@@ -33,36 +37,36 @@ class FeedAdapter(
         return FeedViewHolder(itemView, activityListener)
     }
 
-    override fun onBindViewHolder(holder: FeedViewHolder, position: Int) {
+    override fun onBindViewHolder(holder : FeedViewHolder, position : Int)
+    {
         val currentItem = feedList[position]
         holder.boxTitle.text = currentItem.title
 
         holder.boxAddress.text = currentItem.address
 
         val list = currentItem.startTime?.split("T")
-        if (list != null) {
-            holder.boxStartTime.text = list[0]
-        }
+        if (list != null) holder.boxStartTime.text = list[0]
 
-        if (currentItem.images != null && currentItem.images.isNotEmpty()) {
-            Glide.with(homeFragment).load(currentItem.images[0]).into(holder.boxImage)
-        } else {
-            holder.boxImage.setImageResource(R.drawable.example_event_photo)
-        }
+        if (currentItem.images != null && currentItem.images.isNotEmpty()) Glide.with(homeFragment)
+                .load(currentItem.images[0]).into(holder.boxImage)
+        else holder.boxImage.setImageResource(R.drawable.example_event_photo)
     }
 
-    override fun getItemCount(): Int {
+    override fun getItemCount() : Int
+    {
         return feedList.size
     }
 
-    class FeedViewHolder(itemView: View, listener: OnItemClickListener) :
-        RecyclerView.ViewHolder(itemView) {
-        val boxTitle: TextView = itemView.findViewById(R.id.activity_box_title)
-        val boxImage: ImageView = itemView.findViewById(R.id.activity_box_image)
-        val boxAddress: TextView = itemView.findViewById(R.id.activity_box_address)
-        val boxStartTime: TextView = itemView.findViewById(R.id.activity_box_start_time)
+    class FeedViewHolder(itemView : View, listener : OnItemClickListener) :
+            RecyclerView.ViewHolder(itemView)
+    {
+        val boxTitle : TextView = itemView.findViewById(R.id.activity_box_title)
+        val boxImage : ImageView = itemView.findViewById(R.id.activity_box_image)
+        val boxAddress : TextView = itemView.findViewById(R.id.activity_box_address)
+        val boxStartTime : TextView = itemView.findViewById(R.id.activity_box_start_time)
 
-        init {
+        init
+        {
             itemView.setOnClickListener {
                 listener.onItemClick(adapterPosition)
             }

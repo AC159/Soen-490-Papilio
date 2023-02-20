@@ -8,14 +8,16 @@ import com.soen490chrysalis.papilio.repository.activities.IActivityRepository
 import com.soen490chrysalis.papilio.services.network.responses.ActivityResponse
 import kotlinx.coroutines.launch
 
-class HomeFragmentViewModel(private val activityRepository: IActivityRepository) : ViewModel() {
-
+class HomeFragmentViewModel(private val activityRepository : IActivityRepository) : ViewModel()
+{
     private val logTag = HomeFragmentViewModel::class.java.simpleName
-    var activityResponse: MutableLiveData<ActivityResponse> = MutableLiveData<ActivityResponse>()
+    var activityResponse : MutableLiveData<ActivityResponse> = MutableLiveData<ActivityResponse>()
 
-    fun getAllActivities(page: String, size: String) {
+    fun getAllActivities(page : String, size : String)
+    {
         viewModelScope.launch {
-            try {
+            try
+            {
                 val getAllActivitiesResponse = activityRepository.getAllActivities(page, size)
                 activityResponse.value = ActivityResponse(
                     getAllActivitiesResponse.body()!!.count,
@@ -24,11 +26,12 @@ class HomeFragmentViewModel(private val activityRepository: IActivityRepository)
                     getAllActivitiesResponse.body()!!.currentPage
                 )
                 Log.d("getAllAct", activityResponse.toString())
-            } catch (e: Exception) {
+            }
+            catch (e : Exception)
+            {
                 Log.d(logTag, "activityRepository.getAllActivities - exception:\n $e")
             }
 
         }
     }
-
 }

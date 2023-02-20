@@ -1,8 +1,6 @@
 package com.soen490chrysalis.papilio.services.network.responses
 
-import android.app.Activity
 import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
 
 /*
     File that will hold all the data classes for response objects

@@ -22,6 +22,11 @@ data class UserRequest(
     val user : User
 )
 
+data class ActivitySearchRequest(
+    @Json(name = "keyword")
+    val keyword : String
+)
+
 /*
     Data classes used to update user personal information
  */

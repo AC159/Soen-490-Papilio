@@ -156,4 +156,6 @@
     <string name="example_full_name">John Doe</string>
     <string name="bio_hint">Your bio goes here!</string>
     <string name="bio_edit_hint">Write your bio here…</string>
+    <string name="search_activity_hint">Search for activities...</string>
+    <string name="search_button_text">Button</string>
 </resources>

@@ -1,7 +1,9 @@
 package com.soen490chrysalis.papilio.services.network
 
 import com.soen490chrysalis.papilio.BuildConfig
+import com.soen490chrysalis.papilio.services.network.requests.ActivitySearchRequest
 import com.soen490chrysalis.papilio.services.network.responses.ActivityResponse
+import com.soen490chrysalis.papilio.services.network.responses.SearchActivityResponse
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Response
@@ -44,6 +46,11 @@ interface IActivityApiService
         @Query("page") page : String?,
         @Query("size") size : String?
     ) : Response<ActivityResponse>
+
+    @POST("search")
+    suspend fun searchActivities(
+    @Body keyword : ActivitySearchRequest
+    ) : Response<SearchActivityResponse>
 }
 
 /*

@@ -2,8 +2,8 @@ package com.soen490chrysalis.papilio.viewModel.factories
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.soen490chrysalis.papilio.repository.Genre.GenreRepository
-import com.soen490chrysalis.papilio.repository.Genre.IGenreRepository
+import com.soen490chrysalis.papilio.repository.genre.GenreRepository
+import com.soen490chrysalis.papilio.repository.genre.IGenreRepository
 import com.soen490chrysalis.papilio.services.network.GenreApi
 import com.soen490chrysalis.papilio.viewModel.GenreViewModel
 

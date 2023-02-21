@@ -4,9 +4,8 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.soen490chrysalis.papilio.repository.Genre.IGenreRepository
+import com.soen490chrysalis.papilio.repository.genre.IGenreRepository
 import com.soen490chrysalis.papilio.services.network.responses.GenreObject
-import com.soen490chrysalis.papilio.services.network.responses.GenreObjectResponse
 import kotlinx.coroutines.launch
 
 class GenreViewModel(private val genreRepository: IGenreRepository) : ViewModel() {

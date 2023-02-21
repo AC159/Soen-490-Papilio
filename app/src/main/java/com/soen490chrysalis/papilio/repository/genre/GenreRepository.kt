@@ -1,9 +1,8 @@
-package com.soen490chrysalis.papilio.repository.Genre
+package com.soen490chrysalis.papilio.repository.genre
 
 import android.util.Log
 import com.soen490chrysalis.papilio.services.network.IGenreApiService
 import com.soen490chrysalis.papilio.services.network.responses.GenreObject
-import com.soen490chrysalis.papilio.services.network.responses.GenreObjectResponse
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

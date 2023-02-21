@@ -32,10 +32,9 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 
 
 @RunWith(JUnit4::class)
-class UserRepositoryTest
-{
+class UserRepositoryTest {
     private var mockWebServer = MockWebServer()
-    private lateinit var mockRetrofitUserService : IUserApiService
+    private lateinit var mockRetrofitUserService: IUserApiService
     private val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
 
     private val mockFirebaseAuth = Mockito.mock(FirebaseAuth::class.java)
@@ -46,7 +45,7 @@ class UserRepositoryTest
     private val mockFirebaseUser = Mockito.mock(FirebaseUser::class.java)
     private val mockFirebaseUserUid = "aset23q45346457sdfhrtu5r"
 
-    private lateinit var userRepository : IUserRepository
+    private lateinit var userRepository: IUserRepository
     private val firstName = "firstName"
     private val lastName = "lastName"
     private val email = "someEmail@gmail.com"
@@ -57,8 +56,7 @@ class UserRepositoryTest
     val coroutineRule = MainCoroutineRule()
 
     @Before
-    fun setUp()
-    {
+    fun setUp() {
         // Stub firebase authentication functions
         @Suppress("UNCHECKED_CAST")
         Mockito.`when`(mockFirebaseAuth.signInWithEmailAndPassword(email, password)).thenReturn(
@@ -72,9 +70,9 @@ class UserRepositoryTest
         val taskCompletionSource = TaskCompletionSource<AuthResult>()
         taskCompletionSource.setResult(mockAuthResult)
         Mockito.`when`(mockFirebaseAuth.createUserWithEmailAndPassword(email, password))
-                .thenReturn(taskCompletionSource.task)
+            .thenReturn(taskCompletionSource.task)
         Mockito.`when`(mockFirebaseAuth.signInWithEmailAndPassword(email, password))
-                .thenReturn(taskCompletionSource.task)
+            .thenReturn(taskCompletionSource.task)
 
         Mockito.`when`(mockAuthResult.user).thenReturn(mockFirebaseUser)
         Mockito.`when`(mockFirebaseAuth.currentUser).thenReturn(mockFirebaseUser)
@@ -86,10 +84,10 @@ class UserRepositoryTest
         println("Webserver has successfully started for UserRepository test...")
 
         mockRetrofitUserService = Retrofit.Builder()
-                .addConverterFactory(MoshiConverterFactory.create(moshi))
-                .baseUrl(mockWebServer.url("/")) // note the URL is different from production one
-                .build()
-                .create(IUserApiService::class.java)
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .baseUrl(mockWebServer.url("/")) // note the URL is different from production one
+            .build()
+            .create(IUserApiService::class.java)
 
         println("Instantiated mockRetrofitUserService for UserRepository test!")
 
@@ -109,14 +107,12 @@ class UserRepositoryTest
     }
 
     @After
-    fun teardown()
-    {
+    fun teardown() {
         mockWebServer.shutdown()
     }
 
     @Test
-    fun getFirebaseUser()
-    {
+    fun getFirebaseUser() {
         userRepository.getUser()
         verify(mockFirebaseAuth, times(1)).currentUser
     }
@@ -182,7 +178,7 @@ class UserRepositoryTest
         mockWebServer.enqueue(mockedResponse)
 
         val idToken = "someToken"
-        val result : Pair<Boolean, String> = userRepository.firebaseAuthWithGoogle(idToken)
+        val result: Pair<Boolean, String> = userRepository.firebaseAuthWithGoogle(idToken)
         println("Result: $result")
         assert(!result.first && result.second == "firebaseAuth.signInWithCredential(credential) must not be null")
     }
@@ -195,7 +191,7 @@ class UserRepositoryTest
         val mockedResponse = MockResponse().setResponseCode(200)
         mockWebServer.enqueue(mockedResponse)
 
-        val result : Pair<Boolean, String> =
+        val result: Pair<Boolean, String> =
             userRepository.firebaseCreateAccountWithEmailAndPassword(
                 firstName,
                 lastName,
@@ -222,9 +218,9 @@ class UserRepositoryTest
             )
         )
         Mockito.`when`(mockFirebaseAuth.createUserWithEmailAndPassword(email, password))
-                .thenReturn(taskCompletionSource.task)
+            .thenReturn(taskCompletionSource.task)
 
-        val result : Pair<Boolean, String> =
+        val result: Pair<Boolean, String> =
             userRepository.firebaseCreateAccountWithEmailAndPassword(
                 firstName,
                 lastName,
@@ -247,9 +243,9 @@ class UserRepositoryTest
             )
         )
         Mockito.`when`(mockFirebaseAuth.createUserWithEmailAndPassword(email, password))
-                .thenReturn(taskCompletionSource.task)
+            .thenReturn(taskCompletionSource.task)
 
-        val result : Pair<Boolean, String> =
+        val result: Pair<Boolean, String> =
             userRepository.firebaseCreateAccountWithEmailAndPassword(
                 firstName,
                 lastName,
@@ -272,9 +268,9 @@ class UserRepositoryTest
             )
         )
         Mockito.`when`(mockFirebaseAuth.createUserWithEmailAndPassword(email, password))
-                .thenReturn(taskCompletionSource.task)
+            .thenReturn(taskCompletionSource.task)
 
-        val result : Pair<Boolean, String> =
+        val result: Pair<Boolean, String> =
             userRepository.firebaseCreateAccountWithEmailAndPassword(
                 firstName,
                 lastName,
@@ -292,9 +288,9 @@ class UserRepositoryTest
         val taskCompletionSource = TaskCompletionSource<AuthResult>()
         taskCompletionSource.setException(Exception("Oops, something went wrong!"))
         Mockito.`when`(mockFirebaseAuth.createUserWithEmailAndPassword(email, password))
-                .thenReturn(taskCompletionSource.task)
+            .thenReturn(taskCompletionSource.task)
 
-        val result : Pair<Boolean, String> =
+        val result: Pair<Boolean, String> =
             userRepository.firebaseCreateAccountWithEmailAndPassword(
                 firstName,
                 lastName,
@@ -314,7 +310,7 @@ class UserRepositoryTest
         val mockedResponse = MockResponse().setResponseCode(200)
         mockWebServer.enqueue(mockedResponse)
 
-        val result : Pair<Boolean, String> =
+        val result: Pair<Boolean, String> =
             userRepository.firebaseLoginWithEmailAndPassword(email, password)
         println("Result: $result")
 
@@ -329,9 +325,9 @@ class UserRepositoryTest
         val taskCompletionSource = TaskCompletionSource<AuthResult>()
         taskCompletionSource.setException(FirebaseAuthInvalidUserException("400", "Invalid User!"))
         Mockito.`when`(mockFirebaseAuth.signInWithEmailAndPassword(email, password))
-                .thenReturn(taskCompletionSource.task)
+            .thenReturn(taskCompletionSource.task)
 
-        val result : Pair<Boolean, String> =
+        val result: Pair<Boolean, String> =
             userRepository.firebaseLoginWithEmailAndPassword(email, password)
         println("Result: $result")
         assert(!result.first && result.second == "User has been disabled or does not exist!")
@@ -348,9 +344,9 @@ class UserRepositoryTest
             )
         )
         Mockito.`when`(mockFirebaseAuth.signInWithEmailAndPassword(email, password))
-                .thenReturn(taskCompletionSource.task)
+            .thenReturn(taskCompletionSource.task)
 
-        val result : Pair<Boolean, String> =
+        val result: Pair<Boolean, String> =
             userRepository.firebaseLoginWithEmailAndPassword(email, password)
         println("Result: $result")
         assert(!result.first && result.second == "Wrong password!")
@@ -362,9 +358,9 @@ class UserRepositoryTest
         val taskCompletionSource = TaskCompletionSource<AuthResult>()
         taskCompletionSource.setException(Exception("Oops, something went wrong!"))
         Mockito.`when`(mockFirebaseAuth.signInWithEmailAndPassword(email, password))
-                .thenReturn(taskCompletionSource.task)
+            .thenReturn(taskCompletionSource.task)
 
-        val result : Pair<Boolean, String> =
+        val result: Pair<Boolean, String> =
             userRepository.firebaseLoginWithEmailAndPassword(email, password)
         println("Result: $result")
         assert(!result.first && result.second == "Oops, something went wrong!")

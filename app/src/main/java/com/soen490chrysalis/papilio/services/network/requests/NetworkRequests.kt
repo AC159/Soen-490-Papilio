@@ -22,7 +22,6 @@ data class UserRequest(
     val user : User
 )
 
-
 /*
     Data classes used to update user personal information
  */

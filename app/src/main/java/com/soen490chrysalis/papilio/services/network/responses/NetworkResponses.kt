@@ -22,6 +22,30 @@ data class UserObject(
     val bio : String
 )
 
+data class ActivityObject(
+    val id: String?,
+    val title: String?,
+    val description: String?,
+    val costPerIndividual: String?,
+    val costPerGroup: String?,
+    val groupSize: String?,
+    val images: List<String>?,
+    val startTime: String?,
+    val endTime: String?,
+    val address: String?,
+    val createdAt: String?,
+    val updatedAt: String?,
+    val businessId: String?,
+    val userId: String?
+)
+
+data class ActivityResponse(
+    val count: String,
+    val rows: List<ActivityObject>,
+    val totalPages: String,
+    val currentPage: String
+)
+
 // Response object for the /api/user/get/:firebaseId endpoint
 data class GetUserByFirebaseIdResponse(
     val found : Boolean,

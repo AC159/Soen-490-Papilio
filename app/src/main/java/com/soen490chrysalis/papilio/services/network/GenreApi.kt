@@ -1,7 +1,6 @@
 package com.soen490chrysalis.papilio.services.network
 
 import com.soen490chrysalis.papilio.services.network.responses.GenreObject
-import com.soen490chrysalis.papilio.services.network.responses.GenreObjectResponse
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Response
@@ -30,13 +29,14 @@ private val retrofit = Retrofit.Builder()
 
 interface IGenreApiService
 {
-    @GET ("all")
+    @GET("all")
     suspend fun getAllGenres(
         @Query("category") category : String?
     ) : Response<List<GenreObject>>
 }
 
-object GenreApi{
+object GenreApi
+{
     // Create a singleton object that implements the UserApiService interface
     val retrofitService : IGenreApiService by lazy {
         retrofit.create(IGenreApiService::class.java)

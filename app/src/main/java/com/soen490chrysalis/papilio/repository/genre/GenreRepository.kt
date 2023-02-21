@@ -14,15 +14,14 @@ class GenreRepository(
 ) : IGenreRepository
 {
     override suspend fun getAllGenres(
-        category: String?
+        category : String?
     ) : Response<List<GenreObject>>
     {
         return withContext(coroutineDispatcher)
         {
-            val whatever = genreService.getAllGenres(category)
-            Log.d("getAllGenres_GenreRepository", whatever.body().toString())
-            return@withContext genreService.getAllGenres(category)
+            val genres = genreService.getAllGenres(category)
+            Log.d("getAllGenres_GenreRepository", genres.body().toString())
+            return@withContext genres
         }
     }
-
 }

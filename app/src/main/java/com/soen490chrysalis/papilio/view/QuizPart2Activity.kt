@@ -7,7 +7,6 @@ import android.content.res.ColorStateList
 import androidx.core.content.ContextCompat
 import android.util.TypedValue
 import android.view.ViewGroup
-import android.util.Log
 import android.view.MenuItem
 import android.widget.Button
 import androidx.lifecycle.Observer
@@ -36,7 +35,6 @@ class QuizPart2Activity : AppCompatActivity()
 
         genreViewModel.genreObject.observe(this, Observer {
             genreList = genreViewModel.genreObject.value!!
-            Log.d("Received genres from the backend", genreList.toString())
         })
 
         //For testing purposes. Must repurpose this button array to actual activities found in backend

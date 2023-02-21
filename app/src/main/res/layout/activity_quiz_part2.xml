@@ -3,7 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/quiz_part1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/abstract_shape_2"
@@ -26,9 +25,10 @@
             <TextView
                 android:id="@+id/question"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:padding="8dp"
-                android:text="Which of the following sports do you enjoy more?"
+                android:layout_marginVertical="15dp"
+                android:text="Which of the following activities do you enjoy more?"
                 android:textColor="@color/dark_blue"
                 android:textSize="16sp"
                 android:textStyle="bold"
@@ -39,19 +39,20 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/linearLayout6"
-            android:layout_width="402dp"
-            android:layout_height="419dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:baselineAligned="false"
             app:layout_constraintBottom_toTopOf="@+id/linearLayout8"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/constraintLayout4"
-            tools:layout_conversion_absoluteHeight="338dp"
-            tools:layout_conversion_absoluteWidth="392dp">
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout4">
 
             <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_width="413dp"
+                android:layout_height="573dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <LinearLayout
                     android:id="@+id/container"
@@ -61,12 +62,6 @@
                     android:orientation="vertical" />
 
             </ScrollView>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
 
             <Button
                 android:id="@+id/doneBtn"
@@ -83,10 +78,16 @@
                 app:cornerRadius="100dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_bias="0.551"
                 app:layout_constraintStart_toStartOf="parent"
                 tools:layout_conversion_absoluteHeight="62dp"
                 tools:layout_conversion_absoluteWidth="212dp" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
         </LinearLayout>
 

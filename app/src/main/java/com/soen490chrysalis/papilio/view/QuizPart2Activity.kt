@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.soen490chrysalis.papilio.R
 import android.content.res.ColorStateList
+import android.graphics.Color
 import androidx.core.content.ContextCompat
 import android.util.TypedValue
 import android.view.ViewGroup
@@ -45,6 +46,7 @@ class QuizPart2Activity : AppCompatActivity()
                 button.text = genre.name
                 button.backgroundTintList =
                     ColorStateList.valueOf(ContextCompat.getColor(this, R.color.dark_blue))
+                button.setTextColor(Color.parseColor("#FFFFFF"))
 
                 val widthInDp = TypedValue.applyDimension(
                     TypedValue.COMPLEX_UNIT_DIP,

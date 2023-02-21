@@ -53,14 +53,10 @@ data class GetUserByFirebaseIdResponse(
 )
 
 data class GenreObject(
-    val id : String?,
-    val name : String?,
+    val id : String,
+    val name : String,
     val url : String?,
-    val category : String?,
-    val createdAt : String?,
-    val updatedAt : String?
-)
-
-data class GenreObjectResponse(
-    val rows: List<GenreObject>?
+    val category : String,
+    val createdAt : String,
+    val updatedAt : String
 )

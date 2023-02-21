@@ -13,10 +13,10 @@ class GenreViewModel(private val genreRepository : IGenreRepository) : ViewModel
     private val logTag = GenreViewModel::class.java.simpleName
     var genreObject : MutableLiveData<List<GenreObject>> = MutableLiveData<List<GenreObject>>()
 
-    fun getAllGenres(category : String?)
+    fun getAllGenres()
     {
         viewModelScope.launch {
-            genreObject.value = genreRepository.getAllGenres(category).body()
+            genreObject.value = genreRepository.getAllGenres().body()
             Log.d(logTag, "Received genres from the repository:\n ${genreObject.value.toString()}")
         }
     }

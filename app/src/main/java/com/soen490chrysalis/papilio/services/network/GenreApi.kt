@@ -1,5 +1,6 @@
 package com.soen490chrysalis.papilio.services.network
 
+import com.soen490chrysalis.papilio.BuildConfig
 import com.soen490chrysalis.papilio.services.network.responses.GenreObject
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -7,6 +8,8 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.*
+
+private const val BASE_URL = BuildConfig.GENRE_API_URL
 
 /*
     File that manages the network requests related to dynamically populating buttons in the user activity quiz
@@ -24,15 +27,13 @@ private val moshi = Moshi.Builder()
 // The Retrofit object with the Moshi converter.
 private val retrofit = Retrofit.Builder()
         .addConverterFactory(MoshiConverterFactory.create(moshi))
-        .baseUrl("http://localhost:1337/api/genre/")
+        .baseUrl(BASE_URL)
         .build()
 
 interface IGenreApiService
 {
     @GET("all")
-    suspend fun getAllGenres(
-        @Query("category") category : String?
-    ) : Response<List<GenreObject>>
+    suspend fun getAllGenres() : Response<List<GenreObject>>
 }
 
 object GenreApi

@@ -13,13 +13,11 @@ class GenreRepository(
     private val coroutineDispatcher : CoroutineDispatcher = Dispatchers.IO
 ) : IGenreRepository
 {
-    override suspend fun getAllGenres(
-        category : String?
-    ) : Response<List<GenreObject>>
+    override suspend fun getAllGenres() : Response<List<GenreObject>>
     {
         return withContext(coroutineDispatcher)
         {
-            val genres = genreService.getAllGenres(category)
+            val genres = genreService.getAllGenres()
             Log.d("getAllGenres_GenreRepository", genres.body().toString())
             return@withContext genres
         }

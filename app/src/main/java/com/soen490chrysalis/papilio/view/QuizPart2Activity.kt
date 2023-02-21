@@ -31,13 +31,13 @@ class QuizPart2Activity : AppCompatActivity()
 
         val viewModelFactory = GenreViewModelFactory()
         genreViewModel = ViewModelProvider(this, viewModelFactory)[GenreViewModel::class.java]
-        genreViewModel.getAllGenres(category = "sport")
+        genreViewModel.getAllGenres()
 
         genreViewModel.genreObject.observe(this, Observer {
             genreList = genreViewModel.genreObject.value!!
         })
 
-        //For testing purposes. Must repurpose this button array to actual activities found in backend
+        // For testing purposes. Must repurpose this button array to actual activities found in backend
         val buttonArray = arrayOf(
             ButtonObject(
                 1,

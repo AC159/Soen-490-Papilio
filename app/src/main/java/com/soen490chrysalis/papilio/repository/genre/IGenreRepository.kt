@@ -5,7 +5,5 @@ import retrofit2.Response
 
 interface IGenreRepository
 {
-    suspend fun getAllGenres(
-        category : String?
-    ) : Response<List<GenreObject>>
+    suspend fun getAllGenres() : Response<List<GenreObject>>
 }

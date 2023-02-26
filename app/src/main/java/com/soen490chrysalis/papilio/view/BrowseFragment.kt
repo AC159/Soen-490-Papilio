@@ -2,7 +2,9 @@ package com.soen490chrysalis.papilio.view
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,14 +18,7 @@ import com.google.android.material.card.MaterialCardView
 import com.soen490chrysalis.papilio.R
 import com.soen490chrysalis.papilio.viewModel.BrowseFragmentViewModel
 import com.soen490chrysalis.papilio.viewModel.factories.BrowseFragmentViewModelFactory
-import org.w3c.dom.Text
 
-
-/**
- * A simple [Fragment] subclass.
- * Use the [BrowseFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class BrowseFragment : Fragment()
 {
     // TODO: Rename and change types of parameters
@@ -58,6 +53,7 @@ class BrowseFragment : Fragment()
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_browse, container, false)
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         val browseFragmentVMFactory = BrowseFragmentViewModelFactory()
@@ -77,7 +73,7 @@ class BrowseFragment : Fragment()
             browseFragmentViewModel.searchActivities(searchBar.text.toString());
         }
 
-        browseFragmentViewModel.activityResponse.observe(viewLifecycleOwner, Observer {
+        browseFragmentViewModel.activitiesResponse.observe(viewLifecycleOwner, Observer {
 
             val noResultsBox = view.findViewById<MaterialCardView>(R.id.no_activity_found_box)
             noResultsBox.visibility = View.GONE
@@ -85,7 +81,7 @@ class BrowseFragment : Fragment()
 
             displayProgressCircle(false)
 
-            val data = browseFragmentViewModel.activityResponse.value
+            val data = browseFragmentViewModel.activitiesResponse.value
 
             activityContainer.removeAllViews()
 
@@ -99,7 +95,7 @@ class BrowseFragment : Fragment()
             }
             else
             {
-                for(activity in browseFragmentViewModel.activityResponse.value?.rows!!)
+                for(activity in browseFragmentViewModel.activitiesResponse.value?.rows!!)
                 {
                     val newActivityBoxLayout = layoutInflater?.inflate(R.layout.activity_activities_box, null);
                     val activityBoxImage = newActivityBoxLayout?.findViewById<ImageView>(R.id.activity_box_image)
@@ -123,9 +119,56 @@ class BrowseFragment : Fragment()
                         activityBoxDesc.text = activity.description
                     }
 
+                    newActivityBoxLayout?.setOnClickListener{
+                        activity.id?.toInt()
+                            ?.let { it1 -> browseFragmentViewModel.getActivity(it1) }
+                    }
+
                     activityContainer.addView(newActivityBoxLayout)
                 }
             }
+        })
+
+        browseFragmentViewModel.activityResponse.observe(viewLifecycleOwner, Observer {
+
+            val activity = browseFragmentViewModel.activityResponse.value?.activity;
+
+            val intent = Intent(this.activity, DisplayActivityInfoActivity::class.java)
+            intent.putExtra("id", activity?.id)
+            intent.putExtra("title", activity?.title)
+            intent.putExtra("description", activity?.description)
+            intent.putExtra(
+                "individualCost",
+                if (activity?.costPerIndividual == "0") "FREE" else ("$" + activity?.costPerIndividual + "/person")
+            )
+            intent.putExtra(
+                "groupCost",
+                if (activity?.costPerGroup == "0") "FREE" else ("$" + activity?.costPerGroup + "/group")
+            )
+            intent.putExtra("location", activity?.address)
+
+            if (activity?.images != null && activity.images.isNotEmpty())
+            {
+                intent.putExtra("images", true)
+                var x = 0
+                Log.d("Size", activity.images.size.toString())
+                for (i in activity.images)
+                {
+                    intent.putExtra("images$x", i)
+                    x++
+                }
+                if (x != 5)
+                {
+                    for (e in x until 5)
+                    {
+                        intent.putExtra("images$e", "")
+                        x++
+                    }
+                }
+            }
+            else intent.putExtra("images", false)
+
+            startActivity(intent)
 
         })
     }
@@ -136,12 +179,10 @@ class BrowseFragment : Fragment()
         layoutActivityList.visibility = if(shouldDisplay) View.GONE else View.VISIBLE
     }
 
-
     fun hideKeyboardFrom(context: Context, view: View) {
         val imm = context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
-
 
     companion object
     {

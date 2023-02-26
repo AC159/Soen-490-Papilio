@@ -98,6 +98,8 @@ class HomeFragment : Fragment()
                 recyclerView.adapter = adapter
 
 
+
+
                 itemClickListener()
 
                 totalPage = it.totalPages.toInt()

@@ -53,6 +53,11 @@ data class ActivityResponse(
     val currentPage: String
 )
 
+data class SingleActivityResponse(
+    val found: Boolean,
+    val activity : ActivityObject
+)
+
 data class SearchActivityResponse(
     val keyword: String,
     val count: String,

@@ -16,6 +16,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
@@ -142,7 +143,7 @@ class UserProfileActivity : AppCompatActivity()
         binding.editProfileButton.setOnClickListener {
             if (!isEditing) // if we are not already in editing mode, change the text of the button and make all editable fields visible and available for editing
             {
-                binding.editProfileButton.text = "Save Changes"
+                binding.editProfileButton.background = ResourcesCompat.getDrawable(resources, R.drawable.save_button, null)!!
                 binding.userProfileBioEdit.visibility = View.VISIBLE
                 binding.userProfilePhoneEditButton.visibility = View.VISIBLE
                 binding.userProfileBio.visibility = View.GONE
@@ -169,7 +170,7 @@ class UserProfileActivity : AppCompatActivity()
                 binding.userProfileBioEdit.visibility = View.GONE
                 binding.userProfilePhoneEditButton.visibility = View.GONE
                 binding.userProfileBio.visibility = View.VISIBLE
-                binding.editProfileButton.text = "Edit Profile"
+                binding.editProfileButton.background = ResourcesCompat.getDrawable(resources, R.drawable.edit_button, null)!!
                 binding.userProfilePicture.setImageResource(R.drawable.user_pfp_example)
 
                 if (user?.providerId != "google.com")

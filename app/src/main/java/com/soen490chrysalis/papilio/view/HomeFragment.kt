@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.DialogInterface
 import android.content.Intent
+import android.graphics.Color
 import android.icu.util.Calendar
 import android.os.Bundle
 import android.util.Log
@@ -43,9 +44,7 @@ class HomeFragment : Fragment() {
 
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_home, container, false)
@@ -85,8 +84,7 @@ class HomeFragment : Fragment() {
                 }
 
                 Log.d(
-                    "NOTIFYING RECYCLER VIEW OF NEWLY INSERTED DATA",
-                    activityList.size.toString()
+                    "NOTIFYING RECYCLER VIEW OF NEWLY INSERTED DATA", activityList.size.toString()
                 )
                 adapter.notifyItemRangeInserted(index - 1, addActivityList.size)
                 isLoading = false
@@ -148,11 +146,11 @@ class HomeFragment : Fragment() {
             var individualCostSliderValues = mutableListOf<Float>(0f, 1000f)
             var groupCostSliderValues = mutableListOf<Float>(0f, 1000f)
 
-            individualCostSlider.addOnChangeListener { slider, value, fromUser ->
+            individualCostSlider.addOnChangeListener { _, _, _ ->
                 individualCostSliderValues = individualCostSlider.values
             }
 
-            groupCostSlider.addOnChangeListener { slider, value, fromUser ->
+            groupCostSlider.addOnChangeListener { _, _, _ ->
                 groupCostSliderValues = groupCostSlider.values
             }
 
@@ -165,7 +163,7 @@ class HomeFragment : Fragment() {
                     .setOnClickListener(View.OnClickListener {
                         startDate = EventDate(
                             dateDialog.datePicker.year,
-                            dateDialog.datePicker.month + 1,
+                            dateDialog.datePicker.month,
                             dateDialog.datePicker.dayOfMonth
                         )
                         startDateButton.text =
@@ -183,7 +181,7 @@ class HomeFragment : Fragment() {
                     .setOnClickListener(View.OnClickListener {
                         endDate = EventDate(
                             dateDialog.datePicker.year,
-                            dateDialog.datePicker.month + 1,
+                            dateDialog.datePicker.month,
                             dateDialog.datePicker.dayOfMonth
                         )
                         endDateButton.text = "${endDate.month + 1}/${endDate.day}/${endDate.year}"
@@ -198,18 +196,14 @@ class HomeFragment : Fragment() {
                 DialogInterface.OnClickListener { _: DialogInterface, _: Int ->
                     homeFragmentViewModel.SetFilter(
                         HomeFragmentViewModel.FilterOptions(
-                            individualCostSliderValues,
-                            groupCostSliderValues,
-                            startDate,
-                            endDate
+                            individualCostSliderValues, groupCostSliderValues, startDate, endDate
                         )
                     )
                     clearFeed()
 
                 })
 
-            builder.setNeutralButton(
-                "Remove All Filters",
+            builder.setNeutralButton("Remove All Filters",
                 DialogInterface.OnClickListener { _: DialogInterface, _: Int ->
                     homeFragmentViewModel.ResetFilter()
                     clearFeed()
@@ -224,9 +218,12 @@ class HomeFragment : Fragment() {
                     }
                 })
 
+
             val dialog = builder.create()
 
             dialog.show()
+
+            dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(Color.RED)
 
         }
 
@@ -302,16 +299,13 @@ class HomeFragment : Fragment() {
                 super.onScrolled(recyclerView, dx, dy)
                 val linearLayoutManager = recyclerView.layoutManager as LinearLayoutManager?
                 if (!isLoading) {
-                    if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() ==
-                        (activityList.size - 1)
-                    ) {
+                    if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() == (activityList.size - 1)) {
                         // bottom of list!
                         if (currentPage <= totalPage) {
                             ++currentPage
                             // fetch more activities upon button click
                             homeFragmentViewModel.getAllActivities(
-                                currentPage.toString(),
-                                pageSize.toString()
+                                currentPage.toString(), pageSize.toString()
                             )
                         }
                         isLoading = true
@@ -322,8 +316,7 @@ class HomeFragment : Fragment() {
         })
     }
 
-    private fun clearFeed()
-    {
+    private fun clearFeed() {
         isRecyclerViewInitialized = false
         val size = activityList.size
         activityList.clear()

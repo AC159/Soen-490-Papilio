@@ -14,31 +14,28 @@ import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.*
 
-class HomeFragmentViewModel(private val activityRepository : IActivityRepository) : ViewModel()
-{
-    data class FilterOptions (
-        val individualCostRange : List<Float>,
-        val groupCostRange : List<Float>,
-        val startDate : EventDate,
-        val endDate : EventDate
+class HomeFragmentViewModel(private val activityRepository: IActivityRepository) : ViewModel() {
+    data class FilterOptions(
+        val individualCostRange: List<Float>,
+        val groupCostRange: List<Float>,
+        val startDate: EventDate,
+        val endDate: EventDate
     )
 
     private val logTag = HomeFragmentViewModel::class.java.simpleName
-    var activityResponse : MutableLiveData<ActivityResponse> = MutableLiveData<ActivityResponse>()
+    var activityResponse: MutableLiveData<ActivityResponse> = MutableLiveData<ActivityResponse>()
 
     val oldestDate = EventDate(2022, 8, 1)
     val furthestDate = EventDate(3022, 8, 1)
 
-    var individualCostLimit : List<Float> = mutableListOf(0f, 10000f)
-    var groupCostLimit : List<Float> = mutableListOf(0f, 10000f)
-    var filterStartDate : EventDate = oldestDate
-    var filterEndDate : EventDate = furthestDate
+    var individualCostLimit: List<Float> = mutableListOf(0f, 10000f)
+    var groupCostLimit: List<Float> = mutableListOf(0f, 10000f)
+    var filterStartDate: EventDate = oldestDate
+    var filterEndDate: EventDate = furthestDate
 
-    fun getAllActivities(page : String, size : String)
-    {
+    fun getAllActivities(page: String, size: String) {
         viewModelScope.launch {
-            try
-            {
+            try {
                 val getAllActivitiesResponse = activityRepository.getAllActivities(page, size)
                 activityResponse.value = ActivityResponse(
                     getAllActivitiesResponse.body()!!.count,
@@ -47,24 +44,21 @@ class HomeFragmentViewModel(private val activityRepository : IActivityRepository
                     getAllActivitiesResponse.body()!!.currentPage
                 )
                 Log.d("getAllAct", activityResponse.toString())
-            }
-            catch (e : Exception)
-            {
+            } catch (e: Exception) {
                 Log.d(logTag, "activityRepository.getAllActivities - exception:\n $e")
             }
 
         }
     }
 
-    fun SetFilter(filters : FilterOptions)
-    {
+    fun SetFilter(filters: FilterOptions) {
         individualCostLimit = filters.individualCostRange
         groupCostLimit = filters.groupCostRange
         filterStartDate = filters.startDate
         filterEndDate = filters.endDate
     }
 
-    public fun filterActivity(activity : ActivityObject) : Boolean {
+    public fun filterActivity(activity: ActivityObject): Boolean {
         var shouldAdd = true
         val individualCost = activity.costPerIndividual?.toFloat()
         val groupCost = activity.costPerGroup?.toFloat()
@@ -73,8 +67,10 @@ class HomeFragmentViewModel(private val activityRepository : IActivityRepository
         val dateString = activityStartTime!!.substring(0, activityStartTime.indexOf("T"))
         val dateParts = dateString.split("-")
 
-        val activityDate = LocalDate.of(dateParts[0].toInt(), dateParts[1].toInt(), dateParts[2].toInt())
-        val startDate = LocalDate.of(filterStartDate.year, filterStartDate.month, filterStartDate.day)
+        val activityDate =
+            LocalDate.of(dateParts[0].toInt(), dateParts[1].toInt(), dateParts[2].toInt())
+        val startDate =
+            LocalDate.of(filterStartDate.year, filterStartDate.month, filterStartDate.day)
         val endDate = LocalDate.of(filterEndDate.year, filterEndDate.month, filterEndDate.day)
 
         Log.d("Date -> ", activityDate.toString())
@@ -91,9 +87,8 @@ class HomeFragmentViewModel(private val activityRepository : IActivityRepository
             }
         }
 
-        if(shouldAdd)
-        {
-            if(activityDate.isBefore(startDate) || activityDate.isAfter(endDate)) {
+        if (shouldAdd) {
+            if (activityDate.isBefore(startDate) || activityDate.isAfter(endDate)) {
                 shouldAdd = false
             }
         }
@@ -101,7 +96,7 @@ class HomeFragmentViewModel(private val activityRepository : IActivityRepository
         return shouldAdd
     }
 
-    fun ResetFilter(){
+    fun ResetFilter() {
         individualCostLimit = mutableListOf(0f, 10000f)
         groupCostLimit = mutableListOf(0f, 10000f)
         filterStartDate = oldestDate

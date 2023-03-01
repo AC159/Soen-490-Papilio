@@ -12,8 +12,10 @@ import kotlinx.coroutines.launch
 class BrowseFragmentViewModel(private val activityRepository: IActivityRepository) : ViewModel() {
 
     private val logTag = BrowseFragmentViewModel::class.java.simpleName
-    var activitiesResponse: MutableLiveData<SearchActivityResponse> = MutableLiveData<SearchActivityResponse>()
-    var activityResponse: MutableLiveData<SingleActivityResponse> = MutableLiveData<SingleActivityResponse>()
+    var activitiesResponse: MutableLiveData<SearchActivityResponse> =
+        MutableLiveData<SearchActivityResponse>()
+    var activityResponse: MutableLiveData<SingleActivityResponse> =
+        MutableLiveData<SingleActivityResponse>()
 
     fun searchActivities(query: String) {
         viewModelScope.launch {
@@ -31,8 +33,7 @@ class BrowseFragmentViewModel(private val activityRepository: IActivityRepositor
         }
     }
 
-    fun getActivity(activityId : Number)
-    {
+    fun getActivity(activityId: Number) {
         viewModelScope.launch {
             try {
                 val getActivityResponse = activityRepository.getActivity(activityId)

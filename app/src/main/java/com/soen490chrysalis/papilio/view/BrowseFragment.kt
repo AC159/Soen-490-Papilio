@@ -19,37 +19,33 @@ import com.soen490chrysalis.papilio.R
 import com.soen490chrysalis.papilio.viewModel.BrowseFragmentViewModel
 import com.soen490chrysalis.papilio.viewModel.factories.BrowseFragmentViewModelFactory
 
-class BrowseFragment : Fragment()
-{
+class BrowseFragment : Fragment() {
     // TODO: Rename and change types of parameters
-    private var mParam1 : String? = null
-    private var mParam2 : String? = null
+    private var mParam1: String? = null
+    private var mParam2: String? = null
 
-    private lateinit var browseFragmentViewModel : BrowseFragmentViewModel
+    private lateinit var browseFragmentViewModel: BrowseFragmentViewModel
 
-    private lateinit var progressCircleContainer : LinearLayout
-    private lateinit var progressCircle : ProgressBar
+    private lateinit var progressCircleContainer: LinearLayout
+    private lateinit var progressCircle: ProgressBar
 
-    private lateinit var searchBar : EditText
-    private lateinit var searchButton : ImageButton
-    private lateinit var layoutActivityList : ScrollView
-    private lateinit var activityContainer : LinearLayout
+    private lateinit var searchBar: EditText
+    private lateinit var searchButton: ImageButton
+    private lateinit var layoutActivityList: ScrollView
+    private lateinit var activityContainer: LinearLayout
 
-    override fun onCreate(savedInstanceState : Bundle?)
-    {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (arguments != null)
-        {
+        if (arguments != null) {
             mParam1 = arguments?.getString(ARG_PARAM1)
             mParam2 = arguments?.getString(ARG_PARAM2)
         }
     }
 
     override fun onCreateView(
-        inflater : LayoutInflater, container : ViewGroup?,
-        savedInstanceState : Bundle?
-    ) : View?
-    {
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_browse, container, false)
     }
@@ -57,7 +53,8 @@ class BrowseFragment : Fragment()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         val browseFragmentVMFactory = BrowseFragmentViewModelFactory()
-        browseFragmentViewModel = ViewModelProvider(this, browseFragmentVMFactory)[BrowseFragmentViewModel::class.java]
+        browseFragmentViewModel =
+            ViewModelProvider(this, browseFragmentVMFactory)[BrowseFragmentViewModel::class.java]
 
         layoutActivityList = view.findViewById(R.id.activity_container)
         activityContainer = view.findViewById(R.id.activity_list)
@@ -85,26 +82,26 @@ class BrowseFragment : Fragment()
 
             activityContainer.removeAllViews()
 
-            val layoutInflater : LayoutInflater? = activity?.layoutInflater
+            val layoutInflater: LayoutInflater? = activity?.layoutInflater
 
-            if(data?.count == "0")
-            {
+            if (data?.count == "0") {
                 displayProgressCircle(true)
                 noResultsBox.visibility = View.VISIBLE
                 progressCircle.visibility = View.GONE
-            }
-            else
-            {
-                for(activity in browseFragmentViewModel.activitiesResponse.value?.rows!!)
-                {
-                    val newActivityBoxLayout = layoutInflater?.inflate(R.layout.activity_activities_box, null);
-                    val activityBoxImage = newActivityBoxLayout?.findViewById<ImageView>(R.id.activity_box_image)
-                    val activityBoxTitle = newActivityBoxLayout?.findViewById<TextView>(R.id.activity_box_title)
-                    val activityBoxDesc = newActivityBoxLayout?.findViewById<TextView>(R.id.activity_box_address)
-                    newActivityBoxLayout?.findViewById<TextView>(R.id.activity_box_start_time)?.visibility = View.GONE
+            } else {
+                for (activity in browseFragmentViewModel.activitiesResponse.value?.rows!!) {
+                    val newActivityBoxLayout =
+                        layoutInflater?.inflate(R.layout.activity_activities_box, null);
+                    val activityBoxImage =
+                        newActivityBoxLayout?.findViewById<ImageView>(R.id.activity_box_image)
+                    val activityBoxTitle =
+                        newActivityBoxLayout?.findViewById<TextView>(R.id.activity_box_title)
+                    val activityBoxDesc =
+                        newActivityBoxLayout?.findViewById<TextView>(R.id.activity_box_address)
+                    newActivityBoxLayout?.findViewById<TextView>(R.id.activity_box_start_time)?.visibility =
+                        View.GONE
 
-                    if(activity.images != null)
-                    {
+                    if (activity.images != null) {
                         if (activityBoxImage != null) {
                             Glide.with(this)
                                 .load(activity.images)
@@ -119,7 +116,7 @@ class BrowseFragment : Fragment()
                         activityBoxDesc.text = activity.description
                     }
 
-                    newActivityBoxLayout?.setOnClickListener{
+                    newActivityBoxLayout?.setOnClickListener {
                         activity.id?.toInt()
                             ?.let { it1 -> browseFragmentViewModel.getActivity(it1) }
                     }
@@ -147,36 +144,30 @@ class BrowseFragment : Fragment()
             )
             intent.putExtra("location", activity?.address)
 
-            if (activity?.images != null && activity.images.isNotEmpty())
-            {
+            if (activity?.images != null && activity.images.isNotEmpty()) {
                 intent.putExtra("images", true)
                 var x = 0
                 Log.d("Size", activity.images.size.toString())
-                for (i in activity.images)
-                {
+                for (i in activity.images) {
                     intent.putExtra("images$x", i)
                     x++
                 }
-                if (x != 5)
-                {
-                    for (e in x until 5)
-                    {
+                if (x != 5) {
+                    for (e in x until 5) {
                         intent.putExtra("images$e", "")
                         x++
                     }
                 }
-            }
-            else intent.putExtra("images", false)
+            } else intent.putExtra("images", false)
 
             startActivity(intent)
 
         })
     }
 
-    fun displayProgressCircle(shouldDisplay : Boolean)
-    {
-        progressCircleContainer.visibility = if(shouldDisplay) View.VISIBLE else View.GONE
-        layoutActivityList.visibility = if(shouldDisplay) View.GONE else View.VISIBLE
+    fun displayProgressCircle(shouldDisplay: Boolean) {
+        progressCircleContainer.visibility = if (shouldDisplay) View.VISIBLE else View.GONE
+        layoutActivityList.visibility = if (shouldDisplay) View.GONE else View.VISIBLE
     }
 
     fun hideKeyboardFrom(context: Context, view: View) {
@@ -184,8 +175,7 @@ class BrowseFragment : Fragment()
         imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
-    companion object
-    {
+    companion object {
         // TODO: Rename parameter arguments, choose names that match
         // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
         private const val ARG_PARAM1 = "param1"
@@ -200,8 +190,7 @@ class BrowseFragment : Fragment()
          * @return A new instance of fragment BrowseFragment.
          */
         // TODO: Rename and change types and number of parameters
-        fun newInstance(param1 : String?, param2 : String?) : BrowseFragment
-        {
+        fun newInstance(param1: String?, param2: String?): BrowseFragment {
             val fragment = BrowseFragment()
             val args = Bundle()
             args.putString(ARG_PARAM1, param1)

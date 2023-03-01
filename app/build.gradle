@@ -82,6 +82,8 @@ task jacocoUnifiedTestReport(type: JacocoReport, dependsOn: ['connectedAndroidTe
 
 dependencies {
 
+    implementation 'com.jakewharton.threetenabp:threetenabp:1.4.4'
+
     // firebase configuration
     implementation platform('com.google.firebase:firebase-bom:30.4.1') // Import the Firebase BoM
     implementation 'com.google.firebase:firebase-analytics-ktx'

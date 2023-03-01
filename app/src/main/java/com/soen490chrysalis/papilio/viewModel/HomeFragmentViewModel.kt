@@ -9,10 +9,7 @@ import com.soen490chrysalis.papilio.services.network.responses.ActivityObject
 import com.soen490chrysalis.papilio.services.network.responses.ActivityResponse
 import com.soen490chrysalis.papilio.view.dialogs.EventDate
 import kotlinx.coroutines.launch
-import java.text.ParseException
-import java.text.SimpleDateFormat
 import java.time.LocalDate
-import java.util.*
 
 class HomeFragmentViewModel(private val activityRepository: IActivityRepository) : ViewModel() {
     data class FilterOptions(
@@ -70,8 +67,8 @@ class HomeFragmentViewModel(private val activityRepository: IActivityRepository)
         val activityDate =
             LocalDate.of(dateParts[0].toInt(), dateParts[1].toInt(), dateParts[2].toInt())
         val startDate =
-            LocalDate.of(filterStartDate.year, filterStartDate.month, filterStartDate.day)
-        val endDate = LocalDate.of(filterEndDate.year, filterEndDate.month, filterEndDate.day)
+            LocalDate.of(filterStartDate.year, filterStartDate.month+1, filterStartDate.day)
+        val endDate = LocalDate.of(filterEndDate.year, filterEndDate.month+1, filterEndDate.day)
 
         Log.d("Date -> ", activityDate.toString())
 

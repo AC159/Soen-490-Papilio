@@ -8,37 +8,79 @@
     android:background="@drawable/sign_up_activity_background"
     tools:context=".view.ActivitiesFragment">
 
-
-    <ScrollView
-        android:id="@+id/feed_scrollView"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout_editor_absoluteX="-73dp"
-        tools:layout_editor_absoluteY="-26dp">
+        android:orientation="vertical"
+       >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="horizontal"
+            android:background="@color/orange"
+            android:weightSum="11">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/activityFeedRV"
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="10"
+                android:text="Activity Feed"
+                android:textSize="8pt"
+                android:textColor="@color/black"
+                android:gravity="center_vertical"
+                android:layout_marginLeft="5pt">
+
+            </TextView>
+
+            <ImageButton
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:listitem="@layout/activity_activities_box" />
+                android:id="@+id/filter_button"
+                android:src="@drawable/filter"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:layout_margin="5pt"
+                android:layout_weight="1"
+                >
+            </ImageButton>
+
         </LinearLayout>
 
-    </ScrollView>
+        <ScrollView
+            android:id="@+id/feed_scrollView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:layout_editor_absoluteX="-73dp"
+            tools:layout_editor_absoluteY="-26dp">
 
-    <ProgressBar
-        android:id="@+id/feed_progress_Bar"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_height="25dp"
-        android:layout_marginBottom="-10dp"
-        android:indeterminate="true"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@id/feed_scrollView" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/activityFeedRV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:listitem="@layout/activity_activities_box" />
+            </LinearLayout>
+
+        </ScrollView>
+
+        <ProgressBar
+            android:id="@+id/feed_progress_Bar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:layout_marginBottom="-10dp"
+            android:indeterminate="true"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/feed_scrollView" />
+
+    </LinearLayout>
+
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

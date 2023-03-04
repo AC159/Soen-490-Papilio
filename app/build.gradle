@@ -29,6 +29,7 @@ android {
             buildConfigField("String", "USER_API_URL", "\"" + localProperties['USER_API_URL'] + "\"")
             buildConfigField("String", "ACTIVITY_API_URL", "\"" + localProperties['ACTIVITY_API_URL'] + "\"")
             buildConfigField("String", "MAPBOX_SECRET_TOKEN", "\"" + localProperties['MAPBOX_SECRET_TOKEN'] + "\"")
+            buildConfigField("String", "STREAM_CHAT_API_KEY", "\"" + localProperties['STREAM_CHAT_API_KEY'] + "\"")
         }
         release {
             minifyEnabled false
@@ -36,6 +37,7 @@ android {
             buildConfigField("String", "USER_API_URL", "\"" + localProperties['USER_API_URL'] + "\"")
             buildConfigField("String", "ACTIVITY_API_URL", "\"" + localProperties['ACTIVITY_API_URL'] + "\"")
             buildConfigField("String", "MAPBOX_SECRET_TOKEN", "\"" + localProperties['MAPBOX_SECRET_TOKEN'] + "\"")
+            buildConfigField("String", "STREAM_CHAT_API_KEY", "\"" + localProperties['STREAM_CHAT_API_KEY'] + "\"")
         }
     }
     compileOptions {

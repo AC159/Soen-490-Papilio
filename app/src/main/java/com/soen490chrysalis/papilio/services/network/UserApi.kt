@@ -70,6 +70,11 @@ interface IUserApiService
         @PartMap activity : Map<String, Any>,
         @Part images : List<MultipartBody.Part>
     ) : Response<Void>
+
+    @GET("get-chat-user-token/{firebaseId}")
+    suspend fun getUserChatToken(
+        @Path("firebaseId") firebaseId : String?
+    ) : Response<String>
 }
 
 /*

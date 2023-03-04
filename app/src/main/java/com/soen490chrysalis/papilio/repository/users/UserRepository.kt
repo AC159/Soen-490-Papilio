@@ -73,6 +73,36 @@ class UserRepository(
 
     /*
        DESCRIPTION:
+       Utility function that calls the backend to obtain a new token for a user to be able to
+       use the chat feature.
+
+       Author: Anastassy Cap
+       Date: March 4, 2023
+     */
+    override suspend fun getNewChatTokenForUser(firebaseId : String) : String?
+    {
+        return withContext(coroutineDispatcher)
+        {
+            try
+            {
+                val response = userService.getUserChatToken(firebaseId)
+                Log.d(logTag, "userRepository getNewChatTokenForUser() response: $response")
+                return@withContext response.body()
+            }
+            catch (e : Exception)
+            {
+                Log.d(
+                    logTag,
+                    "userRepository getNewChatTokenForUser() exception occurred: ${e.message}"
+                )
+                println(e.message)
+            }
+            return@withContext null
+        }
+    }
+
+    /*
+       DESCRIPTION:
        Utility function that makes a request to the backend to create a user.
 
        The last 3 parameters are there for a good reason: when the user authenticates with their email and password

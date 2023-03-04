@@ -43,4 +43,6 @@ interface IUserRepository
         emailAddress : String,
         password : String
     ) : Pair<Boolean, String>
+
+    suspend fun getNewChatTokenForUser(firebaseId : String) : String?
 }

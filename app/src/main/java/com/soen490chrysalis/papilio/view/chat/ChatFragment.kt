@@ -72,7 +72,7 @@ class ChatFragment : Fragment()
             )
 
             // Step 2 - Set up the client for API calls with the plugin for offline storage
-            val client = ChatClient.Builder(STREAM_CHAT_API_KEY, activity!!.applicationContext)
+            val client = ChatClient.Builder(STREAM_CHAT_API_KEY, requireActivity().applicationContext)
                     .withPlugin(offlinePluginFactory)
                     .logLevel(ChatLogLevel.ALL) // Set to NOTHING in prod
                     .build()
@@ -111,7 +111,7 @@ class ChatFragment : Fragment()
                     // Start channel activity
                     startActivity(
                         ChannelActivity.newIntent(
-                            activity!!.applicationContext,
+                            requireActivity().applicationContext,
                             _channel
                         )
                     )

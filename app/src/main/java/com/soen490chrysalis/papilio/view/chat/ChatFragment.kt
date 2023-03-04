@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.auth.FirebaseAuth
-import com.soen490chrysalis.papilio.BuildConfig
+import com.soen490chrysalis.papilio.BuildConfig.STREAM_CHAT_API_KEY
 import com.soen490chrysalis.papilio.databinding.FragmentChatBinding
 import com.soen490chrysalis.papilio.viewModel.UserChatViewModel
 import com.soen490chrysalis.papilio.viewModel.factories.UserChatViewModelFactory
@@ -72,7 +72,7 @@ class ChatFragment : Fragment()
             )
 
             // Step 2 - Set up the client for API calls with the plugin for offline storage
-            val client = ChatClient.Builder(BuildConfig.STREAM_CHAT_API_KEY, activity!!.applicationContext)
+            val client = ChatClient.Builder(STREAM_CHAT_API_KEY, activity!!.applicationContext)
                     .withPlugin(offlinePluginFactory)
                     .logLevel(ChatLogLevel.ALL) // Set to NOTHING in prod
                     .build()

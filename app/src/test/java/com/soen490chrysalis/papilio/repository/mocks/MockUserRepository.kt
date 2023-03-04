@@ -81,5 +81,8 @@ class MockUserRepository : IUserRepository
         return Pair(true, "")
     }
 
-
+    override suspend fun getNewChatTokenForUser(firebaseId : String) : String?
+    {
+        return "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiSnNNVlhnVDJNaE44eGpwVzFOTnZBTXFMQURmMSJ9.N-FhnRWLgkGP6knf_QD7gWgUJ7Fm4wtbKkodAUqSlwU"
+    }
 }

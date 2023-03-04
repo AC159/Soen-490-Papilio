@@ -15,7 +15,7 @@ class UserChatViewModel(private val userRepository : IUserRepository) : ViewMode
     {
         viewModelScope.launch {
             val chatToken = userRepository.getNewChatTokenForUser(userFirebaseId)
-            if (chatToken != null) userChatToken.value = chatToken
+            if (chatToken != null) userChatToken.value = chatToken!!
         }
     }
 }

@@ -68,7 +68,7 @@ class ChatFragment : Fragment()
                     persistenceEnabled = true,
                     uploadAttachmentsNetworkType = UploadAttachmentsNetworkType.NOT_ROAMING,
                 ),
-                appContext = activity!!.applicationContext,
+                appContext = requireActivity().applicationContext,
             )
 
             // Step 2 - Set up the client for API calls with the plugin for offline storage

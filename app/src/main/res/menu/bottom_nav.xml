@@ -13,6 +13,10 @@
         android:id="@+id/activities"
         android:icon="@drawable/ic_activities" />
     <item
+        android:title="Chats"
+        android:id="@+id/chats"
+        android:icon="@drawable/ic_baseline_chat_24" />
+    <item
         android:title="Account"
         android:id="@+id/account"
         android:icon="@drawable/ic_account" />

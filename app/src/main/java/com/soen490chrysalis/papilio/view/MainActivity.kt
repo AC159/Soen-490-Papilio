@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.navigation.NavigationBarView
 import com.soen490chrysalis.papilio.*
 import com.soen490chrysalis.papilio.databinding.ActivityMainBinding
+import com.soen490chrysalis.papilio.view.chat.ChatFragment
 
 
 class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListener
@@ -37,6 +38,8 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
                     .replace(binding.fragmentContainerView.id, BrowseFragment()).commit()
             R.id.activities -> supportFragmentManager.beginTransaction()
                     .replace(binding.fragmentContainerView.id, ActivitiesFragment()).commit()
+            R.id.chats -> supportFragmentManager.beginTransaction()
+                    .replace(binding.fragmentContainerView.id, ChatFragment()).commit()
             R.id.account    -> supportFragmentManager.beginTransaction()
                     .replace(binding.fragmentContainerView.id, AccountMenuFragment()).commit()
         }

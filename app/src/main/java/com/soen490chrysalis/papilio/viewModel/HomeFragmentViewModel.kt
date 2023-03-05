@@ -10,6 +10,7 @@ import com.soen490chrysalis.papilio.services.network.responses.ActivityResponse
 import com.soen490chrysalis.papilio.view.dialogs.EventDate
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import java.util.logging.Filter
 
 class HomeFragmentViewModel(private val activityRepository: IActivityRepository) : ViewModel() {
     data class FilterOptions(
@@ -98,5 +99,15 @@ class HomeFragmentViewModel(private val activityRepository: IActivityRepository)
         groupCostLimit = mutableListOf(0f, 10000f)
         filterStartDate = oldestDate
         filterEndDate = furthestDate
+    }
+
+    fun GetFilterValues()
+    : FilterOptions {
+        return FilterOptions(
+            individualCostLimit,
+            groupCostLimit,
+            filterStartDate,
+            filterEndDate
+        )
     }
 }

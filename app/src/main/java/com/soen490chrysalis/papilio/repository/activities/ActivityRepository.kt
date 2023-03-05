@@ -124,7 +124,10 @@ class ActivityRepository(
         }
     }
 
-    override suspend fun getAllActivities(page: String, size: String): Response<ActivityResponse> {
+    override suspend fun getAllActivities(
+        page: String,
+        size: String
+    ): Response<ActivityResponse> {
         return withContext(coroutineDispatcher)
         {
             val response = activityAPIService.getAllActivities(page, size)

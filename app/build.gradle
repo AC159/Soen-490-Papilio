@@ -83,9 +83,10 @@ task jacocoUnifiedTestReport(type: JacocoReport, dependsOn: ['connectedAndroidTe
 
 dependencies {
 
+    // This is for desugaring modern java.time API for older Android API versions (Do not remove!)
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.2.2")
 
-    implementation 'com.jakewharton.threetenabp:threetenabp:1.4.4'
+//    implementation 'com.jakewharton.threetenabp:threetenabp:1.4.4'
 
     // firebase configuration
     implementation platform('com.google.firebase:firebase-bom:30.4.1') // Import the Firebase BoM

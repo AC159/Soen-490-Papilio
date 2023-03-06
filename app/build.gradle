@@ -4,6 +4,7 @@ plugins {
     id 'kotlin-android-extensions'
     id 'com.google.gms.google-services' // google services gradle plugin
     id 'jacoco'
+    id 'com.google.firebase.firebase-perf' // performance monitoring gradle plugin
 }
 
 def localProperties = new Properties()
@@ -87,6 +88,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.android.gms:play-services-auth:20.3.0'
     implementation 'com.google.firebase:firebase-auth:21.0.1'
+    implementation 'com.google.firebase:firebase-perf-ktx' //performance testing
 
     implementation "androidx.activity:activity-ktx:1.6.0"
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"

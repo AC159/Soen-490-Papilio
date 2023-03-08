@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.fragment.app.Fragment
@@ -16,6 +17,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.google.android.material.card.MaterialCardView
 import com.soen490chrysalis.papilio.R
+import com.soen490chrysalis.papilio.databinding.ActivityActivitiesBoxBinding
+import com.soen490chrysalis.papilio.databinding.FragmentBrowseBinding
 import com.soen490chrysalis.papilio.viewModel.BrowseFragmentViewModel
 import com.soen490chrysalis.papilio.viewModel.factories.BrowseFragmentViewModelFactory
 
@@ -29,8 +32,8 @@ class BrowseFragment : Fragment() {
     private lateinit var progressCircleContainer: LinearLayout
     private lateinit var progressCircle: ProgressBar
 
+    private lateinit var binding: FragmentBrowseBinding
     private lateinit var searchBar: EditText
-    private lateinit var searchButton: ImageButton
     private lateinit var backButton: ImageButton
     private lateinit var layoutActivityList: ScrollView
     private lateinit var activityContainer: LinearLayout
@@ -44,11 +47,11 @@ class BrowseFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_browse, container, false)
+        binding = FragmentBrowseBinding.inflate(layoutInflater)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -57,24 +60,25 @@ class BrowseFragment : Fragment() {
         browseFragmentViewModel =
             ViewModelProvider(this, browseFragmentVMFactory)[BrowseFragmentViewModel::class.java]
 
-        layoutActivityList = view.findViewById(R.id.activity_container)
-        activityContainer = view.findViewById(R.id.activity_list)
+        layoutActivityList = binding.activityContainer
+        activityContainer = binding.activityList
 
-        progressCircle = view.findViewById(R.id.progressBar1)
-        progressCircleContainer = view.findViewById(R.id.progressBarContainer)
-        searchBar = view.findViewById(R.id.search_bar)
-        searchButton = view.findViewById(R.id.search_button)
-        backButton = view.findViewById(R.id.back_button)
+        progressCircle = binding.progressBar1
+        progressCircleContainer = binding.progressBarContainer
+        searchBar = binding.searchBar
+        backButton = binding.backButton
 
-        searchButton.setOnClickListener {
-            displayProgressCircle(true)
-            context?.let { it1 -> hideKeyboardFrom(it1, view) }
-            browseFragmentViewModel.searchActivities(searchBar.text.toString());
+        binding.searchBar.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                displayProgressCircle(true)
+                context?.let { it1 -> hideKeyboardFrom(it1, view) }
+                browseFragmentViewModel.searchActivities(searchBar.text.toString());
+            }
+            true
         }
 
-        backButton.setOnClickListener {
-            activity?.supportFragmentManager?.beginTransaction()
-                ?.remove(this)?.commit()
+        binding.backButton.setOnClickListener {
+            activity?.supportFragmentManager?.beginTransaction()?.remove(this)?.commit()
         }
 
         browseFragmentViewModel.activitiesResponse.observe(viewLifecycleOwner, Observer {
@@ -97,38 +101,33 @@ class BrowseFragment : Fragment() {
                 progressCircle.visibility = View.GONE
             } else {
                 for (activity in browseFragmentViewModel.activitiesResponse.value?.rows!!) {
-                    val newActivityBoxLayout =
-                        layoutInflater?.inflate(R.layout.activity_activities_box, null);
-                    val activityBoxImage =
-                        newActivityBoxLayout?.findViewById<ImageView>(R.id.activity_box_image)
-                    val activityBoxTitle =
-                        newActivityBoxLayout?.findViewById<TextView>(R.id.activity_box_title)
-                    val activityBoxDesc =
-                        newActivityBoxLayout?.findViewById<TextView>(R.id.activity_box_address)
-                    newActivityBoxLayout?.findViewById<TextView>(R.id.activity_box_start_time)?.visibility =
-                        View.GONE
 
-                    if (activity.images != null) {
-                        if (activityBoxImage != null) {
-                            Glide.with(this)
-                                .load(activity.images)
-                                .into(activityBoxImage)
+                    val activityBoxBinding = layoutInflater?.let { it1 ->
+                        ActivityActivitiesBoxBinding.inflate(
+                            it1
+                        )
+                    }
+
+                    if (activityBoxBinding != null) {
+                        val activityBoxImage = activityBoxBinding.activityBoxImage
+                        val activityBoxTitle = activityBoxBinding.activityBoxTitle
+                        val activityBoxDesc = activityBoxBinding.activityBoxAddress
+                        activityBoxBinding.activityBoxStartTime.visibility = View.GONE
+
+                        if (activity.images != null) {
+                            Glide.with(this).load(activity.images).into(activityBoxImage)
                         }
-                    }
 
-                    if (activityBoxTitle != null) {
                         activityBoxTitle.text = activity.title
-                    }
-                    if (activityBoxDesc != null) {
                         activityBoxDesc.text = activity.description
-                    }
 
-                    newActivityBoxLayout?.setOnClickListener {
-                        activity.id?.toInt()
-                            ?.let { it1 -> browseFragmentViewModel.getActivity(it1) }
-                    }
+                        activityBoxBinding.activityBox.setOnClickListener {
+                            activity.id?.toInt()
+                                ?.let { it1 -> browseFragmentViewModel.getActivity(it1) }
+                        }
 
-                    activityContainer.addView(newActivityBoxLayout)
+                        activityContainer.addView(activityBoxBinding.activityBox)
+                    }
                 }
             }
         })

@@ -37,17 +37,9 @@
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 android:hint="@string/search_activity_hint"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
                 android:padding="15dp" />
-
-            <ImageButton
-                android:id="@+id/search_button"
-                android:layout_width="60dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/search_icon"
-                android:text="@string/search_button_text" />
-
 
         </LinearLayout>
 

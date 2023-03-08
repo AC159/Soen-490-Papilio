@@ -78,11 +78,11 @@ class ChatFragment : Fragment()
                     .build()
 
             // Step 3 - Authenticate and connect the user
-            val user = FirebaseAuth.getInstance().currentUser?.let {
+            val user = userChatViewModel.getCurrentFirebaseUser()?.let { _user ->
                 User(
-                    id = it.uid,
-                    name = "Some display name", // todo: Set display name and image url
-                    image = "https://bit.ly/2TIt8NR"
+                    id = _user.uid,
+                    name = _user.displayName.toString(),
+                    image = _user.photoUrl.toString()
                 )
             }
 

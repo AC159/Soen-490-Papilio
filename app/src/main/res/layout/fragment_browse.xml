@@ -2,42 +2,51 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/browse_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/browse_fragment"
-    android:background="@drawable/sign_up_activity_background"
+    android:background="@color/white"
     tools:context=".view.BrowseFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/sign_up_activity_background"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="@color/orange">
+            android:background="@color/orange"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/back_button"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/back"
+                android:text="@string/search_button_text" />
 
             <EditText
                 android:id="@+id/search_bar"
                 android:layout_width="fill_parent"
-                android:layout_weight="1"
                 android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:hint="@string/search_activity_hint"
-                android:padding="15dp">
-            </EditText>
+                android:padding="15dp" />
 
             <ImageButton
                 android:id="@+id/search_button"
                 android:layout_width="60dp"
-                android:layout_weight="0"
                 android:layout_height="match_parent"
-                android:src="@drawable/search_icon"
-                android:text="@string/search_button_text"
+                android:layout_weight="0"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                />
-
+                android:src="@drawable/search_icon"
+                android:text="@string/search_button_text" />
 
 
         </LinearLayout>
@@ -48,30 +57,29 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:gravity="center"
-            android:visibility="gone"
-            >
+            android:visibility="gone">
 
             <ProgressBar
                 android:id="@+id/progressBar1"
                 style="?android:attr/progressBarStyleLarge"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/no_activity_found_box"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="15dp"
-                app:cardBackgroundColor="@color/orange"
                 android:visibility="gone"
-                >
+                app:cardBackgroundColor="@color/orange"
+                app:cardCornerRadius="15dp">
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:padding="30dp"
                     android:text="No Activities Found!"
-                    android:textStyle="bold"
                     android:textColor="@color/black"
-                    android:padding="30dp">
+                    android:textStyle="bold">
 
                 </TextView>
             </com.google.android.material.card.MaterialCardView>
@@ -88,8 +96,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingBottom="15dp">
-            </LinearLayout>
+                android:paddingBottom="15dp" />
 
         </ScrollView>
 

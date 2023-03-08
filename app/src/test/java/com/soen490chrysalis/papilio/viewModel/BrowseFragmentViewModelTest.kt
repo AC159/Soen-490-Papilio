@@ -89,7 +89,7 @@ class BrowseFragmentViewModelTest
         browseFragmentViewModel.getActivity(156)
 
         advanceUntilIdle()
-        
+
         assert(browseFragmentViewModel.activityResponse.value!!.found && browseFragmentViewModel.activityResponse.value!!.activity.id?.toInt() == 156)
 
     }

@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.slider.RangeSlider
 import com.soen490chrysalis.papilio.R
+import com.soen490chrysalis.papilio.databinding.ActivityMainBinding
 import com.soen490chrysalis.papilio.services.network.responses.ActivityObject
 import com.soen490chrysalis.papilio.view.dialogs.EventDate
 import com.soen490chrysalis.papilio.view.dialogs.FeedAdapter
@@ -33,6 +34,7 @@ class HomeFragment : Fragment() {
     private var isLoading = false
     private lateinit var progressBar: ProgressBar
     private lateinit var filterButton: ImageButton
+    private lateinit var searchButton: ImageButton
 
     // todo: these variables should be in the view model not in the fragment or activity
     private lateinit var activityList: MutableList<ActivityObject>
@@ -54,6 +56,8 @@ class HomeFragment : Fragment() {
         progressBar = view.findViewById(R.id.feed_progress_Bar)
         recyclerView = view.findViewById(R.id.activityFeedRV)
         filterButton = view.findViewById(R.id.filter_button)
+        searchButton = view.findViewById(R.id.search_button)
+
 
         val homeFragmentVMFactory = HomeFragmentViewModelFactory()
         homeFragmentViewModel =
@@ -225,6 +229,15 @@ class HomeFragment : Fragment() {
             dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(Color.RED)
 
         }
+
+        searchButton.setOnClickListener {
+            activity?.supportFragmentManager?.beginTransaction()
+                ?.add(
+                    ActivityMainBinding.inflate(layoutInflater).fragmentContainerView.id,
+                    BrowseFragment()
+                )?.commit()
+        }
+
 
     }
 

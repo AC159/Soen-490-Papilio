@@ -31,6 +31,7 @@ class BrowseFragment : Fragment() {
 
     private lateinit var searchBar: EditText
     private lateinit var searchButton: ImageButton
+    private lateinit var backButton: ImageButton
     private lateinit var layoutActivityList: ScrollView
     private lateinit var activityContainer: LinearLayout
 
@@ -63,11 +64,17 @@ class BrowseFragment : Fragment() {
         progressCircleContainer = view.findViewById(R.id.progressBarContainer)
         searchBar = view.findViewById(R.id.search_bar)
         searchButton = view.findViewById(R.id.search_button)
+        backButton = view.findViewById(R.id.back_button)
 
         searchButton.setOnClickListener {
             displayProgressCircle(true)
             context?.let { it1 -> hideKeyboardFrom(it1, view) }
             browseFragmentViewModel.searchActivities(searchBar.text.toString());
+        }
+
+        backButton.setOnClickListener {
+            activity?.supportFragmentManager?.beginTransaction()
+                ?.remove(this)?.commit()
         }
 
         browseFragmentViewModel.activitiesResponse.observe(viewLifecycleOwner, Observer {
@@ -163,6 +170,11 @@ class BrowseFragment : Fragment() {
             startActivity(intent)
 
         })
+
+        searchBar.requestFocus()
+        val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showSoftInput(searchBar, InputMethodManager.SHOW_IMPLICIT)
+
     }
 
     fun displayProgressCircle(shouldDisplay: Boolean) {

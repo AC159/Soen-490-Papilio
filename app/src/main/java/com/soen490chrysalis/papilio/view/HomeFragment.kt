@@ -145,6 +145,11 @@ class HomeFragment : Fragment() {
             val groupCostSlider = dialogLayout.findViewById<RangeSlider>(R.id.slider_group_cost)
             val startDateButton = dialogLayout.findViewById<TextView>(R.id.select_start_date_btn)
             val endDateButton = dialogLayout.findViewById<TextView>(R.id.select_end_date_btn)
+            val ic_start_value_text = dialogLayout.findViewById<TextView>(R.id.ic_start_value)
+            val ic_end_value_text = dialogLayout.findViewById<TextView>(R.id.ic_end_value)
+            val gc_start_value_text = dialogLayout.findViewById<TextView>(R.id.gc_start_value)
+            val gc_end_value_text = dialogLayout.findViewById<TextView>(R.id.gc_end_value)
+
 
             val currentFilterValues = homeFragmentViewModel.GetFilterValues()
 
@@ -156,16 +161,25 @@ class HomeFragment : Fragment() {
                 "${currentStartDate.month + 1}/${currentStartDate.day}/${currentStartDate.year}"
             endDateButton.text =
                 "${currentEndDate.month + 1}/${currentEndDate.day}/${currentEndDate.year}"
+            ic_start_value_text.text = "$${individualCostSliderValues[0]}"
+            ic_end_value_text.text = "$${individualCostSliderValues[1]}"
+            gc_start_value_text.text = "$${groupCostSliderValues[0]}"
+            gc_end_value_text.text = "$${groupCostSliderValues[1]}"
+
 
             groupCostSlider.values = groupCostSliderValues
             individualCostSlider.values = individualCostSliderValues
 
             individualCostSlider.addOnChangeListener { _, _, _ ->
                 individualCostSliderValues = individualCostSlider.values
+                ic_start_value_text.text = "$${individualCostSlider.values[0]}"
+                ic_end_value_text.text = "$${individualCostSlider.values[1]}"
             }
 
             groupCostSlider.addOnChangeListener { _, _, _ ->
                 groupCostSliderValues = groupCostSlider.values
+                gc_start_value_text.text = "$${groupCostSlider.values[0]}"
+                gc_end_value_text.text = "$${groupCostSlider.values[1]}"
             }
 
             startDateButton.setOnClickListener {

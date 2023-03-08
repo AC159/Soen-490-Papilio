@@ -13,9 +13,39 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
+            android:layout_marginTop="5dp"
             android:layout_marginBottom="45dp"
             android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="12"
+                >
+
+                <TextView
+                    android:id="@+id/ic_start_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="$0"
+                    android:textStyle="bold"
+                    android:textSize="25sp"/>
+
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="12"/>
+
+                <TextView
+                    android:id="@+id/ic_end_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="$1000"
+                    android:textStyle="bold"
+                    android:textSize="25sp"/>
+
+            </LinearLayout>
 
             <com.google.android.material.slider.RangeSlider
                 android:id="@+id/slider_individual_cost"
@@ -24,6 +54,7 @@
                 android:stepSize="10"
                 android:valueFrom="0"
                 android:valueTo="1000"
+                app:labelBehavior="gone"
                 app:haloColor="@color/orange"
                 app:values="@array/rangeSliderValues">
 
@@ -42,9 +73,39 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
+            android:layout_marginTop="5dp"
             android:layout_marginBottom="45dp"
             android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="12"
+                >
+
+                <TextView
+                    android:id="@+id/gc_start_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="$0"
+                    android:textStyle="bold"
+                    android:textSize="25sp"/>
+
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="12"/>
+
+                <TextView
+                    android:id="@+id/gc_end_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="$1000"
+                    android:textStyle="bold"
+                    android:textSize="25sp"/>
+
+            </LinearLayout>
 
             <com.google.android.material.slider.RangeSlider
                 android:id="@+id/slider_group_cost"
@@ -71,7 +132,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
+            android:layout_marginTop="5dp"
             android:layout_marginBottom="45dp"
             android:orientation="vertical">
 
@@ -82,15 +143,37 @@
                 android:gravity="center_vertical"
                 android:weightSum="9">
 
-                <TextView
-                    android:id="@+id/select_start_date_btn"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="4"
-                    android:clickable="true"
-                    android:focusable="true"
                     android:gravity="center"
-                    android:text="@string/select_start_date" />
+                    android:orientation="vertical"
+                    android:layout_weight="4">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:textSize="20sp"
+                        android:text="FROM" />
+
+                    <Space
+                        android:layout_width="match_parent"
+                        android:layout_height="10sp"/>
+
+                    <TextView
+                        android:id="@+id/select_start_date_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:text="@string/select_start_date" />
+
+                </LinearLayout>
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -98,15 +181,38 @@
                     android:layout_weight="1"
                     android:src="@drawable/right_arrow_filters" />
 
-                <TextView
-                    android:id="@+id/select_end_date_btn"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="4"
-                    android:clickable="true"
-                    android:focusable="true"
                     android:gravity="center"
-                    android:text="@string/select_end_date" />
+                    android:orientation="vertical"
+                    android:layout_weight="4">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:textSize="20sp"
+                        android:text="TO" />
+
+                    <Space
+                        android:layout_width="match_parent"
+                        android:layout_height="10sp"/>
+
+                    <TextView
+                        android:id="@+id/select_end_date_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="4"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:text="@string/select_end_date" />
+
+                </LinearLayout>
 
             </LinearLayout>
 

@@ -311,6 +311,46 @@
 
                 </LinearLayout>
 
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="left"
+                            android:paddingLeft="15dp"
+                            android:paddingTop="15dp"
+                            android:text="Contact:"
+                            android:textColor="@color/black"
+                            android:textStyle="bold"/>
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/info_Contact"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:paddingLeft="10dp"
+                        android:paddingTop="15dp"
+                        android:text="email"
+                        android:textColor="@color/black"
+                        android:clickable="true"/>
+
+                </LinearLayout>
+
+
+
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -320,6 +360,8 @@
                     android:text="Reviews:"
                     android:textColor="@color/black"
                     android:textStyle="bold" />
+
+
 
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="374dp"

@@ -149,6 +149,8 @@ class HomeFragment : Fragment()
                 intent.putExtra("id", activityList[position].id)
                 intent.putExtra("title", activityList[position].title)
                 intent.putExtra("description", activityList[position].description)
+                //TODO: add the contact email to the activity info page
+//                intent.putExtra("contact", activityList[position].)
                 intent.putExtra(
                     "individualCost",
                     if (activityList[position].costPerIndividual == "0") "FREE" else ("$" + activityList[position].costPerIndividual + "/person")

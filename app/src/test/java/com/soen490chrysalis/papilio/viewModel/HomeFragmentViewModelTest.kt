@@ -63,8 +63,8 @@ class HomeFragmentViewModelTest
 
         var filterValues = homeFragmentViewModel.GetFilterValues()
 
-        assert(filterValues.individualCostRange == mutableListOf(0f, 10000f)
-                && filterValues.groupCostRange == mutableListOf(0f, 10000f)
+        assert(filterValues.individualCostRange == mutableListOf(0f, 1000f)
+                && filterValues.groupCostRange == mutableListOf(0f, 1000f)
                 && filterValues.startDate == homeFragmentViewModel.oldestDate
                 && filterValues.endDate == homeFragmentViewModel.furthestDate)
 
@@ -89,8 +89,8 @@ class HomeFragmentViewModelTest
 
         filterValues = homeFragmentViewModel.GetFilterValues()
 
-        assert(filterValues.individualCostRange == mutableListOf(0f, 10000f)
-                && filterValues.groupCostRange == mutableListOf(0f, 10000f)
+        assert(filterValues.individualCostRange == mutableListOf(0f, 1000f)
+                && filterValues.groupCostRange == mutableListOf(0f, 1000f)
                 && filterValues.startDate == homeFragmentViewModel.oldestDate
                 && filterValues.endDate == homeFragmentViewModel.furthestDate)
 

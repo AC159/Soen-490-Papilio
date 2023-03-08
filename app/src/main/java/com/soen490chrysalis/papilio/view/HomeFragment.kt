@@ -146,8 +146,19 @@ class HomeFragment : Fragment() {
             val startDateButton = dialogLayout.findViewById<TextView>(R.id.select_start_date_btn)
             val endDateButton = dialogLayout.findViewById<TextView>(R.id.select_end_date_btn)
 
-            var individualCostSliderValues = mutableListOf<Float>(0f, 1000f)
-            var groupCostSliderValues = mutableListOf<Float>(0f, 1000f)
+            val currentFilterValues = homeFragmentViewModel.GetFilterValues()
+
+            var individualCostSliderValues = currentFilterValues.individualCostRange
+            var groupCostSliderValues = currentFilterValues.groupCostRange
+            val currentStartDate = currentFilterValues.startDate
+            val currentEndDate = currentFilterValues.endDate
+            startDateButton.text =
+                "${currentStartDate.month + 1}/${currentStartDate.day}/${currentStartDate.year}"
+            endDateButton.text =
+                "${currentEndDate.month + 1}/${currentEndDate.day}/${currentEndDate.year}"
+
+            groupCostSlider.values = groupCostSliderValues
+            individualCostSlider.values = individualCostSliderValues
 
             individualCostSlider.addOnChangeListener { _, _, _ ->
                 individualCostSliderValues = individualCostSlider.values

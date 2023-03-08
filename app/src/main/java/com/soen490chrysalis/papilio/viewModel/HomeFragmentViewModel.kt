@@ -26,8 +26,8 @@ class HomeFragmentViewModel(private val activityRepository: IActivityRepository)
     val oldestDate = EventDate(2022, 8, 1)
     val furthestDate = EventDate(3022, 8, 1)
 
-    var individualCostLimit: List<Float> = mutableListOf(0f, 10000f)
-    var groupCostLimit: List<Float> = mutableListOf(0f, 10000f)
+    var individualCostLimit: List<Float> = mutableListOf(0f, 1000f)
+    var groupCostLimit: List<Float> = mutableListOf(0f, 1000f)
     var filterStartDate: EventDate = oldestDate
     var filterEndDate: EventDate = furthestDate
 
@@ -95,8 +95,8 @@ class HomeFragmentViewModel(private val activityRepository: IActivityRepository)
     }
 
     fun ResetFilter() {
-        individualCostLimit = mutableListOf(0f, 10000f)
-        groupCostLimit = mutableListOf(0f, 10000f)
+        individualCostLimit = mutableListOf(0f, 1000f)
+        groupCostLimit = mutableListOf(0f, 1000f)
         filterStartDate = oldestDate
         filterEndDate = furthestDate
     }

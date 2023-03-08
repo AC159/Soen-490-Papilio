@@ -7,6 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.mapbox.maps.*
 import com.mapbox.maps.plugin.annotation.annotations
@@ -17,11 +18,14 @@ import com.mapbox.search.result.SearchResult
 import com.mapbox.search.result.SearchSuggestion
 import com.soen490chrysalis.papilio.R
 import com.soen490chrysalis.papilio.databinding.ActivityDisplayActivityInfoBinding
+import com.soen490chrysalis.papilio.viewModel.ActivityInfoViewModel
+import com.soen490chrysalis.papilio.viewModel.factories.ActivityInfoViewModelFactory
 
 class DisplayActivityInfoActivity : AppCompatActivity()
 {
     private val logTag = DisplayActivityInfoActivity::class.java.simpleName
     private lateinit var binding : ActivityDisplayActivityInfoBinding
+    private lateinit var activityInfoViewModel : ActivityInfoViewModel
 
     override fun onCreate(savedInstanceState : Bundle?)
     {
@@ -38,6 +42,8 @@ class DisplayActivityInfoActivity : AppCompatActivity()
             actionBar.setDisplayHomeAsUpEnabled(true)
             actionBar.title = "Activity Info"
         }
+
+        activityInfoViewModel = ViewModelProvider(this, ActivityInfoViewModelFactory())[ActivityInfoViewModel::class.java]
 
         val infoTile : TextView = binding.infoTitle
         val infoDescription : TextView = binding.infoDescription

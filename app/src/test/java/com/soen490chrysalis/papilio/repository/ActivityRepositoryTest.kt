@@ -114,6 +114,8 @@ class ActivityRepositoryTest
             "some activity title",
             "some description",
             5,
+            10,
+            5,
             pictures,
             EventDate(2023, 10, 10),
             EventTime(0, 10),

@@ -269,6 +269,8 @@ class CreateActivity : AppCompatActivity()
         val activityTitle : String = binding.eventTitle.text.toString()
         val description : String = binding.eventDescription.text.toString()
         val maxNbrOfParticipants : String = binding.eventMaxNumberParticipants.text.toString()
+        val individualCost: String = binding.eventIndividualCost.text.toString()
+        val groupCost: String = binding.eventGroupCost.text.toString()
 
         val dateValidation =
             createActivityViewModel.validateActivityDate(binding.selectDateBtn.text.toString())
@@ -291,6 +293,14 @@ class CreateActivity : AppCompatActivity()
             createActivityViewModel.validateActivityMaxNumberOfParticipants(maxNbrOfParticipants)
         binding.eventMaxNumberParticipants.error = nbrOfParticipantsValidation
 
+        val nbrOfIndividualCostValidation =
+            createActivityViewModel.validateActivityIndividualCost(individualCost)
+        binding.eventIndividualCost.error = individualCost
+
+        val nbrOfGroupCostValidation =
+            createActivityViewModel.validateActivityGroupCost(groupCost)
+        binding.eventGroupCost.error = groupCost
+
         val picturesValidation =
             createActivityViewModel.validateActivityPictureUris(pictures)
         binding.importPicturesTv.error = picturesValidation
@@ -299,6 +309,7 @@ class CreateActivity : AppCompatActivity()
         binding.eventLocation.error = addressValidation
 
         if (titleValidation == null && descriptionValidation == null && nbrOfParticipantsValidation == null
+                && nbrOfIndividualCostValidation == null && nbrOfGroupCostValidation == null
                 && picturesValidation == null && addressValidation == null && validateStartTime == null
                 && validateEndTime == null && dateValidation == null
         )
@@ -318,6 +329,8 @@ class CreateActivity : AppCompatActivity()
             createActivityViewModel.postNewActivity(
                 activityTitle,
                 description,
+                Integer.parseInt(individualCost),
+                Integer.parseInt(groupCost),
                 Integer.parseInt(maxNbrOfParticipants),
                 pictures,
                 activityDate,

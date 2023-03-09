@@ -37,6 +37,8 @@ class ActivityRepository(
     override suspend fun postNewUserActivity(
         activityTitle : String,
         description : String,
+        costPerIndividual: Int,
+        costPerGroup: Int,
         groupSize : Int,
         pictures : List<Pair<String, InputStream>>,
         activityDate : EventDate,

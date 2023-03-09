@@ -56,6 +56,34 @@ class CreateActivityViewModel(private val activityRepository : IActivityReposito
         return "Number of participants must be greater than 0!"
     }
 
+    fun validateActivityIndividualCost(individualCost : String) : String?
+    {
+        try
+        {
+            val nbrOfIndividualCost = Integer.parseInt(individualCost)
+            if (nbrOfIndividualCost >= 0) return "null"
+        }
+        catch (e : java.lang.NumberFormatException)
+        {
+            return "Not a number!"
+        }
+        return "Number of participants must be greater than or equal to 0!"
+    }
+
+    fun validateActivityGroupCost(groupCost : String) : String?
+    {
+        try
+        {
+            val nbrOfGroupCost = Integer.parseInt(groupCost)
+            if (nbrOfGroupCost >= 0) return null
+        }
+        catch (e : java.lang.NumberFormatException)
+        {
+            return "Not a number!"
+        }
+        return "Number of participants must be greater than or equal to 0!"
+    }
+
     fun validateActivityPictureUris(pictures : List<Pair<String, InputStream>>) : String?
     {
         if (pictures.isNotEmpty()) return null
@@ -134,6 +162,8 @@ class CreateActivityViewModel(private val activityRepository : IActivityReposito
     fun postNewActivity(
         activityTitle : String,
         description : String,
+        costPerIndividual: Int,
+        costPerGroup: Int,
         groupSize : Int,
         pictures : List<Pair<String, InputStream>>,
         activityDate : EventDate,
@@ -147,6 +177,8 @@ class CreateActivityViewModel(private val activityRepository : IActivityReposito
                 val response = activityRepository.postNewUserActivity(
                     activityTitle,
                     description,
+                    costPerIndividual,
+                    costPerGroup,
                     groupSize,
                     pictures,
                     activityDate,

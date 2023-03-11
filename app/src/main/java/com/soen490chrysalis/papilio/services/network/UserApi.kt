@@ -1,8 +1,8 @@
 package com.soen490chrysalis.papilio.services.network
 
 import com.soen490chrysalis.papilio.BuildConfig
-import com.soen490chrysalis.papilio.services.network.requests.UserRequest
-import com.soen490chrysalis.papilio.services.network.requests.UserUpdate
+import com.soen490chrysalis.papilio.services.network.requests.*
+import com.soen490chrysalis.papilio.services.network.responses.CheckUserIsMemberOfActivityResponse
 import com.soen490chrysalis.papilio.services.network.responses.GetUserByFirebaseIdResponse
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -75,6 +75,25 @@ interface IUserApiService
     suspend fun getUserChatToken(
         @Path("firebaseId") firebaseId : String?
     ) : Response<String>
+
+    @POST("activity/{user_id}/join/{activity_id}")
+    suspend fun addUserToActivity(
+        @Path("user_id") user_id : String?,
+        @Path("activity_id") activity_id : String,
+        @Body user_name : AddUserToActivityBody
+    ) : Response<Void>
+
+    @DELETE("activity/{user_id}/unjoin/{activity_id}")
+    suspend fun removeUserFromActivity(
+        @Path("user_id") user_id : String?,
+        @Path("activity_id") activity_id : String
+    ) : Response<Void>
+
+    @GET("activity/{user_id}/checkJoined/{activity_id}")
+    suspend fun checkActivityMember(
+        @Path("user_id") user_id : String?,
+        @Path("activity_id") activity_id : String
+    ) : Response<CheckUserIsMemberOfActivityResponse>
 }
 
 /*

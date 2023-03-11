@@ -37,3 +37,8 @@ data class UserUpdate(
     @Json(name = "update")
     val update : Map<String, Any>
 )
+
+// Request bodies to add/remove a user from an activity chat
+data class AddUserToActivityBody(
+    val user_name : String?
+)

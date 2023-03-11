@@ -9,6 +9,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.progressindicator.CircularProgressIndicatorSpec
+import com.google.android.material.progressindicator.IndeterminateDrawable
+import com.google.android.material.snackbar.Snackbar
 import com.mapbox.maps.*
 import com.mapbox.maps.plugin.annotation.annotations
 import com.mapbox.maps.plugin.annotation.generated.CircleAnnotationOptions
@@ -43,7 +47,59 @@ class DisplayActivityInfoActivity : AppCompatActivity()
             actionBar.title = "Activity Info"
         }
 
-        activityInfoViewModel = ViewModelProvider(this, ActivityInfoViewModelFactory())[ActivityInfoViewModel::class.java]
+        activityInfoViewModel = ViewModelProvider(
+            this,
+            ActivityInfoViewModelFactory()
+        )[ActivityInfoViewModel::class.java]
+
+        val bundle : Bundle = intent.extras!!
+        val activity_id = bundle.getString("id")!!
+
+        // we need to determine if the user has already joined this activity or not and display the text button accordingly
+        // Disable the 'join' button while we process the request & display a progress indicator
+        DisableButtonAndShowProgressIndicator(binding.joinButton)
+        activityInfoViewModel.checkActivityMember(activity_id)
+
+        activityInfoViewModel.checkActivityMemberResponse.observe(this) {
+            if (it.isSuccess)
+            {
+                println("Observer response: $it")
+                binding.joinButton.text = if (!it.hasUserJoined) "Join" else "Leave"
+            }
+            else displaySnackBar(it.errorMessage)
+
+            // re-enable the 'join' button
+            EnableButtonAndRemoveProgressIndicator(binding.joinButton)
+        }
+
+        // Set an click listener on the 'join' button of the activity
+        binding.joinButton.setOnClickListener {
+            DisableButtonAndShowProgressIndicator(binding.joinButton)
+            if (binding.joinButton.text.toString()
+                            .lowercase() == "join"
+            ) activityInfoViewModel.joinActivity(activity_id)
+            else activityInfoViewModel.leaveActivity(activity_id)
+        }
+
+        // Listen to the API response when the user wants to join an activity
+        activityInfoViewModel.jonActivityResponse.observe(this) {
+            EnableButtonAndRemoveProgressIndicator(binding.joinButton)
+
+            // Change the text of the button if the user successfully joined the activity
+            if (it.isSuccess) binding.joinButton.text = "Leave"
+
+            displaySnackBar(it.errorMessage)
+        }
+
+        // Listen to the API response when the user wants to leave an activity
+        activityInfoViewModel.leaveActivityResponse.observe(this) {
+            EnableButtonAndRemoveProgressIndicator(binding.joinButton)
+
+            // Change the text of the button if the user successfully left the activity
+            if (it.isSuccess) binding.joinButton.text = "Join"
+
+            displaySnackBar(it.errorMessage)
+        }
 
         val infoTile : TextView = binding.infoTitle
         val infoDescription : TextView = binding.infoDescription
@@ -53,12 +109,11 @@ class DisplayActivityInfoActivity : AppCompatActivity()
         val infoImages0 : ImageView = binding.infoImageView0
         val infoImages1 : ImageView = binding.infoImageView1
         val infoImages2 : ImageView = binding.infoImageView2
-        val infoImages3 : ImageView = binding.infoImageView4
-        val infoImages4 : ImageView = binding.infoImageView0
+        val infoImages3 : ImageView = binding.infoImageView3
+        val infoImages4 : ImageView = binding.infoImageView4
         val mapView : MapView = binding.mapView
 
-        val bundle : Bundle? = intent.extras
-        val title = bundle!!.getString("title")
+        val title = bundle.getString("title")
         val description = bundle.getString("description")
         val individualCost = bundle.getString("individualCost")
         val groupCost = bundle.getString("groupCost")
@@ -109,7 +164,7 @@ class DisplayActivityInfoActivity : AppCompatActivity()
         infoGroupCost.text = groupCost
         infoAddress.text = location
 
-       mapView.getMapboxMap().loadStyleUri(Style.MAPBOX_STREETS)
+        mapView.getMapboxMap().loadStyleUri(Style.MAPBOX_STREETS)
 
         // Create a Search Engine object so we can do Forward Geocoding
         val searchEngine = SearchEngine.createSearchEngine(
@@ -217,5 +272,33 @@ class DisplayActivityInfoActivity : AppCompatActivity()
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun DisableButtonAndShowProgressIndicator(button : MaterialButton)
+    {
+        val spec =
+            CircularProgressIndicatorSpec(
+                this, null, 0,
+                com.google.android.material.R.style.Widget_Material3_CircularProgressIndicator_ExtraSmall
+            )
+        val progressIndicatorDrawable =
+            IndeterminateDrawable.createCircularDrawable(this, spec)
+        button.icon = progressIndicatorDrawable
+        button.isEnabled = false
+    }
+
+    private fun EnableButtonAndRemoveProgressIndicator(button : MaterialButton)
+    {
+        button.icon = null
+        button.isEnabled = true
+    }
+
+    private fun displaySnackBar(message : String)
+    {
+        Snackbar.make(
+            binding.coordinatorLayoutDisplayActivityInfo,
+            message,
+            Snackbar.LENGTH_LONG
+        ).show()
     }
 }

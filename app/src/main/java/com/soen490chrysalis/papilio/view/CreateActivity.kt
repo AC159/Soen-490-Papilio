@@ -1,7 +1,7 @@
 package com.soen490chrysalis.papilio.view
 
+import com.google.firebase.perf.metrics.AddTrace
 import android.Manifest
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.icu.util.Calendar
 import android.os.Bundle
@@ -264,6 +264,7 @@ class CreateActivity : AppCompatActivity()
         }
     }
 
+    @AddTrace(name = "create_new_activity_submit")
     private fun handleUserInputValidation()
     {
         val activityTitle : String = binding.eventTitle.text.toString()

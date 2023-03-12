@@ -73,6 +73,99 @@ class UserRepository(
 
     /*
        DESCRIPTION:
+       Utility function that calls the backend to obtain a new token for a user to be able to
+       use the chat feature.
+
+       Author: Anastassy Cap
+       Date: March 4, 2023
+     */
+    override suspend fun getNewChatTokenForUser(firebaseId : String) : String?
+    {
+        return withContext(coroutineDispatcher)
+        {
+            try
+            {
+                val response = userService.getUserChatToken(firebaseId)
+                Log.d(logTag, "userRepository getNewChatTokenForUser() response: $response")
+                return@withContext response.body()
+            }
+            catch (e : Exception)
+            {
+                Log.d(
+                    logTag,
+                    "userRepository getNewChatTokenForUser() exception occurred: ${e.message}"
+                )
+            }
+            return@withContext null
+        }
+    }
+
+    override suspend fun addUserToActivity(
+        activity_id : String
+    ) : Pair<Boolean, String>
+    {
+        return withContext(coroutineDispatcher)
+        {
+            val response : Pair<Boolean, String> = try
+            {
+                val requestBody = AddUserToActivityBody(getUser()?.displayName)
+                val result = userService.addUserToActivity(getUser()?.uid, activity_id, requestBody)
+                Log.d(logTag, "userRepository addUserToActivity() response: $result")
+                Pair(result.isSuccessful, result.message())
+            }
+            catch (e : Exception)
+            {
+                Log.d(logTag, "userRepository addUserToActivity() exception: $e")
+                Pair(false, e.message.toString())
+            }
+            return@withContext response
+        }
+    }
+
+    override suspend fun removeUserFromActivity(
+        activity_id : String
+    ) : Pair<Boolean, String>
+    {
+        return withContext(coroutineDispatcher)
+        {
+            val response : Pair<Boolean, String> = try
+            {
+                val result = userService.removeUserFromActivity(getUser()?.uid, activity_id)
+                Log.d(logTag, "userRepository removeUserFromActivity() response: $result")
+                Pair(result.isSuccessful, result.message())
+            }
+            catch (e : Exception)
+            {
+                Log.d(logTag, "userRepository removeUserFromActivity() exception: $e")
+                Pair(false, e.message.toString())
+            }
+            return@withContext response
+        }
+    }
+
+    override suspend fun checkActivityMember(
+        activity_id : String
+    ) : Triple<Boolean, String, Boolean>
+    {
+        return withContext(coroutineDispatcher)
+        {
+            val response : Triple<Boolean, String, Boolean> = try
+            {
+                val result = userService.checkActivityMember(getUser()?.uid, activity_id)
+                Log.d(logTag, "userRepository checkActivityMember() response: $result")
+                Triple(result.isSuccessful, result.message(), result.body()!!.joined)
+            }
+            catch (e : Exception)
+            {
+                Log.d(logTag, "userRepository checkActivityMember() exception: $e")
+                Triple(false, e.message.toString(), false)
+            }
+            return@withContext response
+        }
+    }
+
+    /*
+       DESCRIPTION:
        Utility function that makes a request to the backend to create a user.
 
        The last 3 parameters are there for a good reason: when the user authenticates with their email and password

@@ -35,10 +35,14 @@ data class ActivityObject(
     val address: String?,
     val createdAt: String?,
     val updatedAt: String?,
-    val businessId: String?,
+    val business: BusinessObject?,
     val userId: String?
 )
 
+data class BusinessObject(
+    val businessId: String?,
+    val email: String?
+)
 data class ActivityObjectLight(
     val id: String?,
     val title: String?,

@@ -1,8 +1,10 @@
 package com.soen490chrysalis.papilio.view
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -25,14 +27,12 @@ import com.soen490chrysalis.papilio.databinding.ActivityDisplayActivityInfoBindi
 import com.soen490chrysalis.papilio.viewModel.ActivityInfoViewModel
 import com.soen490chrysalis.papilio.viewModel.factories.ActivityInfoViewModelFactory
 
-class DisplayActivityInfoActivity : AppCompatActivity()
-{
+class DisplayActivityInfoActivity : AppCompatActivity() {
     private val logTag = DisplayActivityInfoActivity::class.java.simpleName
-    private lateinit var binding : ActivityDisplayActivityInfoBinding
-    private lateinit var activityInfoViewModel : ActivityInfoViewModel
+    private lateinit var binding: ActivityDisplayActivityInfoBinding
+    private lateinit var activityInfoViewModel: ActivityInfoViewModel
 
-    override fun onCreate(savedInstanceState : Bundle?)
-    {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDisplayActivityInfoBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -41,8 +41,7 @@ class DisplayActivityInfoActivity : AppCompatActivity()
         val actionBar = supportActionBar
 
         // if Action Bar is not null, then put a back button on it as well as put the "User Profile" title on it
-        if (actionBar != null)
-        {
+        if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true)
             actionBar.title = "Activity Info"
         }
@@ -52,7 +51,7 @@ class DisplayActivityInfoActivity : AppCompatActivity()
             ActivityInfoViewModelFactory()
         )[ActivityInfoViewModel::class.java]
 
-        val bundle : Bundle = intent.extras!!
+        val bundle: Bundle = intent.extras!!
         val activity_id = bundle.getString("id")!!
 
         // we need to determine if the user has already joined this activity or not and display the text button accordingly
@@ -61,12 +60,10 @@ class DisplayActivityInfoActivity : AppCompatActivity()
         activityInfoViewModel.checkActivityMember(activity_id)
 
         activityInfoViewModel.checkActivityMemberResponse.observe(this) {
-            if (it.isSuccess)
-            {
+            if (it.isSuccess) {
                 println("Observer response: $it")
                 binding.joinButton.text = if (!it.hasUserJoined) "Join" else "Leave"
-            }
-            else displaySnackBar(it.errorMessage)
+            } else displaySnackBar(it.errorMessage)
 
             // re-enable the 'join' button
             EnableButtonAndRemoveProgressIndicator(binding.joinButton)
@@ -76,7 +73,7 @@ class DisplayActivityInfoActivity : AppCompatActivity()
         binding.joinButton.setOnClickListener {
             DisableButtonAndShowProgressIndicator(binding.joinButton)
             if (binding.joinButton.text.toString()
-                            .lowercase() == "join"
+                    .lowercase() == "join"
             ) activityInfoViewModel.joinActivity(activity_id)
             else activityInfoViewModel.leaveActivity(activity_id)
         }
@@ -101,17 +98,18 @@ class DisplayActivityInfoActivity : AppCompatActivity()
             displaySnackBar(it.errorMessage)
         }
 
-        val infoTile : TextView = binding.infoTitle
-        val infoDescription : TextView = binding.infoDescription
-        val infoIndividualCost : TextView = binding.individualCost
-        val infoGroupCost : TextView = binding.groupCost
-        val infoAddress : TextView = binding.infoLocation
-        val infoImages0 : ImageView = binding.infoImageView0
-        val infoImages1 : ImageView = binding.infoImageView1
-        val infoImages2 : ImageView = binding.infoImageView2
-        val infoImages3 : ImageView = binding.infoImageView3
-        val infoImages4 : ImageView = binding.infoImageView4
-        val mapView : MapView = binding.mapView
+        val infoTile: TextView = binding.infoTitle
+        val infoDescription: TextView = binding.infoDescription
+        val infoIndividualCost: TextView = binding.individualCost
+        val infoGroupCost: TextView = binding.groupCost
+        val infoAddress: TextView = binding.infoLocation
+        val infoImages0: ImageView = binding.infoImageView0
+        val infoImages1: ImageView = binding.infoImageView1
+        val infoImages2: ImageView = binding.infoImageView2
+        val infoImages3: ImageView = binding.infoImageView3
+        val infoImages4: ImageView = binding.infoImageView4
+        val mapView: MapView = binding.mapView
+        val infoContact: Button = binding.infoContact
 
         val title = bundle.getString("title")
         val description = bundle.getString("description")
@@ -119,40 +117,36 @@ class DisplayActivityInfoActivity : AppCompatActivity()
         val groupCost = bundle.getString("groupCost")
         val location = bundle.getString("location")
         val hasImages = bundle.getBoolean("images")
+        val contactString = bundle.getString("contact")
 
-        if (hasImages)
-        {
+
+        if (hasImages) {
             val image0 = bundle.getString("images0")
             val image1 = bundle.getString("images1")
             val image2 = bundle.getString("images2")
             val image3 = bundle.getString("images3")
             val image4 = bundle.getString("images4")
 
-            if (image0 != "")
-            {
+            if (image0 != "") {
                 Glide.with(this).load(image0).into(infoImages0)
             }
 
-            if (image1 != "")
-            {
+            if (image1 != "") {
                 infoImages1.isVisible = true
                 Glide.with(this).load(image1).into(infoImages1)
             }
 
-            if (image2 != "")
-            {
+            if (image2 != "") {
                 infoImages2.isVisible = true
                 Glide.with(this).load(image2).into(infoImages2)
             }
 
-            if (image3 != "")
-            {
+            if (image3 != "") {
                 infoImages3.isVisible = true
                 Glide.with(this).load(image3).into(infoImages3)
             }
 
-            if (image4 != "")
-            {
+            if (image4 != "") {
                 infoImages4.isVisible = true
                 Glide.with(this).load(image4).into(infoImages4)
             }
@@ -164,6 +158,21 @@ class DisplayActivityInfoActivity : AppCompatActivity()
         infoGroupCost.text = groupCost
         infoAddress.text = location
 
+
+        if (contactString == null) {
+            infoContact.isVisible = false
+        }
+
+        infoContact.setOnClickListener {
+
+            val callIntent: Intent = Intent(Intent.ACTION_SEND).apply {
+                type = "text/plain"
+                putExtra(Intent.EXTRA_EMAIL, arrayOf(contactString))
+            }
+            startActivity(callIntent)
+        }
+
+
         mapView.getMapboxMap().loadStyleUri(Style.MAPBOX_STREETS)
 
         // Create a Search Engine object so we can do Forward Geocoding
@@ -172,12 +181,10 @@ class DisplayActivityInfoActivity : AppCompatActivity()
         )
 
         // Callback to deal with the results of the select() method in searchEngine.This is where the MapView is created and tuned to be displayed on the activity info page
-        val selectCallback = object : SearchSelectionCallback
-        {
+        val selectCallback = object : SearchSelectionCallback {
             override fun onResult(
-                suggestion : SearchSuggestion, result : SearchResult, responseInfo : ResponseInfo
-            )
-            {
+                suggestion: SearchSuggestion, result: SearchResult, responseInfo: ResponseInfo
+            ) {
                 Log.d(logTag, "Received mapbox suggestion for map view ${result.coordinate}")
 
                 // The activity's location in (latitude, longitude) format
@@ -203,43 +210,38 @@ class DisplayActivityInfoActivity : AppCompatActivity()
                 val annotationApi = mapView.annotations
                 val circleAnnotationManager = annotationApi.createCircleAnnotationManager()
 
-                val circleAnnotationOptions : CircleAnnotationOptions =
+                val circleAnnotationOptions: CircleAnnotationOptions =
                     CircleAnnotationOptions().withPoint(coordinates).withCircleRadius(8.0)
-                            .withCircleColor("#ee4e8b").withCircleStrokeWidth(2.0)
-                            .withCircleStrokeColor("#ffffff")
+                        .withCircleColor("#ee4e8b").withCircleStrokeWidth(2.0)
+                        .withCircleStrokeColor("#ffffff")
                 circleAnnotationManager.create(circleAnnotationOptions)
             }
 
             override fun onSuggestions(
-                suggestions : List<SearchSuggestion>, responseInfo : ResponseInfo
-            )
-            {
+                suggestions: List<SearchSuggestion>, responseInfo: ResponseInfo
+            ) {
                 // Empty for now, maybe stuff will be added here later.
             }
 
             override fun onCategoryResult(
-                suggestion : SearchSuggestion,
-                results : List<SearchResult>,
-                responseInfo : ResponseInfo
-            )
-            {
+                suggestion: SearchSuggestion,
+                results: List<SearchResult>,
+                responseInfo: ResponseInfo
+            ) {
                 // Empty for now, maybe stuff will be added here later.
             }
 
-            override fun onError(e : Exception)
-            {
+            override fun onError(e: Exception) {
                 // Empty for now, maybe stuff will be added here later.
                 Log.d(logTag, "Mapview error: $e")
             }
         }
 
         // Callback to handle the Suggestion object when it is fetched by the searchEngine.search() method
-        val searchCallback = object : SearchSuggestionsCallback
-        {
+        val searchCallback = object : SearchSuggestionsCallback {
             override fun onSuggestions(
-                suggestions : List<SearchSuggestion>, responseInfo : ResponseInfo
-            )
-            {
+                suggestions: List<SearchSuggestion>, responseInfo: ResponseInfo
+            ) {
                 val suggestion = suggestions.firstOrNull()
 
                 // Using the Suggestion object of our location that we just received, call the select() method in searchEngine
@@ -247,8 +249,7 @@ class DisplayActivityInfoActivity : AppCompatActivity()
                 suggestion?.let { searchEngine.select(it, selectCallback) }
             }
 
-            override fun onError(e : Exception)
-            {
+            override fun onError(e: Exception) {
             }
         }
 
@@ -261,12 +262,9 @@ class DisplayActivityInfoActivity : AppCompatActivity()
         }
     }
 
-    override fun onOptionsItemSelected(item : MenuItem) : Boolean
-    {
-        when (item.itemId)
-        {
-            android.R.id.home ->
-            {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
                 finish()
                 return true
             }
@@ -274,8 +272,7 @@ class DisplayActivityInfoActivity : AppCompatActivity()
         return super.onOptionsItemSelected(item)
     }
 
-    private fun DisableButtonAndShowProgressIndicator(button : MaterialButton)
-    {
+    private fun DisableButtonAndShowProgressIndicator(button: MaterialButton) {
         val spec =
             CircularProgressIndicatorSpec(
                 this, null, 0,
@@ -287,14 +284,12 @@ class DisplayActivityInfoActivity : AppCompatActivity()
         button.isEnabled = false
     }
 
-    private fun EnableButtonAndRemoveProgressIndicator(button : MaterialButton)
-    {
+    private fun EnableButtonAndRemoveProgressIndicator(button: MaterialButton) {
         button.icon = null
         button.isEnabled = true
     }
 
-    private fun displaySnackBar(message : String)
-    {
+    private fun displaySnackBar(message: String) {
         Snackbar.make(
             binding.coordinatorLayoutDisplayActivityInfo,
             message,

@@ -299,6 +299,7 @@ class HomeFragment : Fragment() {
                 intent.putExtra("id", activityList[position].id)
                 intent.putExtra("title", activityList[position].title)
                 intent.putExtra("description", activityList[position].description)
+                intent.putExtra("contact", activityList[position].business?.email)
                 intent.putExtra(
                     "individualCost",
                     if (activityList[position].costPerIndividual == "0") "FREE" else ("$" + activityList[position].costPerIndividual + "/person")

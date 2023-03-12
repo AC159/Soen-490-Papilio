@@ -176,7 +176,6 @@
                                         android:textSize="12sp" />
                                 </LinearLayout>
 
-
                             </LinearLayout>
 
                         </com.google.android.material.card.MaterialCardView>
@@ -257,7 +256,7 @@
                             android:textColor="@color/white"
                             android:visibility="visible"
                             app:cornerRadius="100dp" />
-
+                            
                         <ImageView
                             android:layout_width="30dp"
                             android:layout_height="30dp"
@@ -267,7 +266,6 @@
                             android:src="@drawable/heart_regular" />
 
                     </LinearLayout>
-
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -313,8 +311,29 @@
                             mapbox:mapbox_cameraTargetLng="18.06"
                             mapbox:mapbox_cameraZoom="9.0"
                             mapbox:mapbox_resourcesAccessToken="@string/MAPBOX_PUBLIC_ACCESS_TOKEN" />
-
                     </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+
+                        <Button
+                            android:id="@+id/info_Contact"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:backgroundTint="@color/orange"
+                            android:layout_marginLeft="5dp"
+                            android:text="Contact"
+                            android:textColor="@color/white"
+                            android:visibility="visible"
+                            app:cornerRadius="100dp"/>
+
+
+
+                </LinearLayout>
 
                     <TextView
                         android:layout_width="match_parent"
@@ -351,10 +370,6 @@
                     </com.google.android.material.card.MaterialCardView>
                 </LinearLayout>
             </LinearLayout>
-
-
-        </ScrollView>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
+    </ScrollView>
+   </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -38,6 +38,7 @@ class DisplayActivityInfoActivity : AppCompatActivity()
             actionBar.setDisplayHomeAsUpEnabled(true)
             actionBar.title = "Activity Info"
         }
+        val bundle : Bundle? = intent.extras
 
         val infoTile : TextView = binding.infoTitle
         val infoDescription : TextView = binding.infoDescription
@@ -51,7 +52,7 @@ class DisplayActivityInfoActivity : AppCompatActivity()
         val infoImages4 : ImageView = binding.infoImageView0
         val mapView : MapView = binding.mapView
 
-        val bundle : Bundle? = intent.extras
+
         val title = bundle!!.getString("title")
         val description = bundle.getString("description")
         val individualCost = bundle.getString("individualCost")

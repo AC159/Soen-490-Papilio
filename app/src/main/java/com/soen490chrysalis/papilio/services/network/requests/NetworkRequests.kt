@@ -10,21 +10,21 @@ import com.squareup.moshi.Json
  */
 
 data class User(
-    val firstName : String,
-    val lastName : String,
-    val email : String,
+    val firstName: String,
+    val lastName: String,
+    val email: String,
     @Json(name = "firebase_id")
-    val firebaseId : String
+    val firebaseId: String
 )
 
 data class UserRequest(
     @Json(name = "user")
-    val user : User
+    val user: User
 )
 
 data class ActivitySearchRequest(
     @Json(name = "keyword")
-    val keyword : String
+    val keyword: String
 )
 
 /*
@@ -32,13 +32,14 @@ data class ActivitySearchRequest(
  */
 data class Identifier(
     @Json(name = "firebase_id")
-    val firebaseId : String
+    val firebaseId: String
 )
 
 data class UserUpdate(
     @Json(name = "identifier")
-    val identifier : Identifier,
+    val identifier: Identifier,
 
     @Json(name = "update")
-    val update : Map<String, Any>
+    val update: Map<String, Any>
 )
+

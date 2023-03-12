@@ -253,13 +253,14 @@
                         android:visibility="visible"
                         app:cornerRadius="100dp" />
 
-                    <ImageView
+                    <ImageButton
+                        android:id="@+id/favorite_button"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginStart="10dp"
                         android:clickable="true"
                         android:focusable="true"
-                        android:src="@drawable/heart_regular" />
+                        android:background="@drawable/heart_regular" />
 
                 </LinearLayout>
 

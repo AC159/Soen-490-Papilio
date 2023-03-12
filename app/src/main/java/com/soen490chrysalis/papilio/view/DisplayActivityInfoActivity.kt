@@ -3,10 +3,12 @@ package com.soen490chrysalis.papilio.view
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.mapbox.maps.*
 import com.mapbox.maps.plugin.annotation.annotations
@@ -17,14 +19,23 @@ import com.mapbox.search.result.SearchResult
 import com.mapbox.search.result.SearchSuggestion
 import com.soen490chrysalis.papilio.R
 import com.soen490chrysalis.papilio.databinding.ActivityDisplayActivityInfoBinding
+import com.soen490chrysalis.papilio.viewModel.DisplayActivityViewModel
+import com.soen490chrysalis.papilio.viewModel.HomeFragmentViewModel
+import com.soen490chrysalis.papilio.viewModel.factories.DisplayActivityViewModelFactory
 
 class DisplayActivityInfoActivity : AppCompatActivity()
 {
     private val logTag = DisplayActivityInfoActivity::class.java.simpleName
+    private lateinit var displayActivityViewModel : DisplayActivityViewModel
     private lateinit var binding : ActivityDisplayActivityInfoBinding
+    private var isActivityFavorited : Boolean = false
+    private lateinit var favoriteButton : ImageButton
 
     override fun onCreate(savedInstanceState : Bundle?)
     {
+        val displayActivityViewModelFactory = DisplayActivityViewModelFactory()
+        displayActivityViewModel = ViewModelProvider(this, displayActivityViewModelFactory)[DisplayActivityViewModel::class.java]
+
         super.onCreate(savedInstanceState)
         binding = ActivityDisplayActivityInfoBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -50,6 +61,7 @@ class DisplayActivityInfoActivity : AppCompatActivity()
         val infoImages3 : ImageView = binding.infoImageView4
         val infoImages4 : ImageView = binding.infoImageView0
         val mapView : MapView = binding.mapView
+        favoriteButton = binding.favoriteButton
 
         val bundle : Bundle? = intent.extras
         val title = bundle!!.getString("title")
@@ -58,6 +70,35 @@ class DisplayActivityInfoActivity : AppCompatActivity()
         val groupCost = bundle.getString("groupCost")
         val location = bundle.getString("location")
         val hasImages = bundle.getBoolean("images")
+        val activityId = bundle.getString("id")?.toInt()
+
+        if (activityId != null) {
+            displayActivityViewModel.checkActivityFavorited(activityId)
+        }
+
+        displayActivityViewModel.checkActivityFavoritedResponse.observe(this, androidx.lifecycle.Observer {
+            isActivityFavorited = it.isActivityFound
+            changeFavoriteButton()
+        })
+
+        favoriteButton.setOnClickListener{
+            if(!isActivityFavorited)
+            {
+                if (activityId != null) {
+                    isActivityFavorited = true
+                    displayActivityViewModel.addFavoriteActivity(activityId)
+                    changeFavoriteButton()
+                }
+            }
+            else
+            {
+                if (activityId != null) {
+                    isActivityFavorited = false
+                    displayActivityViewModel.removeFavoriteActivity(activityId)
+                    changeFavoriteButton()
+                }
+            }
+        }
 
         if (hasImages)
         {
@@ -211,5 +252,17 @@ class DisplayActivityInfoActivity : AppCompatActivity()
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    fun changeFavoriteButton()
+    {
+        if(isActivityFavorited)
+        {
+            favoriteButton.setBackgroundResource(R.drawable.heart_filled)
+        }
+        else
+        {
+            favoriteButton.setBackgroundResource(R.drawable.heart_regular)
+        }
     }
 }

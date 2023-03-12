@@ -2,6 +2,9 @@ package com.soen490chrysalis.papilio.repository.users
 
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.FirebaseUser
+import com.soen490chrysalis.papilio.services.network.responses.CheckFavoriteResponse
+import com.soen490chrysalis.papilio.services.network.responses.FavoriteActivitiesResponse
+import com.soen490chrysalis.papilio.services.network.responses.FavoriteResponse
 import com.soen490chrysalis.papilio.services.network.responses.GetUserByFirebaseIdResponse
 import retrofit2.Response
 
@@ -25,6 +28,20 @@ interface IUserRepository
     suspend fun createUser(
         user : FirebaseUser?
     ) : Response<Void>
+
+    suspend fun isActivityFavorited(
+        activityId : String?
+    ) : Response<CheckFavoriteResponse>
+
+    suspend fun addFavoriteActivity(
+        activityId : Number
+    ) : Response<FavoriteResponse>
+
+    suspend fun removeFavoriteActivity(
+        activityId : Number
+    ) : Response<FavoriteResponse>
+
+    suspend fun getFavoriteActivities() : Response<FavoriteActivitiesResponse>
 
     suspend fun updateUser(
         variableMap : Map<String, Any>

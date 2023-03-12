@@ -43,12 +43,29 @@ data class BusinessObject(
     val businessId: String?,
     val email: String?
 )
+data class ActivityObjectLight(
+    val id: String?,
+    val title: String?,
+    val description: String?,
+    val images: String?,
+)
 
 data class ActivityResponse(
     val count: String,
     val rows: List<ActivityObject>,
     val totalPages: String,
     val currentPage: String
+)
+
+data class SingleActivityResponse(
+    val found: Boolean,
+    val activity : ActivityObject
+)
+
+data class SearchActivityResponse(
+    val keyword: String,
+    val count: String,
+    val rows: List<ActivityObjectLight>
 )
 
 // Response object for the /api/user/get/:firebaseId endpoint

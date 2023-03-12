@@ -1,8 +1,7 @@
 package com.soen490chrysalis.papilio.repository.mocks
 
 import com.soen490chrysalis.papilio.repository.activities.IActivityRepository
-import com.soen490chrysalis.papilio.services.network.responses.ActivityObject
-import com.soen490chrysalis.papilio.services.network.responses.ActivityResponse
+import com.soen490chrysalis.papilio.services.network.responses.*
 import com.soen490chrysalis.papilio.view.dialogs.EventDate
 import com.soen490chrysalis.papilio.view.dialogs.EventTime
 import retrofit2.Response
@@ -27,7 +26,7 @@ class MockActivityRepository : IActivityRepository {
         size: String
     ): Response<ActivityResponse> {
 
-        var activityList: MutableList<ActivityObject> = mutableListOf()
+        val activityList: MutableList<ActivityObject> = mutableListOf()
         for (i in 1..size.toInt()) {
             val activityObject = ActivityObject(
                 i.toString(),
@@ -57,5 +56,57 @@ class MockActivityRepository : IActivityRepository {
         )
 
         return Response.success(activityResponse)
+    }
+
+    override suspend fun getActivity(activityId: Number): Response<SingleActivityResponse> {
+
+            val activityObject = ActivityObject(
+                activityId.toString(),
+                "Activity 1 Title",
+                "This is Activity 1",
+                "0",
+                "0",
+                "4",
+                listOf("a" + 1 + "image1", "a" + 2 + "image1"),
+                "1500",
+                "2000",
+                "Activity 1 Address",
+                "A1 Creation Time",
+                "A1 Update Time",
+                null,
+                "user 1"
+            )
+
+
+        val activityResponse = SingleActivityResponse(
+            true,
+            activityObject,
+        )
+
+        return Response.success(activityResponse)
+    }
+
+    override suspend fun searchActivities(query: String): Response<SearchActivityResponse> {
+
+        val activityList: MutableList<ActivityObjectLight> = mutableListOf()
+        for (i in 1..5) {
+            val activityObject = ActivityObjectLight(
+                i.toString(),
+                "Activity $i Title",
+                "This is Activity $i",
+                "a" + i + "image1",
+            )
+
+            activityList.add(activityObject)
+        }
+
+        val activityResponse = SearchActivityResponse(
+            query,
+            activityList.count().toString(),
+            activityList
+        )
+
+        return Response.success(activityResponse)
+
     }
 }

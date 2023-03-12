@@ -324,6 +324,7 @@
                         android:gravity="center">
 
                         <TextView
+                            android:id="@+id/info_Contact_title"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="left"
@@ -343,7 +344,7 @@
                         android:paddingLeft="10dp"
                         android:paddingTop="15dp"
                         android:text="email"
-                        android:textColor="@color/black"
+                        android:textColor="@color/blue"
                         android:clickable="true"/>
 
                 </LinearLayout>

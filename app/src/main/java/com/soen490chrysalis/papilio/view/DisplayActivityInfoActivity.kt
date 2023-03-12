@@ -1,6 +1,10 @@
 package com.soen490chrysalis.papilio.view
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.style.UnderlineSpan
 import android.util.Log
 import android.view.MenuItem
 import android.widget.ImageView
@@ -44,6 +48,8 @@ class DisplayActivityInfoActivity : AppCompatActivity()
         val infoIndividualCost : TextView = binding.individualCost
         val infoGroupCost : TextView = binding.groupCost
         val infoAddress : TextView = binding.infoLocation
+        val infoContact: TextView = binding.infoContact
+        val infoContactTitle: TextView = binding.infoContactTitle
         val infoImages0 : ImageView = binding.infoImageView0
         val infoImages1 : ImageView = binding.infoImageView1
         val infoImages2 : ImageView = binding.infoImageView2
@@ -58,6 +64,9 @@ class DisplayActivityInfoActivity : AppCompatActivity()
         val groupCost = bundle.getString("groupCost")
         val location = bundle.getString("location")
         val hasImages = bundle.getBoolean("images")
+
+        val contact = SpannableString(bundle.getString("contact"))
+        contact.setSpan(UnderlineSpan(), 0, contact.length, 0)
 
         if (hasImages)
         {
@@ -102,6 +111,23 @@ class DisplayActivityInfoActivity : AppCompatActivity()
         infoIndividualCost.text = individualCost
         infoGroupCost.text = groupCost
         infoAddress.text = location
+
+
+        if(contact != null){
+            infoContact.text = contact
+        }else{
+            infoContact.isVisible = false
+            infoContactTitle.isVisible = false
+        }
+
+        infoContact.setOnClickListener {
+            val callIntent: Intent = Intent(Intent.ACTION_SEND).apply{
+                type = "text/plain"
+                putExtra(Intent.EXTRA_EMAIL, arrayOf(contact))
+            }
+            startActivity(callIntent)
+        }
+
 
        mapView.getMapboxMap().loadStyleUri(Style.MAPBOX_STREETS)
 

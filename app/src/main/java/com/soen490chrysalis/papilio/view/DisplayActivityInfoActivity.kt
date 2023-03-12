@@ -2,8 +2,6 @@ package com.soen490chrysalis.papilio.view
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.SpannableString
-import android.text.style.UnderlineSpan
 import android.util.Log
 import android.view.MenuItem
 import android.widget.Button
@@ -31,8 +29,8 @@ import com.soen490chrysalis.papilio.viewModel.factories.ActivityInfoViewModelFac
 
 class DisplayActivityInfoActivity : AppCompatActivity() {
     private val logTag = DisplayActivityInfoActivity::class.java.simpleName
-    private lateinit var binding : ActivityDisplayActivityInfoBinding
-    private lateinit var activityInfoViewModel : ActivityInfoViewModel
+    private lateinit var binding: ActivityDisplayActivityInfoBinding
+    private lateinit var activityInfoViewModel: ActivityInfoViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,7 +51,7 @@ class DisplayActivityInfoActivity : AppCompatActivity() {
             ActivityInfoViewModelFactory()
         )[ActivityInfoViewModel::class.java]
 
-        val bundle : Bundle = intent.extras!!
+        val bundle: Bundle = intent.extras!!
         val activity_id = bundle.getString("id")!!
 
         // we need to determine if the user has already joined this activity or not and display the text button accordingly
@@ -62,12 +60,10 @@ class DisplayActivityInfoActivity : AppCompatActivity() {
         activityInfoViewModel.checkActivityMember(activity_id)
 
         activityInfoViewModel.checkActivityMemberResponse.observe(this) {
-            if (it.isSuccess)
-            {
+            if (it.isSuccess) {
                 println("Observer response: $it")
                 binding.joinButton.text = if (!it.hasUserJoined) "Join" else "Leave"
-            }
-            else displaySnackBar(it.errorMessage)
+            } else displaySnackBar(it.errorMessage)
 
             // re-enable the 'join' button
             EnableButtonAndRemoveProgressIndicator(binding.joinButton)
@@ -77,7 +73,7 @@ class DisplayActivityInfoActivity : AppCompatActivity() {
         binding.joinButton.setOnClickListener {
             DisableButtonAndShowProgressIndicator(binding.joinButton)
             if (binding.joinButton.text.toString()
-                            .lowercase() == "join"
+                    .lowercase() == "join"
             ) activityInfoViewModel.joinActivity(activity_id)
             else activityInfoViewModel.leaveActivity(activity_id)
         }
@@ -102,19 +98,18 @@ class DisplayActivityInfoActivity : AppCompatActivity() {
             displaySnackBar(it.errorMessage)
         }
 
-        val infoTile : TextView = binding.infoTitle
-        val infoDescription : TextView = binding.infoDescription
-        val infoIndividualCost : TextView = binding.individualCost
-        val infoGroupCost : TextView = binding.groupCost
-        val infoAddress : TextView = binding.infoLocation
-        val infoImages0 : ImageView = binding.infoImageView0
-        val infoImages1 : ImageView = binding.infoImageView1
-        val infoImages2 : ImageView = binding.infoImageView2
-        val infoImages3 : ImageView = binding.infoImageView3
-        val infoImages4 : ImageView = binding.infoImageView4
-        val mapView : MapView = binding.mapView
+        val infoTile: TextView = binding.infoTitle
+        val infoDescription: TextView = binding.infoDescription
+        val infoIndividualCost: TextView = binding.individualCost
+        val infoGroupCost: TextView = binding.groupCost
+        val infoAddress: TextView = binding.infoLocation
+        val infoImages0: ImageView = binding.infoImageView0
+        val infoImages1: ImageView = binding.infoImageView1
+        val infoImages2: ImageView = binding.infoImageView2
+        val infoImages3: ImageView = binding.infoImageView3
+        val infoImages4: ImageView = binding.infoImageView4
+        val mapView: MapView = binding.mapView
         val infoContact: Button = binding.infoContact
-        val infoContactTitle: TextView = binding.infoContactTitle
 
         val title = bundle.getString("title")
         val description = bundle.getString("description")
@@ -164,11 +159,8 @@ class DisplayActivityInfoActivity : AppCompatActivity() {
         infoAddress.text = location
 
 
-        if (contactString != null) {
-            infoContact.text = contactString
-        } else {
+        if (contactString == null) {
             infoContact.isVisible = false
-            infoContactTitle.isVisible = false
         }
 
         infoContact.setOnClickListener {
@@ -280,8 +272,7 @@ class DisplayActivityInfoActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun DisableButtonAndShowProgressIndicator(button : MaterialButton)
-    {
+    private fun DisableButtonAndShowProgressIndicator(button: MaterialButton) {
         val spec =
             CircularProgressIndicatorSpec(
                 this, null, 0,
@@ -293,14 +284,12 @@ class DisplayActivityInfoActivity : AppCompatActivity() {
         button.isEnabled = false
     }
 
-    private fun EnableButtonAndRemoveProgressIndicator(button : MaterialButton)
-    {
+    private fun EnableButtonAndRemoveProgressIndicator(button: MaterialButton) {
         button.icon = null
         button.isEnabled = true
     }
 
-    private fun displaySnackBar(message : String)
-    {
+    private fun displaySnackBar(message: String) {
         Snackbar.make(
             binding.coordinatorLayoutDisplayActivityInfo,
             message,

@@ -69,3 +69,7 @@ data class GetUserByFirebaseIdResponse(
     val found : Boolean,
     val user : UserObject
 )
+
+data class CheckUserIsMemberOfActivityResponse(
+    val joined : Boolean
+)

@@ -2,6 +2,7 @@ package com.soen490chrysalis.papilio.repository
 
 import android.util.Log
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.TaskCompletionSource
 import com.google.firebase.auth.*
@@ -25,10 +26,12 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 import org.mockito.Mockito
+import org.mockito.kotlin.any
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import java.io.IOException
 
 
 @RunWith(JUnit4::class)
@@ -84,7 +87,7 @@ class UserRepositoryTest {
         println("Webserver has successfully started for UserRepository test...")
 
         mockRetrofitUserService = Retrofit.Builder()
-            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .addConverterFactory(MoshiConverterFactory.create(moshi).asLenient())
             .baseUrl(mockWebServer.url("/")) // note the URL is different from production one
             .build()
             .create(IUserApiService::class.java)
@@ -364,5 +367,42 @@ class UserRepositoryTest {
             userRepository.firebaseLoginWithEmailAndPassword(email, password)
         println("Result: $result")
         assert(!result.first && result.second == "Oops, something went wrong!")
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun getChatToken() = runTest {
+        val token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiSnNNVlhnVDJNaE44eGpwVzFOTnZBTXFMQURmMSJ9.N-FhnRWLgkGP6knf_QD7gWgUJ7Fm4wtbKkodAUqSlwU"
+        val mockServerResponse = MockResponse().setResponseCode(200).setBody(token)
+        mockWebServer.enqueue(mockServerResponse)
+
+        var userToken = userRepository.getNewChatTokenForUser(mockFirebaseUserUid)
+        println("user token: $userToken")
+        assert(userToken == token)
+
+        // Ask for a token again but this time the server will return null
+        userToken = userRepository.getNewChatTokenForUser(mockFirebaseUserUid)
+        assert(userToken == null)
+    }
+
+    @Suppress("LocalVariableName")
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun addUserToActivityChatTest() = runTest {
+        val activity_id = "160"
+
+        var mockServerResponse = MockResponse().setResponseCode(200)
+        mockWebServer.enqueue(mockServerResponse)
+
+        var result = userRepository.addUserToActivity(activity_id)
+        println("Result: $result")
+        assert(result.first && result.second == "OK")
+
+        mockServerResponse = MockResponse().setResponseCode(400)
+        mockWebServer.enqueue(mockServerResponse)
+
+        result = userRepository.addUserToActivity(activity_id)
+        println("Result: $result")
+        assert(!result.first && result.second == "Client Error")
     }
 }

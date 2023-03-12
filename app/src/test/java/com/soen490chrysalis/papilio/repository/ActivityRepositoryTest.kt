@@ -33,7 +33,8 @@ import java.io.File
 import java.io.InputStream
 
 @RunWith(JUnit4::class)
-class ActivityRepositoryTest {
+class ActivityRepositoryTest
+{
     private var mockWebServer = MockWebServer()
     private lateinit var mockRetrofitUserService: IUserApiService
     private lateinit var mockRetrofitActivityService: IActivityApiService
@@ -51,7 +52,8 @@ class ActivityRepositoryTest {
     val coroutineRule = MainCoroutineRule()
 
     @Before
-    fun setUp() {
+    fun setUp()
+    {
         Mockito.`when`(mockFirebaseAuth.currentUser).thenReturn(mockFirebaseUser)
         Mockito.`when`(mockFirebaseUser?.uid).thenReturn(mockFirebaseUserUid)
 
@@ -94,7 +96,8 @@ class ActivityRepositoryTest {
     }
 
     @After
-    fun teardown() {
+    fun teardown()
+    {
         mockWebServer.shutdown()
     }
 

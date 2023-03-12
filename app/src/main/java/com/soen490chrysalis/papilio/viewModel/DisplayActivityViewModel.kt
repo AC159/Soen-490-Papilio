@@ -19,22 +19,6 @@ class DisplayActivityViewModel(private val userRepository: IUserRepository) : Vi
     var checkActivityFavoritedResponse: MutableLiveData<CheckFavoriteResponse> =
         MutableLiveData<CheckFavoriteResponse>()
 
-
-    fun getFavoriteActivities() {
-        viewModelScope.launch {
-            try {
-                val getAllActivitiesResponse = userRepository.getFavoriteActivities()
-                activitiesResponse.value = FavoriteActivitiesResponse(
-                    getAllActivitiesResponse.body()!!.count,
-                    getAllActivitiesResponse.body()!!.activities
-                )
-                Log.d("getFavoriteActivities", activitiesResponse.value.toString())
-            } catch (e: Exception) {
-                Log.d(logTag, "userRepository.getFavoriteActivities - exception:\n $e")
-            }
-        }
-    }
-
     fun checkActivityFavorited(activityId: Number) {
         viewModelScope.launch {
             try {

@@ -4,6 +4,7 @@
     android:id="@+id/activities_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/sign_up_activity_background"
     tools:context=".view.ActivitiesFragment">
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

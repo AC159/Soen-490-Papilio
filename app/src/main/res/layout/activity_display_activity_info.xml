@@ -258,9 +258,10 @@
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_marginStart="10dp"
+                        android:background="@drawable/heart_regular"
                         android:clickable="true"
                         android:focusable="true"
-                        android:background="@drawable/heart_regular" />
+                        tools:ignore="SpeakableTextPresentCheck" />
 
                 </LinearLayout>
 

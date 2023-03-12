@@ -46,7 +46,6 @@ class DisplayActivityInfoActivity : AppCompatActivity()
             actionBar.setDisplayHomeAsUpEnabled(true)
             actionBar.title = "Activity Info"
         }
-        val bundle : Bundle? = intent.extras
 
         activityInfoViewModel = ViewModelProvider(
             this,

@@ -10,8 +10,8 @@
         android:id="@+id/scrollView4"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:overScrollMode="never"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:overScrollMode="never">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -171,7 +171,6 @@
                                     android:textSize="12sp" />
                             </LinearLayout>
 
-
                         </LinearLayout>
 
                     </com.google.android.material.card.MaterialCardView>
@@ -263,7 +262,6 @@
 
                 </LinearLayout>
 
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -311,7 +309,6 @@
 
                 </LinearLayout>
 
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -332,25 +329,22 @@
                             android:paddingTop="15dp"
                             android:text="Contact:"
                             android:textColor="@color/black"
-                            android:textStyle="bold"/>
+                            android:textStyle="bold" />
 
                     </LinearLayout>
 
-                    <TextView
+                    <Button
                         android:id="@+id/info_Contact"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="left"
-                        android:paddingLeft="10dp"
-                        android:paddingTop="15dp"
+                        android:backgroundTint="@color/orange"
+                        android:layout_marginLeft="5dp"
                         android:text="email"
-                        android:textColor="@color/blue"
-                        android:clickable="true"/>
+                        android:textColor="@color/white"
+                        android:visibility="visible"
+                        app:cornerRadius="100dp"/>
 
                 </LinearLayout>
-
-
-
 
                 <TextView
                     android:layout_width="match_parent"
@@ -361,7 +355,6 @@
                     android:text="Reviews:"
                     android:textColor="@color/black"
                     android:textStyle="bold" />
-
 
 
                 <com.google.android.material.card.MaterialCardView
@@ -389,8 +382,6 @@
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
         </LinearLayout>
-
-
     </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

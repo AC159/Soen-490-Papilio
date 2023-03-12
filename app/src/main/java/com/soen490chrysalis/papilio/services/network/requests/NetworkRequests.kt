@@ -22,6 +22,11 @@ data class UserRequest(
     val user : User
 )
 
+data class ActivitySearchRequest(
+    @Json(name = "keyword")
+    val keyword : String
+)
+
 /*
     Data classes used to update user personal information
  */
@@ -36,4 +41,9 @@ data class UserUpdate(
 
     @Json(name = "update")
     val update : Map<String, Any>
+)
+
+// Request bodies to add/remove a user from an activity chat
+data class AddUserToActivityBody(
+    val user_name : String?
 )

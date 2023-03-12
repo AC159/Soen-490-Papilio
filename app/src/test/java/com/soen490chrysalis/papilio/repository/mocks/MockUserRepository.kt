@@ -81,5 +81,25 @@ class MockUserRepository : IUserRepository
         return Pair(true, "")
     }
 
+    override suspend fun getNewChatTokenForUser(firebaseId : String) : String?
+    {
+        return "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiSnNNVlhnVDJNaE44eGpwVzFOTnZBTXFMQURmMSJ9.N-FhnRWLgkGP6knf_QD7gWgUJ7Fm4wtbKkodAUqSlwU"
+    }
 
+    override suspend fun addUserToActivity(
+        activity_id : String
+    ) : Pair<Boolean, String>
+    {
+        return Pair(true, "")
+    }
+
+    override suspend fun removeUserFromActivity(activity_id : String) : Pair<Boolean, String>
+    {
+        return Pair(true, "")
+    }
+
+    override suspend fun checkActivityMember(activity_id : String) : Triple<Boolean, String, Boolean>
+    {
+        return Triple(true, "", true)
+    }
 }

@@ -1,6 +1,8 @@
 package com.soen490chrysalis.papilio.repository.activities
 
 import com.soen490chrysalis.papilio.services.network.responses.ActivityResponse
+import com.soen490chrysalis.papilio.services.network.responses.SearchActivityResponse
+import com.soen490chrysalis.papilio.services.network.responses.SingleActivityResponse
 import com.soen490chrysalis.papilio.view.dialogs.EventDate
 import com.soen490chrysalis.papilio.view.dialogs.EventTime
 import retrofit2.Response
@@ -32,4 +34,12 @@ interface IActivityRepository
         page: String,
         size: String
     ) : Response<ActivityResponse>
+
+    suspend fun getActivity(
+        activityId: Number
+    ) : Response<SingleActivityResponse>
+
+    suspend fun searchActivities(
+        query: String
+    ) : Response<SearchActivityResponse>
 }

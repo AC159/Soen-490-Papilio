@@ -4,7 +4,10 @@ import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.soen490chrysalis.papilio.services.network.IUserApiService
 import com.soen490chrysalis.papilio.services.network.IActivityApiService
+import com.soen490chrysalis.papilio.services.network.requests.ActivitySearchRequest
 import com.soen490chrysalis.papilio.services.network.responses.ActivityResponse
+import com.soen490chrysalis.papilio.services.network.responses.SearchActivityResponse
+import com.soen490chrysalis.papilio.services.network.responses.SingleActivityResponse
 import com.soen490chrysalis.papilio.view.dialogs.EventDate
 import com.soen490chrysalis.papilio.view.dialogs.EventTime
 import kotlinx.coroutines.CoroutineDispatcher
@@ -122,11 +125,39 @@ class ActivityRepository(
         }
     }
 
-    override suspend fun getAllActivities(page: String, size: String): Response<ActivityResponse> {
+    override suspend fun getAllActivities(
+        page: String,
+        size: String
+    ): Response<ActivityResponse> {
         return withContext(coroutineDispatcher)
         {
             val response = activityAPIService.getAllActivities(page, size)
             Log.d(logTag, "Post new user activity: $response")
+
+            return@withContext response
+        }
+    }
+
+    override suspend fun getActivity(activityId : Number): Response<SingleActivityResponse> {
+        return withContext(coroutineDispatcher)
+        {
+            val response = activityAPIService.getActivity(activityId)
+            Log.d(logTag, "Get Single Activity: $response")
+
+            return@withContext response
+        }
+    }
+
+    override suspend fun searchActivities(
+        query:String
+    ): Response<SearchActivityResponse> {
+        return withContext(coroutineDispatcher)
+        {
+            val requestBody = ActivitySearchRequest(
+                keyword = query
+            )
+            val response = activityAPIService.searchActivities(requestBody)
+            Log.d(logTag, "Search activities: $response")
 
             return@withContext response
         }

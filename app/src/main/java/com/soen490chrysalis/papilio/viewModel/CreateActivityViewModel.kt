@@ -14,144 +14,116 @@ import java.io.InputStream
 import java.util.*
 import kotlin.collections.ArrayList
 
-data class PostNewUserActivityResponse(var isSuccess : Boolean, var msg : String)
+data class PostNewUserActivityResponse(var isSuccess: Boolean, var msg: String)
 
-class CreateActivityViewModel(private val activityRepository : IActivityRepository) : ViewModel()
-{
+class CreateActivityViewModel(private val activityRepository: IActivityRepository) : ViewModel() {
     private val logTag = CreateActivityViewModel::class.java.simpleName
-    var activityAddressSuggestions : MutableLiveData<List<String>> =
+    var activityAddressSuggestions: MutableLiveData<List<String>> =
         MutableLiveData<List<String>>(ArrayList())
 
     /* We keep track of whole mapbox address suggestions because they contain lat/long coordinates
        which will be useful when we want to display the activity location on a map
     */
-    private var fullActivityAddresses : List<AddressAutofillSuggestion> = ArrayList()
+    private var fullActivityAddresses: List<AddressAutofillSuggestion> = ArrayList()
 
-    var postNewUserActivityResponse : MutableLiveData<PostNewUserActivityResponse> =
+    var postNewUserActivityResponse: MutableLiveData<PostNewUserActivityResponse> =
         MutableLiveData()
 
-    fun validateActivityTitle(title : String) : String?
-    {
+    fun validateActivityTitle(title: String): String? {
         if (title.length >= 3) return null
         return "Title must be at least 3 characters long!"
     }
 
-    fun validateActivityDescription(description : String) : String?
-    {
+    fun validateActivityDescription(description: String): String? {
         if (description.length >= 15) return null
         return "Description must be at least 15 characters long!"
     }
 
-    fun validateActivityMaxNumberOfParticipants(maxNbrOfParticipants : String) : String?
-    {
-        try
-        {
+    fun validateActivityMaxNumberOfParticipants(maxNbrOfParticipants: String): String? {
+        try {
             val nbrOfParticipants = Integer.parseInt(maxNbrOfParticipants)
             if (nbrOfParticipants >= 1) return null
-        }
-        catch (e : java.lang.NumberFormatException)
-        {
+        } catch (e: java.lang.NumberFormatException) {
             return "Not a number!"
         }
         return "Number of participants must be greater than 0!"
     }
 
-    fun validateActivityIndividualCost(individualCost : String) : String?
-    {
-        try
-        {
+    fun validateActivityIndividualCost(individualCost: String): String? {
+        try {
             val nbrOfIndividualCost = Integer.parseInt(individualCost)
-            if (nbrOfIndividualCost >= 0) return "null"
-        }
-        catch (e : java.lang.NumberFormatException)
-        {
+            if (nbrOfIndividualCost >= 0) return null
+        } catch (e: java.lang.NumberFormatException) {
             return "Not a number!"
         }
         return "Number of participants must be greater than or equal to 0!"
     }
 
-    fun validateActivityGroupCost(groupCost : String) : String?
-    {
-        try
-        {
+    fun validateActivityGroupCost(groupCost: String): String? {
+        try {
             val nbrOfGroupCost = Integer.parseInt(groupCost)
             if (nbrOfGroupCost >= 0) return null
-        }
-        catch (e : java.lang.NumberFormatException)
-        {
+        } catch (e: java.lang.NumberFormatException) {
             return "Not a number!"
         }
         return "Number of participants must be greater than or equal to 0!"
     }
 
-    fun validateActivityPictureUris(pictures : List<Pair<String, InputStream>>) : String?
-    {
+    fun validateActivityPictureUris(pictures: List<Pair<String, InputStream>>): String? {
         if (pictures.isNotEmpty()) return null
         return "Don't forget to add some pictures!"
     }
 
-    fun validateActivityDate( date : String ) : String?
-    {
+    fun validateActivityDate(date: String): String? {
         println("Date validation: ${date.trim(' ').lowercase(Locale.getDefault())}")
-        if ( date.trim(' ').lowercase(Locale.getDefault()) != "select date" ) return null
+        if (date.trim(' ').lowercase(Locale.getDefault()) != "select date") return null
         return "You must select a date!"
     }
 
-    fun validateStartTime( startTime : EventTime ) : String?
-    {
-        if ( startTime.hourOfDay != -1 && startTime.minute != -1 ) return null
+    fun validateStartTime(startTime: EventTime): String? {
+        if (startTime.hourOfDay != -1 && startTime.minute != -1) return null
         return "You must select a start time!"
     }
 
-    fun validateEndTime( endTime : EventTime ) : String?
-    {
-        if ( endTime.hourOfDay != -1 && endTime.minute != -1 ) return null
+    fun validateEndTime(endTime: EventTime): String? {
+        if (endTime.hourOfDay != -1 && endTime.minute != -1) return null
         return "You must select an end time!"
     }
 
-    fun validateActivityAddress() : String?
-    {
+    fun validateActivityAddress(): String? {
         if (activityAddressSuggestions.value?.isNotEmpty() == true) return null
         return "You must select an address from the dropdown!"
     }
 
-    fun getMapBoxAddressSuggestions(query : Query)
-    {
+    fun getMapBoxAddressSuggestions(query: Query) {
         viewModelScope.launch {
             val addressAutofill = AddressAutofill.create(BuildConfig.MAPBOX_SECRET_TOKEN)
-            val response : AddressAutofillResponse =
+            val response: AddressAutofillResponse =
                 addressAutofill.suggestions(query, AddressAutofillOptions())
 
-            when (response)
-            {
-                is AddressAutofillResponse.Suggestions ->
-                {
+            when (response) {
+                is AddressAutofillResponse.Suggestions -> {
                     Log.d(logTag, response.suggestions.toString())
                     val nbrOfSuggestions = response.suggestions.size
 
-                    if (nbrOfSuggestions > 0)
-                    {
+                    if (nbrOfSuggestions > 0) {
                         // Let's take at most the top 5 address suggestions which we will display to the user
-                        val topSuggestions : MutableList<String> = ArrayList()
-                        val fullAddresses : MutableList<AddressAutofillSuggestion> = ArrayList()
+                        val topSuggestions: MutableList<String> = ArrayList()
+                        val fullAddresses: MutableList<AddressAutofillSuggestion> = ArrayList()
 
-                        for (i in 1..5)
-                        {
-                            if (nbrOfSuggestions - i >= 0)
-                            {
+                        for (i in 1..5) {
+                            if (nbrOfSuggestions - i >= 0) {
                                 val address = response.suggestions[nbrOfSuggestions - i]
                                 topSuggestions.add(address.formattedAddress)
                                 fullAddresses.add(address)
-                            }
-                            else break
+                            } else break
                         }
 
                         activityAddressSuggestions.value = topSuggestions
                         fullActivityAddresses = fullAddresses
                     }
                 }
-                else                                   ->
-                {
+                else -> {
                     // No suggestions
                 }
 
@@ -160,20 +132,18 @@ class CreateActivityViewModel(private val activityRepository : IActivityReposito
     }
 
     fun postNewActivity(
-        activityTitle : String,
-        description : String,
+        activityTitle: String,
+        description: String,
         costPerIndividual: Int,
         costPerGroup: Int,
-        groupSize : Int,
-        pictures : List<Pair<String, InputStream>>,
-        activityDate : EventDate,
-        startTime : EventTime,
-        endTime : EventTime
-    )
-    {
+        groupSize: Int,
+        pictures: List<Pair<String, InputStream>>,
+        activityDate: EventDate,
+        startTime: EventTime,
+        endTime: EventTime
+    ) {
         viewModelScope.launch {
-            try
-            {
+            try {
                 val response = activityRepository.postNewUserActivity(
                     activityTitle,
                     description,
@@ -191,9 +161,7 @@ class CreateActivityViewModel(private val activityRepository : IActivityReposito
                     response.isSuccessful,
                     if (response.isSuccessful) "Activity successfully created!" else "Oops, something went wrong"
                 )
-            }
-            catch (e : Exception)
-            {
+            } catch (e: Exception) {
                 Log.d(logTag, "activityRepository.postNewUserActivity - exception:\n $e")
                 postNewUserActivityResponse.value = PostNewUserActivityResponse(
                     false,

@@ -37,11 +37,10 @@ import java.io.File
 import java.io.InputStream
 
 @RunWith(JUnit4::class)
-class ActivityRepositoryTest
-{
+class ActivityRepositoryTest {
     private var mockWebServer = MockWebServer()
-    private lateinit var mockRetrofitUserService : IUserApiService
-    private lateinit var mockRetrofitActivityService : IActivityApiService
+    private lateinit var mockRetrofitUserService: IUserApiService
+    private lateinit var mockRetrofitActivityService: IActivityApiService
     private val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
 
     private val mockFirebaseAuth = Mockito.mock(FirebaseAuth::class.java)
@@ -49,15 +48,14 @@ class ActivityRepositoryTest
     private val mockFirebaseUser = Mockito.mock(FirebaseUser::class.java)
     private val mockFirebaseUserUid = "aset23q45346457sdfhrtu5r"
 
-    private lateinit var activityRepository : IActivityRepository
+    private lateinit var activityRepository: IActivityRepository
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @get:Rule
     val coroutineRule = MainCoroutineRule()
 
     @Before
-    fun setUp()
-    {
+    fun setUp() {
         Mockito.`when`(mockFirebaseAuth.currentUser).thenReturn(mockFirebaseUser)
         Mockito.`when`(mockFirebaseUser?.uid).thenReturn(mockFirebaseUserUid)
 
@@ -65,10 +63,10 @@ class ActivityRepositoryTest
         println("Webserver has successfully started for UserRepository test...")
 
         mockRetrofitUserService = Retrofit.Builder()
-                .addConverterFactory(MoshiConverterFactory.create(moshi))
-                .baseUrl(mockWebServer.url("/")) // note the URL is different from production one
-                .build()
-                .create(IUserApiService::class.java)
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .baseUrl(mockWebServer.url("/")) // note the URL is different from production one
+            .build()
+            .create(IUserApiService::class.java)
 
         mockRetrofitActivityService = Retrofit.Builder()
             .addConverterFactory(MoshiConverterFactory.create(moshi))
@@ -80,7 +78,13 @@ class ActivityRepositoryTest
 
         // Important to initialize the user repository here since the mockRetrofitUserService needs to be create beforehand
         activityRepository =
-            Mockito.spy(ActivityRepository(mockFirebaseAuth, mockRetrofitUserService, mockRetrofitActivityService))
+            Mockito.spy(
+                ActivityRepository(
+                    mockFirebaseAuth,
+                    mockRetrofitUserService,
+                    mockRetrofitActivityService
+                )
+            )
 
         // Mock all log calls
         mockkStatic(Log::class)
@@ -94,8 +98,7 @@ class ActivityRepositoryTest
     }
 
     @After
-    fun teardown()
-    {
+    fun teardown() {
         mockWebServer.shutdown()
     }
 
@@ -105,7 +108,7 @@ class ActivityRepositoryTest
         val mockServerResponse = MockResponse().setResponseCode(201)
         mockWebServer.enqueue(mockServerResponse)
 
-        val pictures : MutableList<Pair<String, InputStream>> = ArrayList()
+        val pictures: MutableList<Pair<String, InputStream>> = ArrayList()
 
         val file = File.createTempFile("temp-file", "_temp")
         pictures.add(Pair("png", file.inputStream()))

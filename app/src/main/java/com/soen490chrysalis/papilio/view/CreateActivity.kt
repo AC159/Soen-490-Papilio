@@ -1,7 +1,6 @@
 package com.soen490chrysalis.papilio.view
 
 import android.Manifest
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.icu.util.Calendar
 import android.os.Bundle
@@ -37,25 +36,23 @@ import com.soen490chrysalis.papilio.viewModel.factories.CreateActivityViewModelF
 import java.io.InputStream
 
 
-class CreateActivity : AppCompatActivity()
-{
+class CreateActivity : AppCompatActivity() {
     private val logTag = CreateActivity::class.java.simpleName
     private val PERMISSIONS_REQUEST_LOCATION = 0
-    private lateinit var binding : ActivityCreateActivityBinding
-    private lateinit var createActivityViewModel : CreateActivityViewModel
+    private lateinit var binding: ActivityCreateActivityBinding
+    private lateinit var createActivityViewModel: CreateActivityViewModel
 
     /* Each picture is represented as a pair where the first element is the image file extension
        and the second value is the input stream to that image */
-    private var pictures : MutableList<Pair<String, InputStream>> = ArrayList()
-    private var startTime : EventTime = EventTime(-1, -1)
-    private var endTime : EventTime = EventTime(-1, -1)
+    private var pictures: MutableList<Pair<String, InputStream>> = ArrayList()
+    private var startTime: EventTime = EventTime(-1, -1)
+    private var endTime: EventTime = EventTime(-1, -1)
 
-    private val c : Calendar = Calendar.getInstance()
+    private val c: Calendar = Calendar.getInstance()
     private var activityDate =
         EventDate(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH))
 
-    override fun onCreate(savedInstanceState : Bundle?)
-    {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCreateActivityBinding.inflate(layoutInflater)
         val view = binding.root
@@ -70,8 +67,7 @@ class CreateActivity : AppCompatActivity()
         val actionBar = supportActionBar
 
         // if Action Bar is not null, then put a back button on it as well as put the "User Profile" title on it
-        if (actionBar != null)
-        {
+        if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true)
             actionBar.title = "Create an Activity"
         }
@@ -103,8 +99,7 @@ class CreateActivity : AppCompatActivity()
                 // Callback is invoked after the user selects media items or closes the
                 // photo picker.
 
-                if (uris.size > 5)
-                {
+                if (uris.size > 5) {
                     // Display a snackbar to the user that up to 5 pictures are allowed to be selected
                     // We need to make this check since not all phones support the photo picker
                     Snackbar.make(
@@ -112,9 +107,7 @@ class CreateActivity : AppCompatActivity()
                         "You can select up to 5 pictures!",
                         Snackbar.LENGTH_LONG
                     ).show()
-                }
-                else if (uris.isNotEmpty())
-                {
+                } else if (uris.isNotEmpty()) {
                     pictures.clear()
 
                     Log.d(logTag, "Photo picker: # of pictures selected: ${uris.size}")
@@ -122,8 +115,7 @@ class CreateActivity : AppCompatActivity()
 
                     val builder = SpannableStringBuilder()
 
-                    for (uri in uris)
-                    {
+                    for (uri in uris) {
                         Log.d(logTag, "Image uri: $uri")
 
                         val cursor = contentResolver.query(
@@ -144,19 +136,16 @@ class CreateActivity : AppCompatActivity()
                         builder.append(spannableString).append("\n")
 
                         val inputStream = contentResolver.openInputStream(uri)
-                        if (inputStream != null)
-                        {
+                        if (inputStream != null) {
                             println("Number of bytes in the file: ${inputStream.available()}")
                             val tokens = fileName?.split(".")
-                            val fileExtension : String = tokens?.get(tokens.size - 1) ?: "jpg"
+                            val fileExtension: String = tokens?.get(tokens.size - 1) ?: "jpg"
                             pictures.add(Pair(fileExtension, inputStream))
                         }
                     }
                     binding.chosenFilesTv.visibility = View.VISIBLE
                     binding.chosenFilesTv.text = builder
-                }
-                else
-                {
+                } else {
                     Log.d(logTag, "Photo picker: no pictures selected")
                 }
             }
@@ -168,8 +157,7 @@ class CreateActivity : AppCompatActivity()
         }
 
         binding.eventLocation.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus && !isPermissionGranted(Manifest.permission.ACCESS_FINE_LOCATION))
-            {
+            if (hasFocus && !isPermissionGranted(Manifest.permission.ACCESS_FINE_LOCATION)) {
                 ActivityCompat.requestPermissions(
                     this,
                     arrayOf(
@@ -183,24 +171,22 @@ class CreateActivity : AppCompatActivity()
 
         binding.eventLocation.addTextChangedListener {
 
-            val userAddress : String = binding.eventLocation.text.toString()
+            val userAddress: String = binding.eventLocation.text.toString()
 
             /* We will only ask mapbox to give us address suggestions once the user has put
                enough text because otherwise the suggestions are not accurate and we are wasting
                API calls */
-            if (userAddress.length >= 15)
-            {
-                val query : Query? = Query.create(userAddress)
+            if (userAddress.length >= 15) {
+                val query: Query? = Query.create(userAddress)
 
-                if (query != null)
-                {
+                if (query != null) {
                     createActivityViewModel.getMapBoxAddressSuggestions(query)
                 }
             }
         }
 
         createActivityViewModel.activityAddressSuggestions.observe(this, Observer<List<String>> {
-            val adapter : ArrayAdapter<String> =
+            val adapter: ArrayAdapter<String> =
                 ArrayAdapter(this, android.R.layout.simple_list_item_1, it)
 
             binding.eventLocation.setAdapter(adapter)
@@ -224,51 +210,40 @@ class CreateActivity : AppCompatActivity()
     }
 
     @Suppress("SameParameterValue")
-    private fun isPermissionGranted(permission : String) : Boolean
-    {
+    private fun isPermissionGranted(permission: String): Boolean {
         return ContextCompat.checkSelfPermission(
             this, permission
         ) == PackageManager.PERMISSION_GRANTED
     }
 
-    private fun activityDateCallback(date : EventDate)
-    {
+    private fun activityDateCallback(date: EventDate) {
         activityDate = date
         binding.selectDateBtn.text =
             "${activityDate.month + 1}/${activityDate.day}/${activityDate.year}"
     }
 
-    private fun startTimeCallback(time : EventTime)
-    {
+    private fun startTimeCallback(time: EventTime) {
         startTime = time
-        if (startTime.minute == 0)
-        {
+        if (startTime.minute == 0) {
             binding.selectStartTimeBtn.text = "${startTime.hourOfDay}h${startTime.minute}0"
-        }
-        else
-        {
+        } else {
             binding.selectStartTimeBtn.text = "${startTime.hourOfDay}h${startTime.minute}"
         }
     }
 
-    private fun endTimeCallback(time : EventTime)
-    {
+    private fun endTimeCallback(time: EventTime) {
         endTime = time
-        if (endTime.minute == 0)
-        {
+        if (endTime.minute == 0) {
             binding.selectEndTimeBtn.text = "${endTime.hourOfDay}h${endTime.minute}0"
-        }
-        else
-        {
+        } else {
             binding.selectEndTimeBtn.text = "${endTime.hourOfDay}h${endTime.minute}"
         }
     }
 
-    private fun handleUserInputValidation()
-    {
-        val activityTitle : String = binding.eventTitle.text.toString()
-        val description : String = binding.eventDescription.text.toString()
-        val maxNbrOfParticipants : String = binding.eventMaxNumberParticipants.text.toString()
+    private fun handleUserInputValidation() {
+        val activityTitle: String = binding.eventTitle.text.toString()
+        val description: String = binding.eventDescription.text.toString()
+        val maxNbrOfParticipants: String = binding.eventMaxNumberParticipants.text.toString()
         val individualCost: String = binding.eventIndividualCost.text.toString()
         val groupCost: String = binding.eventGroupCost.text.toString()
 
@@ -295,11 +270,11 @@ class CreateActivity : AppCompatActivity()
 
         val nbrOfIndividualCostValidation =
             createActivityViewModel.validateActivityIndividualCost(individualCost)
-        binding.eventIndividualCost.error = individualCost
+        binding.eventIndividualCost.error = nbrOfIndividualCostValidation
 
         val nbrOfGroupCostValidation =
             createActivityViewModel.validateActivityGroupCost(groupCost)
-        binding.eventGroupCost.error = groupCost
+        binding.eventGroupCost.error = nbrOfGroupCostValidation
 
         val picturesValidation =
             createActivityViewModel.validateActivityPictureUris(pictures)
@@ -309,11 +284,10 @@ class CreateActivity : AppCompatActivity()
         binding.eventLocation.error = addressValidation
 
         if (titleValidation == null && descriptionValidation == null && nbrOfParticipantsValidation == null
-                && nbrOfIndividualCostValidation == null && nbrOfGroupCostValidation == null
-                && picturesValidation == null && addressValidation == null && validateStartTime == null
-                && validateEndTime == null && dateValidation == null
-        )
-        {
+            && nbrOfIndividualCostValidation == null && nbrOfGroupCostValidation == null
+            && picturesValidation == null && addressValidation == null && validateStartTime == null
+            && validateEndTime == null && dateValidation == null
+        ) {
             val spec =
                 CircularProgressIndicatorSpec(
                     this, null, 0,
@@ -341,20 +315,16 @@ class CreateActivity : AppCompatActivity()
     }
 
     // Utility function that displays a snackbar in case of success/errors
-    private fun displaySnackBar(coordinatorLayout : CoordinatorLayout, msg : String)
-    {
+    private fun displaySnackBar(coordinatorLayout: CoordinatorLayout, msg: String) {
         Snackbar.make(coordinatorLayout, msg, Snackbar.LENGTH_LONG).show()
         binding.createActivityBtn.icon = null
         binding.createActivityBtn.isEnabled = true // allow the user to make another request
     }
 
     // This is the function that's called when the back button on the action bar is pressed
-    override fun onOptionsItemSelected(item : MenuItem) : Boolean
-    {
-        when (item.itemId)
-        {
-            android.R.id.home ->
-            {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
                 finish()
                 return true
             }

@@ -82,32 +82,32 @@ class CreateActivityViewModelTest
     }
 
     //Todo: Uncomment went the validation for individual cost and group cost works correctly
-//    @Test
-//    fun validateActivityindividualCost()
-//    {
-//        var result =
-//            createActivityViewModel.validateActivityIndividualCost("not a number!")
-//        assert(result == "Not a number!")
-//
-//        result = createActivityViewModel.validateActivityIndividualCost("-1")
-//        assert(result == "Number of participants must be greater than or equal to 0!")
-//
-//        result = createActivityViewModel.validateActivityIndividualCost("5")
-//        assert(result == null)
-//    }
-//    @Test
-//    fun validateActivityGroupCost()
-//    {
-//        var result =
-//            createActivityViewModel.validateActivityGroupCost("not a number!")
-//        assert(result == "Not a number!")
-//
-//        result = createActivityViewModel.validateActivityGroupCost("-1")
-//        assert(result == "Number of participants must be greater than or equal to 0!")
-//
-//        result = createActivityViewModel.validateActivityGroupCost("10")
-//        assert(result == null)
-//    }
+    @Test
+    fun validateActivityindividualCost()
+    {
+        var result =
+            createActivityViewModel.validateActivityIndividualCost("not a number!")
+        assert(result == "Not a number!")
+
+        result = createActivityViewModel.validateActivityIndividualCost("-1")
+        assert(result == "Number of participants must be greater than or equal to 0!")
+
+        result = createActivityViewModel.validateActivityIndividualCost("5")
+        assert(result == null)
+    }
+    @Test
+    fun validateActivityGroupCost()
+    {
+        var result =
+            createActivityViewModel.validateActivityGroupCost("not a number!")
+        assert(result == "Not a number!")
+
+        result = createActivityViewModel.validateActivityGroupCost("-1")
+        assert(result == "Number of participants must be greater than or equal to 0!")
+
+        result = createActivityViewModel.validateActivityGroupCost("10")
+        assert(result == null)
+    }
 
     @Test
     fun validateActivityPictureUris()

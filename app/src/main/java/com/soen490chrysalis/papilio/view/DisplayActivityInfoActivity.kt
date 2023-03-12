@@ -115,8 +115,7 @@ class DisplayActivityInfoActivity : AppCompatActivity() {
         val mapView : MapView = binding.mapView
         val infoContact: Button = binding.infoContact
         val infoContactTitle: TextView = binding.infoContactTitle
-        
-        val bundle: Bundle? = intent.extras
+
         val title = bundle.getString("title")
         val description = bundle.getString("description")
         val individualCost = bundle.getString("individualCost")

@@ -30,6 +30,7 @@ class DisplayActivityInfoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityDisplayActivityInfoBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        val bundle: Bundle? = intent.extras
 
         // Create Action Bar val so we can 1) display it with a proper title and 2) put a working back button on it
         val actionBar = supportActionBar
@@ -54,7 +55,7 @@ class DisplayActivityInfoActivity : AppCompatActivity() {
         val infoImages4: ImageView = binding.infoImageView0
         val mapView: MapView = binding.mapView
 
-        val bundle: Bundle? = intent.extras
+
         val title = bundle!!.getString("title")
         val description = bundle.getString("description")
         val individualCost = bundle.getString("individualCost")

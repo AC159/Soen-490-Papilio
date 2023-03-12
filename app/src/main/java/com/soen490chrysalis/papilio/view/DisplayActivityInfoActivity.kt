@@ -64,9 +64,8 @@ class DisplayActivityInfoActivity : AppCompatActivity()
         val groupCost = bundle.getString("groupCost")
         val location = bundle.getString("location")
         val hasImages = bundle.getBoolean("images")
+        val contactString = bundle.getString("contact")
 
-        val contact = SpannableString(bundle.getString("contact"))
-        contact.setSpan(UnderlineSpan(), 0, contact.length, 0)
 
         if (hasImages)
         {
@@ -113,7 +112,9 @@ class DisplayActivityInfoActivity : AppCompatActivity()
         infoAddress.text = location
 
 
-        if(contact != null){
+        if(contactString != null){
+            val contact = SpannableString(contactString)
+            contact.setSpan(UnderlineSpan(), 0, contact.length, 0)
             infoContact.text = contact
         }else{
             infoContact.isVisible = false
@@ -121,9 +122,10 @@ class DisplayActivityInfoActivity : AppCompatActivity()
         }
 
         infoContact.setOnClickListener {
+
             val callIntent: Intent = Intent(Intent.ACTION_SEND).apply{
                 type = "text/plain"
-                putExtra(Intent.EXTRA_EMAIL, arrayOf(contact))
+                putExtra(Intent.EXTRA_EMAIL, arrayOf(contactString))
             }
             startActivity(callIntent)
         }

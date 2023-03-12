@@ -9,13 +9,11 @@ import com.soen490chrysalis.papilio.databinding.ActivityMainBinding
 import com.soen490chrysalis.papilio.view.chat.ChatFragment
 
 
-class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListener
-{
-    var bottomNavigationView : NavigationBarView? = null
-    private lateinit var binding : ActivityMainBinding
+class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListener {
+    var bottomNavigationView: NavigationBarView? = null
+    private lateinit var binding: ActivityMainBinding
 
-    override fun onCreate(savedInstanceState : Bundle?)
-    {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -28,20 +26,16 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
     }
 
     // Function that loads in a page/fragment on the navigation bar when you tap the respective button
-    override fun onNavigationItemSelected(item : MenuItem) : Boolean
-    {
-        when (item.itemId)
-        {
-            R.id.home       -> supportFragmentManager.beginTransaction()
-                    .replace(binding.fragmentContainerView.id, HomeFragment()).commit()
-            R.id.browse     -> supportFragmentManager.beginTransaction()
-                    .replace(binding.fragmentContainerView.id, BrowseFragment()).commit()
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.home -> supportFragmentManager.beginTransaction()
+                .replace(binding.fragmentContainerView.id, HomeFragment()).commit()
             R.id.activities -> supportFragmentManager.beginTransaction()
-                    .replace(binding.fragmentContainerView.id, ActivitiesFragment()).commit()
+                .replace(binding.fragmentContainerView.id, ActivitiesFragment()).commit()
             R.id.chats -> supportFragmentManager.beginTransaction()
                     .replace(binding.fragmentContainerView.id, ChatFragment()).commit()
-            R.id.account    -> supportFragmentManager.beginTransaction()
-                    .replace(binding.fragmentContainerView.id, AccountMenuFragment()).commit()
+            R.id.account -> supportFragmentManager.beginTransaction()
+                .replace(binding.fragmentContainerView.id, AccountMenuFragment()).commit()
         }
 
         return true

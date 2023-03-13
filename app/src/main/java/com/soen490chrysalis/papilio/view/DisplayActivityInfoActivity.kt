@@ -80,7 +80,7 @@ class DisplayActivityInfoActivity : AppCompatActivity() {
 
         // we need to determine if the user has already joined this activity or not and display the text button accordingly
         // Disable the 'join' button while we process the request & display a progress indicator
-        DisableButtonAndShowProgressIndicator(binding.joinButton)
+        DisableButtonAndShowProgressIndicator(binding.joinButton as MaterialButton)
         activityInfoViewModel.checkActivityMember(activity_id)
 
         activityInfoViewModel.checkActivityMemberResponse.observe(this) {
@@ -90,12 +90,12 @@ class DisplayActivityInfoActivity : AppCompatActivity() {
             } else displaySnackBar(it.errorMessage)
 
             // re-enable the 'join' button
-            EnableButtonAndRemoveProgressIndicator(binding.joinButton)
+            EnableButtonAndRemoveProgressIndicator(binding.joinButton as MaterialButton)
         }
 
         // Set an click listener on the 'join' button of the activity
         binding.joinButton.setOnClickListener {
-            DisableButtonAndShowProgressIndicator(binding.joinButton)
+            DisableButtonAndShowProgressIndicator(binding.joinButton as MaterialButton)
             if (binding.joinButton.text.toString()
                     .lowercase() == "join"
             ) activityInfoViewModel.joinActivity(activity_id)
@@ -104,7 +104,7 @@ class DisplayActivityInfoActivity : AppCompatActivity() {
 
         // Listen to the API response when the user wants to join an activity
         activityInfoViewModel.jonActivityResponse.observe(this) {
-            EnableButtonAndRemoveProgressIndicator(binding.joinButton)
+            EnableButtonAndRemoveProgressIndicator(binding.joinButton as MaterialButton)
 
             // Change the text of the button if the user successfully joined the activity
             if (it.isSuccess) binding.joinButton.text = "Leave"
@@ -114,7 +114,7 @@ class DisplayActivityInfoActivity : AppCompatActivity() {
 
         // Listen to the API response when the user wants to leave an activity
         activityInfoViewModel.leaveActivityResponse.observe(this) {
-            EnableButtonAndRemoveProgressIndicator(binding.joinButton)
+            EnableButtonAndRemoveProgressIndicator(binding.joinButton as MaterialButton)
 
             // Change the text of the button if the user successfully left the activity
             if (it.isSuccess) binding.joinButton.text = "Join"
@@ -122,17 +122,6 @@ class DisplayActivityInfoActivity : AppCompatActivity() {
             displaySnackBar(it.errorMessage)
         }
 
-        val infoTile: TextView = binding.infoTitle
-        val infoDescription: TextView = binding.infoDescription
-        val infoIndividualCost: TextView = binding.individualCost
-        val infoGroupCost: TextView = binding.groupCost
-        val infoAddress: TextView = binding.infoLocation
-        val infoImages0: ImageView = binding.infoImageView0
-        val infoImages1: ImageView = binding.infoImageView1
-        val infoImages2: ImageView = binding.infoImageView2
-        val infoImages3: ImageView = binding.infoImageView3
-        val infoImages4: ImageView = binding.infoImageView4
-        val mapView: MapView = binding.mapView
         val infoContact: Button = binding.infoContact
 
         val title = bundle.getString("title")

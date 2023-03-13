@@ -6,6 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.firebase.auth.FirebaseAuth
 import com.soen490chrysalis.papilio.R
 import com.soen490chrysalis.papilio.databinding.AccountMenuFragmentBinding
 import kotlinx.android.synthetic.main.account_menu_fragment.*
@@ -42,8 +45,18 @@ class AccountMenuFragment : Fragment()
         }
 
         logoutButton?.setOnClickListener{
+            //Firebase sign out
+            FirebaseAuth.getInstance().signOut()
+
+            //Google sign out
+            val googleSignInClient = GoogleSignIn.getClient(requireContext(), GoogleSignInOptions.DEFAULT_SIGN_IN)
+            googleSignInClient.signOut()
+
             val intent = Intent(this.activity, LoginActivity::class.java)
             startActivity(intent)
+
+            //prevents user from using "back" to go to previous screen
+            activity?.finish()
         }
         return view
     }

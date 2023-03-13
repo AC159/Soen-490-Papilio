@@ -66,6 +66,14 @@ class MockUserRepository : IUserRepository
         TODO("Not yet implemented")
     }
 
+    override suspend fun getJoinedActivities(): Response<JoinedActivitiesResponse> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getCreatedActivities(): Response<FavoriteActivitiesResponse> {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun updateUser(
         variableMap : Map<String, Any>
     ) : Response<Void>

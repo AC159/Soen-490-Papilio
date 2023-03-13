@@ -163,7 +163,7 @@ class UpcomingActivitiesFragment : Fragment() {
             }
 
         })
-        
+
         return view
     }
 

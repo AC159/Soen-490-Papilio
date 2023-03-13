@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/coordinator_layout_display_activity_info"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinator_layout_display_activity_info"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -15,8 +15,8 @@
             android:id="@+id/scrollView4"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:overScrollMode="never"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:overScrollMode="never">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -262,9 +262,9 @@
                             android:layout_width="30dp"
                             android:layout_height="30dp"
                             android:layout_marginStart="10dp"
+                            android:background="@drawable/heart_regular"
                             android:clickable="true"
-                            android:focusable="true"
-                            android:background="@drawable/heart_regular" />
+                            android:focusable="true" />
 
                     </LinearLayout>
 
@@ -327,12 +327,12 @@
                         android:id="@+id/info_Contact"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:backgroundTint="@color/orange"
                         android:layout_marginLeft="5dp"
+                        android:backgroundTint="@color/orange"
                         android:text="Contact"
                         android:textColor="@color/white"
                         android:visibility="visible"
-                        app:cornerRadius="100dp"/>
+                        app:cornerRadius="100dp" />
 
                 </LinearLayout>
 
@@ -372,6 +372,6 @@
             </LinearLayout>
 
 
-    </ScrollView>
-   </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

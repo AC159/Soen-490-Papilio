@@ -27,26 +27,27 @@ import com.mapbox.search.result.SearchSuggestion
 import com.soen490chrysalis.papilio.R
 import com.soen490chrysalis.papilio.databinding.ActivityDisplayActivityInfoBinding
 import com.soen490chrysalis.papilio.viewModel.DisplayActivityViewModel
-import com.soen490chrysalis.papilio.viewModel.HomeFragmentViewModel
 import com.soen490chrysalis.papilio.viewModel.factories.DisplayActivityViewModelFactory
 import com.soen490chrysalis.papilio.viewModel.ActivityInfoViewModel
 import com.soen490chrysalis.papilio.viewModel.factories.ActivityInfoViewModelFactory
 
 class DisplayActivityInfoActivity : AppCompatActivity() {
     private val logTag = DisplayActivityInfoActivity::class.java.simpleName
-    private lateinit var displayActivityViewModel : DisplayActivityViewModel
-    private lateinit var binding : ActivityDisplayActivityInfoBinding
-    private var isActivityFavorited : Boolean = false
-    private lateinit var favoriteButton : ImageButton
+    private lateinit var displayActivityViewModel: DisplayActivityViewModel
+    private lateinit var binding: ActivityDisplayActivityInfoBinding
+    private var isActivityFavorited: Boolean = false
+    private lateinit var favoriteButton: ImageButton
     private lateinit var activityInfoViewModel: ActivityInfoViewModel
 
-    override fun onCreate(savedInstanceState : Bundle?)
-    {
+    override fun onCreate(savedInstanceState: Bundle?) {
         val displayActivityViewModelFactory = DisplayActivityViewModelFactory()
-        displayActivityViewModel = ViewModelProvider(this, displayActivityViewModelFactory)[DisplayActivityViewModel::class.java]
+        displayActivityViewModel = ViewModelProvider(
+            this,
+            displayActivityViewModelFactory
+        )[DisplayActivityViewModel::class.java]
         super.onCreate(savedInstanceState)
         binding = ActivityDisplayActivityInfoBinding.inflate(layoutInflater)
-        
+
         setContentView(binding.root)
 
         // Create Action Bar val so we can 1) display it with a proper title and 2) put a working back button on it
@@ -58,17 +59,17 @@ class DisplayActivityInfoActivity : AppCompatActivity() {
             actionBar.title = "Activity Info"
         }
 
-        val infoTile : TextView = binding.infoTitle
-        val infoDescription : TextView = binding.infoDescription
-        val infoIndividualCost : TextView = binding.individualCost
-        val infoGroupCost : TextView = binding.groupCost
-        val infoAddress : TextView = binding.infoLocation
-        val infoImages0 : ImageView = binding.infoImageView0
-        val infoImages1 : ImageView = binding.infoImageView1
-        val infoImages2 : ImageView = binding.infoImageView2
-        val infoImages3 : ImageView = binding.infoImageView4
-        val infoImages4 : ImageView = binding.infoImageView0
-        val mapView : MapView = binding.mapView
+        val infoTile: TextView = binding.infoTitle
+        val infoDescription: TextView = binding.infoDescription
+        val infoIndividualCost: TextView = binding.individualCost
+        val infoGroupCost: TextView = binding.groupCost
+        val infoAddress: TextView = binding.infoLocation
+        val infoImages0: ImageView = binding.infoImageView0
+        val infoImages1: ImageView = binding.infoImageView1
+        val infoImages2: ImageView = binding.infoImageView2
+        val infoImages3: ImageView = binding.infoImageView4
+        val infoImages4: ImageView = binding.infoImageView0
+        val mapView: MapView = binding.mapView
         favoriteButton = binding.favoriteButton
         activityInfoViewModel = ViewModelProvider(
             this,
@@ -136,23 +137,22 @@ class DisplayActivityInfoActivity : AppCompatActivity() {
             displayActivityViewModel.checkActivityFavorited(activityId)
         }
 
-        displayActivityViewModel.checkActivityFavoritedResponse.observe(this, androidx.lifecycle.Observer {
-            isActivityFavorited = it.isActivityFound
-            changeFavoriteButton()
-            favoriteButton.visibility = View.VISIBLE
-        })
+        displayActivityViewModel.checkActivityFavoritedResponse.observe(
+            this,
+            androidx.lifecycle.Observer {
+                isActivityFavorited = it.isActivityFound
+                changeFavoriteButton()
+                favoriteButton.visibility = View.VISIBLE
+            })
 
-        favoriteButton.setOnClickListener{
-            if(!isActivityFavorited)
-            {
+        favoriteButton.setOnClickListener {
+            if (!isActivityFavorited) {
                 if (activityId != null) {
                     isActivityFavorited = true
                     displayActivityViewModel.addFavoriteActivity(activityId)
                     changeFavoriteButton()
                 }
-            }
-            else
-            {
+            } else {
                 if (activityId != null) {
                     isActivityFavorited = false
                     displayActivityViewModel.removeFavoriteActivity(activityId)
@@ -315,14 +315,10 @@ class DisplayActivityInfoActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    fun changeFavoriteButton()
-    {
-        if(isActivityFavorited)
-        {
+    fun changeFavoriteButton() {
+        if (isActivityFavorited) {
             favoriteButton.setBackgroundResource(R.drawable.heart_filled)
-        }
-        else
-        {
+        } else {
             favoriteButton.setBackgroundResource(R.drawable.heart_regular)
         }
     }

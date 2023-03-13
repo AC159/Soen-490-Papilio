@@ -32,11 +32,10 @@ private const val ARG_PARAM2 = "param2"
  * Use the [PapilioFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class FavoriteActivitiesFragment : Fragment()
-{
+class FavoriteActivitiesFragment : Fragment() {
     // TODO: Rename and change types of parameters
-    private var param1 : String? = null
-    private var param2 : String? = null
+    private var param1: String? = null
+    private var param2: String? = null
 
     private lateinit var favoriteActivitiesViewModel: FavoriteActivitiesViewModel
 
@@ -45,8 +44,7 @@ class FavoriteActivitiesFragment : Fragment()
     private lateinit var layoutActivityList: ScrollView
     private lateinit var activityContainer: LinearLayout
 
-    override fun onCreate(savedInstanceState : Bundle?)
-    {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
@@ -54,7 +52,7 @@ class FavoriteActivitiesFragment : Fragment()
         }
     }
 
-    private var _binding : FragmentFavoriteActivitiesBinding? = null
+    private var _binding: FragmentFavoriteActivitiesBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -77,7 +75,10 @@ class FavoriteActivitiesFragment : Fragment()
 
         val favoriteActivitiesVMFactory = FavoriteActivitiesViewModelFactory()
         favoriteActivitiesViewModel =
-            ViewModelProvider(this, favoriteActivitiesVMFactory)[FavoriteActivitiesViewModel::class.java]
+            ViewModelProvider(
+                this,
+                favoriteActivitiesVMFactory
+            )[FavoriteActivitiesViewModel::class.java]
 
         // Fetch all activities favorited by the user
         favoriteActivitiesViewModel.getFavoriteActivities()
@@ -124,7 +125,8 @@ class FavoriteActivitiesFragment : Fragment()
 
                         activityBoxBinding.activityBox.setOnClickListener {
 
-                            val intent = Intent(getActivity(), DisplayActivityInfoActivity::class.java)
+                            val intent =
+                                Intent(getActivity(), DisplayActivityInfoActivity::class.java)
                             intent.putExtra("id", activity.id)
                             intent.putExtra("title", activity.title)
                             intent.putExtra("description", activity.description)
@@ -171,9 +173,7 @@ class FavoriteActivitiesFragment : Fragment()
     }
 
 
-
-    companion object
-    {
+    companion object {
         /**
          * Use this factory method to create a new instance of
          * this fragment using the provided parameters.
@@ -184,7 +184,7 @@ class FavoriteActivitiesFragment : Fragment()
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1 : String, param2 : String) =
+        fun newInstance(param1: String, param2: String) =
             ActivitiesFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)

@@ -50,7 +50,7 @@ class ActivitiesFragment : Fragment()
         _binding = FragmentMyActivitiesBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        val adapter=ViewPagerAdapter(activity!!.supportFragmentManager)
+        val adapter=ViewPagerAdapter(requireActivity().supportFragmentManager)
         adapter.addFragment(UpcomingActivitiesFragment(),"Upcoming")
         adapter.addFragment(FavoriteActivitiesFragment(),"Favorites")
         binding.viewPager.adapter=adapter

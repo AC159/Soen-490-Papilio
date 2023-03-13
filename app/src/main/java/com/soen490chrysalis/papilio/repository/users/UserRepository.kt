@@ -5,10 +5,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.*
 import com.soen490chrysalis.papilio.services.network.*
 import com.soen490chrysalis.papilio.services.network.requests.*
-import com.soen490chrysalis.papilio.services.network.responses.CheckFavoriteResponse
-import com.soen490chrysalis.papilio.services.network.responses.FavoriteActivitiesResponse
-import com.soen490chrysalis.papilio.services.network.responses.FavoriteResponse
-import com.soen490chrysalis.papilio.services.network.responses.GetUserByFirebaseIdResponse
+import com.soen490chrysalis.papilio.services.network.responses.*
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
@@ -238,6 +235,17 @@ class UserRepository(
         }
     }
 
+    override suspend fun getCreatedActivities(): Response<FavoriteActivitiesResponse> {
+        return withContext(coroutineDispatcher) {
+            val firebaseId = firebaseAuth.currentUser!!.uid
+
+            val response = userService.getUserActivities(firebaseId)
+
+            Log.d(logTag, "getCreatedActivities: $response")
+            return@withContext response
+        }
+    }
+
     override suspend fun getFavoriteActivities(): Response<FavoriteActivitiesResponse> {
         return withContext(coroutineDispatcher) {
             val firebaseId = firebaseAuth.currentUser!!.uid
@@ -245,6 +253,17 @@ class UserRepository(
             val response = userService.getUserFavoriteActivities(firebaseId)
 
             Log.d(logTag, "getFavoriteActivities: $response")
+            return@withContext response
+        }
+    }
+
+    override suspend fun getJoinedActivities(): Response<JoinedActivitiesResponse> {
+        return withContext(coroutineDispatcher) {
+            val firebaseId = firebaseAuth.currentUser!!.uid
+
+            val response = userService.getUserJoinedActivities(firebaseId)
+
+            Log.d(logTag, "getJoinedActivities: $response")
             return@withContext response
         }
     }

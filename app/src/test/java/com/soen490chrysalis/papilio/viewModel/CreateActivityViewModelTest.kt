@@ -81,9 +81,8 @@ class CreateActivityViewModelTest
         assert(result == null)
     }
 
-    //Todo: Uncomment went the validation for individual cost and group cost works correctly
     @Test
-    fun validateActivityindividualCost()
+    fun validateActivityIndividualCost()
     {
         var result =
             createActivityViewModel.validateActivityIndividualCost("not a number!")
@@ -95,6 +94,7 @@ class CreateActivityViewModelTest
         result = createActivityViewModel.validateActivityIndividualCost("5")
         assert(result == null)
     }
+
     @Test
     fun validateActivityGroupCost()
     {
@@ -165,13 +165,13 @@ class CreateActivityViewModelTest
         val addressSuggestions = ArrayList<String>()
         createActivityViewModel.activityAddressSuggestions.value = addressSuggestions
         var addressValidation = createActivityViewModel.validateActivityAddress()
-        assert( addressValidation == "You must select an address from the dropdown!" )
+        assert(addressValidation == "You must select an address from the dropdown!")
 
         addressSuggestions.add("some mapbox address")
         createActivityViewModel.activityAddressSuggestions.value = addressSuggestions
         addressValidation = createActivityViewModel.validateActivityAddress()
 
-        assert( addressValidation == null )
+        assert(addressValidation == null)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)

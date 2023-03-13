@@ -36,8 +36,8 @@ import java.io.InputStream
 class ActivityRepositoryTest
 {
     private var mockWebServer = MockWebServer()
-    private lateinit var mockRetrofitUserService: IUserApiService
-    private lateinit var mockRetrofitActivityService: IActivityApiService
+    private lateinit var mockRetrofitUserService : IUserApiService
+    private lateinit var mockRetrofitActivityService : IActivityApiService
     private val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
 
     private val mockFirebaseAuth = Mockito.mock(FirebaseAuth::class.java)
@@ -45,7 +45,7 @@ class ActivityRepositoryTest
     private val mockFirebaseUser = Mockito.mock(FirebaseUser::class.java)
     private val mockFirebaseUserUid = "aset23q45346457sdfhrtu5r"
 
-    private lateinit var activityRepository: IActivityRepository
+    private lateinit var activityRepository : IActivityRepository
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @get:Rule
@@ -61,16 +61,16 @@ class ActivityRepositoryTest
         println("Webserver has successfully started for ActivityRepository test...")
 
         mockRetrofitUserService = Retrofit.Builder()
-            .addConverterFactory(MoshiConverterFactory.create(moshi))
-            .baseUrl(mockWebServer.url("/")) // note the URL is different from production one
-            .build()
-            .create(IUserApiService::class.java)
+                .addConverterFactory(MoshiConverterFactory.create(moshi))
+                .baseUrl(mockWebServer.url("/")) // note the URL is different from production one
+                .build()
+                .create(IUserApiService::class.java)
 
         mockRetrofitActivityService = Retrofit.Builder()
-            .addConverterFactory(MoshiConverterFactory.create(moshi))
-            .baseUrl(mockWebServer.url("/")) // note the URL is different from production one
-            .build()
-            .create(IActivityApiService::class.java)
+                .addConverterFactory(MoshiConverterFactory.create(moshi))
+                .baseUrl(mockWebServer.url("/")) // note the URL is different from production one
+                .build()
+                .create(IActivityApiService::class.java)
 
         println("Instantiated mockRetrofitUserService for UserRepository test!")
 
@@ -107,7 +107,7 @@ class ActivityRepositoryTest
         val mockServerResponse = MockResponse().setResponseCode(201)
         mockWebServer.enqueue(mockServerResponse)
 
-        val pictures: MutableList<Pair<String, InputStream>> = ArrayList()
+        val pictures : MutableList<Pair<String, InputStream>> = ArrayList()
 
         val file = File.createTempFile("temp-file", "_temp")
         pictures.add(Pair("png", file.inputStream()))
@@ -138,50 +138,55 @@ class ActivityRepositoryTest
     fun getAllActivities() = runTest {
 
         val mockServerResponse = MockResponse()
-            .setResponseCode(201)
-            .setBody( "{\n" +
-                    "    \"count\": \"2\",\n" +
-                    "    \"rows\": [\n" +
-                    "    {\n" +
-                    "        \"id\": \"100\",\n" +
-                    "        \"title\": \"some title\",\n" +
-                    "        \"description\": \"some description\",\n" +
-                    "        \"costPerIndividual\": \"10\",\n" +
-                    "        \"costPerGroup\": 40,\n" +
-                    "        \"groupSize\": \"4\",\n" +
-                    "        \"images\": null,\n" +
-                    "        \"startTime\": \"2022-11-14T02:07:02.585Z\",\n" +
-                    "        \"endTime\": \"2022-11-14T02:07:02.585Z\",\n" +
-                    "        \"address\": \"some address\",\n" +
-                    "        \"createdAt\": \"2022-11-14T02:07:02.585Z\",\n" +
-                    "        \"updatedAt\": \"2022-11-14T02:07:02.585Z\",\n" +
-                    "        \"businessId\": null,\n" +
-                    "        \"userId\": \"er43534trt\"\n" +
-                    "    },\n" +
-                    "    {\n" +
-                    "        \"id\": \"101\",\n" +
-                    "        \"title\": \"some title\",\n" +
-                    "        \"description\": \"some description\",\n" +
-                    "        \"costPerIndividual\": \"10\",\n" +
-                    "        \"costPerGroup\": 40,\n" +
-                    "        \"groupSize\": \"4\",\n" +
-                    "        \"images\": null,\n" +
-                    "        \"startTime\": \"2022-11-14T02:07:02.585Z\",\n" +
-                    "        \"endTime\": \"2022-11-14T02:07:02.585Z\",\n" +
-                    "        \"address\": \"some address\",\n" +
-                    "        \"createdAt\": \"2022-11-14T02:07:02.585Z\",\n" +
-                    "        \"updatedAt\": \"2022-11-14T02:07:02.585Z\",\n" +
-                    "        \"businessId\": null,\n" +
-                    "        \"userId\": \"er43534trt\"\n" +
-                    "    }\n" +
-                    "  ],\n" +
-                    " \"totalPages\": \"1\",\n" +
-                    " \"currentPage\": \"1\"\n" +
-                    "}")
+                .setResponseCode(201)
+                .setBody(
+                    "{\n" +
+                            "    \"count\": \"2\",\n" +
+                            "    \"rows\": [\n" +
+                            "    {\n" +
+                            "        \"id\": \"100\",\n" +
+                            "        \"title\": \"some title\",\n" +
+                            "        \"description\": \"some description\",\n" +
+                            "        \"costPerIndividual\": \"10\",\n" +
+                            "        \"costPerGroup\": 40,\n" +
+                            "        \"groupSize\": \"4\",\n" +
+                            "        \"images\": null,\n" +
+                            "        \"startTime\": \"2022-11-14T02:07:02.585Z\",\n" +
+                            "        \"endTime\": \"2022-11-14T02:07:02.585Z\",\n" +
+                            "        \"address\": \"some address\",\n" +
+                            "        \"createdAt\": \"2022-11-14T02:07:02.585Z\",\n" +
+                            "        \"updatedAt\": \"2022-11-14T02:07:02.585Z\",\n" +
+                            "        \"businessId\": null,\n" +
+                            "        \"userId\": \"er43534trt\"\n" +
+                            "    },\n" +
+                            "    {\n" +
+                            "        \"id\": \"101\",\n" +
+                            "        \"title\": \"some title\",\n" +
+                            "        \"description\": \"some description\",\n" +
+                            "        \"costPerIndividual\": \"10\",\n" +
+                            "        \"costPerGroup\": 40,\n" +
+                            "        \"groupSize\": \"4\",\n" +
+                            "        \"images\": null,\n" +
+                            "        \"startTime\": \"2022-11-14T02:07:02.585Z\",\n" +
+                            "        \"endTime\": \"2022-11-14T02:07:02.585Z\",\n" +
+                            "        \"address\": \"some address\",\n" +
+                            "        \"createdAt\": \"2022-11-14T02:07:02.585Z\",\n" +
+                            "        \"updatedAt\": \"2022-11-14T02:07:02.585Z\",\n" +
+                            "        \"businessId\": null,\n" +
+                            "        \"userId\": \"er43534trt\"\n" +
+                            "    }\n" +
+                            "  ],\n" +
+                            " \"totalPages\": \"1\",\n" +
+                            " \"currentPage\": \"1\"\n" +
+                            "}"
+                )
 
         mockWebServer.enqueue(mockServerResponse)
 
-        val response = activityRepository.getAllActivities(Mockito.anyInt().toString(), Mockito.anyInt().toString())
+        val response = activityRepository.getAllActivities(
+            Mockito.anyInt().toString(),
+            Mockito.anyInt().toString()
+        )
 
         advanceUntilIdle()
 
@@ -195,26 +200,28 @@ class ActivityRepositoryTest
     fun getActivity() = runTest {
 
         val mockServerResponse = MockResponse()
-            .setResponseCode(201)
-            .setBody( "{\n" +
-                    "    \"found\": true,\n" +
-                    "    \"activity\": {\n" +
-                    "        \"id\": \"100\",\n" +
-                    "        \"title\": \"some title\",\n" +
-                    "        \"description\": \"some description\",\n" +
-                    "        \"costPerIndividual\": \"10\",\n" +
-                    "        \"costPerGroup\": 40,\n" +
-                    "        \"groupSize\": \"4\",\n" +
-                    "        \"images\": null,\n" +
-                    "        \"startTime\": \"2022-11-14T02:07:02.585Z\",\n" +
-                    "        \"endTime\": \"2022-11-14T02:07:02.585Z\",\n" +
-                    "        \"address\": \"some address\",\n" +
-                    "        \"createdAt\": \"2022-11-14T02:07:02.585Z\",\n" +
-                    "        \"updatedAt\": \"2022-11-14T02:07:02.585Z\",\n" +
-                    "        \"businessId\": null,\n" +
-                    "        \"userId\": \"er43534trt\"\n" +
-                    "    }\n" +
-                    "}")
+                .setResponseCode(201)
+                .setBody(
+                    "{\n" +
+                            "    \"found\": true,\n" +
+                            "    \"activity\": {\n" +
+                            "        \"id\": \"100\",\n" +
+                            "        \"title\": \"some title\",\n" +
+                            "        \"description\": \"some description\",\n" +
+                            "        \"costPerIndividual\": \"10\",\n" +
+                            "        \"costPerGroup\": 40,\n" +
+                            "        \"groupSize\": \"4\",\n" +
+                            "        \"images\": null,\n" +
+                            "        \"startTime\": \"2022-11-14T02:07:02.585Z\",\n" +
+                            "        \"endTime\": \"2022-11-14T02:07:02.585Z\",\n" +
+                            "        \"address\": \"some address\",\n" +
+                            "        \"createdAt\": \"2022-11-14T02:07:02.585Z\",\n" +
+                            "        \"updatedAt\": \"2022-11-14T02:07:02.585Z\",\n" +
+                            "        \"businessId\": null,\n" +
+                            "        \"userId\": \"er43534trt\"\n" +
+                            "    }\n" +
+                            "}"
+                )
 
         mockWebServer.enqueue(mockServerResponse)
 
@@ -232,25 +239,27 @@ class ActivityRepositoryTest
         val queryString = Mockito.anyString()
 
         val mockServerResponse = MockResponse()
-            .setResponseCode(201)
-            .setBody( "{\n" +
-                    "    \"keyword\": \"${queryString}\",\n" +
-                    "    \"count\": \"2\",\n" +
-                    "    \"rows\": [\n" +
-                    "    {\n" +
-                    "        \"id\": \"100\",\n" +
-                    "        \"title\": \"some title\",\n" +
-                    "        \"description\": \"some description\",\n" +
-                    "        \"images\": null\n" +
-                    "    },\n" +
-                    "    {\n" +
-                    "        \"id\": \"100\",\n" +
-                    "        \"title\": \"some title\",\n" +
-                    "        \"description\": \"some description\",\n" +
-                    "        \"images\": null\n" +
-                    "    }\n" +
-                    "  ]\n" +
-                    "}")
+                .setResponseCode(201)
+                .setBody(
+                    "{\n" +
+                            "    \"keyword\": \"${queryString}\",\n" +
+                            "    \"count\": \"2\",\n" +
+                            "    \"rows\": [\n" +
+                            "    {\n" +
+                            "        \"id\": \"100\",\n" +
+                            "        \"title\": \"some title\",\n" +
+                            "        \"description\": \"some description\",\n" +
+                            "        \"images\": null\n" +
+                            "    },\n" +
+                            "    {\n" +
+                            "        \"id\": \"100\",\n" +
+                            "        \"title\": \"some title\",\n" +
+                            "        \"description\": \"some description\",\n" +
+                            "        \"images\": null\n" +
+                            "    }\n" +
+                            "  ]\n" +
+                            "}"
+                )
 
         mockWebServer.enqueue(mockServerResponse)
 

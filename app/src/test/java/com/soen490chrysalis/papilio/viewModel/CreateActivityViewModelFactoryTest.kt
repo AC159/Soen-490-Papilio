@@ -22,7 +22,8 @@ class CreateActivityViewModelFactoryTest
         every { FirebaseAuth.getInstance() } returns firebaseAuthMock
 
         val createActivityViewModelFactory = CreateActivityViewModelFactory()
-        val createActivityViewModel = createActivityViewModelFactory.create(CreateActivityViewModel::class.java)
+        val createActivityViewModel =
+            createActivityViewModelFactory.create(CreateActivityViewModel::class.java)
 
         println(createActivityViewModel.javaClass.simpleName)
         println(CreateActivityViewModel::class.java.simpleName)

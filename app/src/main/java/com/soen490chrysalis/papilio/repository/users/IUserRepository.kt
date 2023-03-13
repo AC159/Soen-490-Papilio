@@ -60,4 +60,12 @@ interface IUserRepository
         emailAddress : String,
         password : String
     ) : Pair<Boolean, String>
+
+    suspend fun getNewChatTokenForUser(firebaseId : String) : String?
+
+    suspend fun addUserToActivity(activity_id : String) : Pair<Boolean, String>
+
+    suspend fun removeUserFromActivity(activity_id : String) : Pair<Boolean, String>
+
+    suspend fun checkActivityMember(activity_id : String) : Triple<Boolean, String, Boolean>
 }

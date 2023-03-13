@@ -120,6 +120,8 @@
     <string name="import_media">Import</string>
     <string name="ex_10">ex: 10</string>
     <string name="maximum_number_of_participants">Maximum number of participants:</string>
+    <string name="cost_for_individual">Individual cost:</string>
+    <string name="cost_for_group">Group cost:</string>
     <string name="description">Description...</string>
     <string name="event_description">Event Description:</string>
     <string name="ex_23h00">ex: 23h00</string>

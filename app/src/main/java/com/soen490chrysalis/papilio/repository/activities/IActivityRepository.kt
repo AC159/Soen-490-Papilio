@@ -20,6 +20,8 @@ interface IActivityRepository
     suspend fun postNewUserActivity(
         activityTitle : String,
         description : String,
+        costPerIndividual : Int,
+        costPerGroup : Int,
         groupSize : Int,
         pictures : List<Pair<String, InputStream>>,
         activityDate : EventDate,
@@ -29,15 +31,15 @@ interface IActivityRepository
     ) : Response<Void>
 
     suspend fun getAllActivities(
-        page: String,
-        size: String
+        page : String,
+        size : String
     ) : Response<ActivityResponse>
 
     suspend fun getActivity(
-        activityId: Number
+        activityId : Number
     ) : Response<SingleActivityResponse>
 
     suspend fun searchActivities(
-        query: String
+        query : String
     ) : Response<SearchActivityResponse>
 }

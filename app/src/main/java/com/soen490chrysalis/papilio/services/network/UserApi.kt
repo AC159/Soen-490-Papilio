@@ -1,12 +1,8 @@
 package com.soen490chrysalis.papilio.services.network
 
 import com.soen490chrysalis.papilio.BuildConfig
-import com.soen490chrysalis.papilio.services.network.responses.CheckFavoriteResponse
-import com.soen490chrysalis.papilio.services.network.responses.FavoriteActivitiesResponse
-import com.soen490chrysalis.papilio.services.network.responses.FavoriteResponse
 import com.soen490chrysalis.papilio.services.network.requests.*
-import com.soen490chrysalis.papilio.services.network.responses.CheckUserIsMemberOfActivityResponse
-import com.soen490chrysalis.papilio.services.network.responses.GetUserByFirebaseIdResponse
+import com.soen490chrysalis.papilio.services.network.responses.*
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.MultipartBody
@@ -51,8 +47,13 @@ interface IUserApiService {
 
     @GET("get/{id}/activities")
     suspend fun getUserActivities(
-        @Path("firebaseId") firebaseId: String?
-    ): Response<GetUserByFirebaseIdResponse>
+        @Path("id") firebaseId: String?
+    ): Response<FavoriteActivitiesResponse>
+
+    @GET("get/joinedActivities/{id}")
+    suspend fun getUserJoinedActivities(
+        @Path("id") firebaseId: String?
+    ): Response<JoinedActivitiesResponse>
 
     @GET("get/{id}/favoriteActivities")
     suspend fun getUserFavoriteActivities(

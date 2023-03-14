@@ -62,6 +62,18 @@ data class FavoriteActivitiesResponse(
     val activities: List<ActivityObject>
 )
 
+data class JoinedActivityObject(
+    val id: String?,
+    val userId: String?,
+    val activityId : String?,
+    val activity : ActivityObject
+)
+
+data class JoinedActivitiesResponse(
+    val count: String,
+    val row: List<JoinedActivityObject>
+)
+
 data class SingleActivityResponse(
     val found: Boolean,
     val activity: ActivityObject

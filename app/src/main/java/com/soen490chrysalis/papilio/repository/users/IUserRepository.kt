@@ -2,10 +2,7 @@ package com.soen490chrysalis.papilio.repository.users
 
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.FirebaseUser
-import com.soen490chrysalis.papilio.services.network.responses.CheckFavoriteResponse
-import com.soen490chrysalis.papilio.services.network.responses.FavoriteActivitiesResponse
-import com.soen490chrysalis.papilio.services.network.responses.FavoriteResponse
-import com.soen490chrysalis.papilio.services.network.responses.GetUserByFirebaseIdResponse
+import com.soen490chrysalis.papilio.services.network.responses.*
 import retrofit2.Response
 
 /*
@@ -43,6 +40,11 @@ interface IUserRepository
 
     suspend fun getFavoriteActivities() : Response<FavoriteActivitiesResponse>
 
+    suspend fun getJoinedActivities() : Response<JoinedActivitiesResponse>
+
+    suspend fun getCreatedActivities() : Response<FavoriteActivitiesResponse>
+
+
     suspend fun updateUser(
         variableMap : Map<String, Any>
     ) : Response<Void>
@@ -50,15 +52,11 @@ interface IUserRepository
     suspend fun firebaseAuthWithGoogle(idToken : String) : Pair<Boolean, String>
 
     suspend fun firebaseCreateAccountWithEmailAndPassword(
-        firstName : String,
-        lastName : String,
-        emailAddress : String,
-        password : String
+        firstName : String, lastName : String, emailAddress : String, password : String
     ) : Pair<Boolean, String>
 
     suspend fun firebaseLoginWithEmailAndPassword(
-        emailAddress : String,
-        password : String
+        emailAddress : String, password : String
     ) : Pair<Boolean, String>
 
     suspend fun getNewChatTokenForUser(firebaseId : String) : String?

@@ -5,10 +5,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.*
 import com.soen490chrysalis.papilio.services.network.*
 import com.soen490chrysalis.papilio.services.network.requests.*
-import com.soen490chrysalis.papilio.services.network.responses.CheckFavoriteResponse
-import com.soen490chrysalis.papilio.services.network.responses.FavoriteActivitiesResponse
-import com.soen490chrysalis.papilio.services.network.responses.FavoriteResponse
-import com.soen490chrysalis.papilio.services.network.responses.GetUserByFirebaseIdResponse
+import com.soen490chrysalis.papilio.services.network.responses.*
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
@@ -72,18 +69,14 @@ class UserRepository(
        Author: Anastassy Cap
        Date: March 4, 2023
      */
-    override suspend fun getNewChatTokenForUser(firebaseId : String) : String?
-    {
+    override suspend fun getNewChatTokenForUser(firebaseId: String): String? {
         return withContext(coroutineDispatcher)
         {
-            try
-            {
+            try {
                 val response = userService.getUserChatToken(firebaseId)
                 Log.d(logTag, "userRepository getNewChatTokenForUser() response: $response")
                 return@withContext response.body()
-            }
-            catch (e : Exception)
-            {
+            } catch (e: Exception) {
                 Log.d(
                     logTag,
                     "userRepository getNewChatTokenForUser() exception occurred: ${e.message}"
@@ -94,20 +87,16 @@ class UserRepository(
     }
 
     override suspend fun addUserToActivity(
-        activity_id : String
-    ) : Pair<Boolean, String>
-    {
+        activity_id: String
+    ): Pair<Boolean, String> {
         return withContext(coroutineDispatcher)
         {
-            val response : Pair<Boolean, String> = try
-            {
+            val response: Pair<Boolean, String> = try {
                 val requestBody = AddUserToActivityBody(getUser()?.displayName)
                 val result = userService.addUserToActivity(getUser()?.uid, activity_id, requestBody)
                 Log.d(logTag, "userRepository addUserToActivity() response: $result")
                 Pair(result.isSuccessful, result.message())
-            }
-            catch (e : Exception)
-            {
+            } catch (e: Exception) {
                 Log.d(logTag, "userRepository addUserToActivity() exception: $e")
                 Pair(false, e.message.toString())
             }
@@ -116,19 +105,15 @@ class UserRepository(
     }
 
     override suspend fun removeUserFromActivity(
-        activity_id : String
-    ) : Pair<Boolean, String>
-    {
+        activity_id: String
+    ): Pair<Boolean, String> {
         return withContext(coroutineDispatcher)
         {
-            val response : Pair<Boolean, String> = try
-            {
+            val response: Pair<Boolean, String> = try {
                 val result = userService.removeUserFromActivity(getUser()?.uid, activity_id)
                 Log.d(logTag, "userRepository removeUserFromActivity() response: $result")
                 Pair(result.isSuccessful, result.message())
-            }
-            catch (e : Exception)
-            {
+            } catch (e: Exception) {
                 Log.d(logTag, "userRepository removeUserFromActivity() exception: $e")
                 Pair(false, e.message.toString())
             }
@@ -137,19 +122,15 @@ class UserRepository(
     }
 
     override suspend fun checkActivityMember(
-        activity_id : String
-    ) : Triple<Boolean, String, Boolean>
-    {
+        activity_id: String
+    ): Triple<Boolean, String, Boolean> {
         return withContext(coroutineDispatcher)
         {
-            val response : Triple<Boolean, String, Boolean> = try
-            {
+            val response: Triple<Boolean, String, Boolean> = try {
                 val result = userService.checkActivityMember(getUser()?.uid, activity_id)
                 Log.d(logTag, "userRepository checkActivityMember() response: $result")
                 Triple(result.isSuccessful, result.message(), result.body()!!.joined)
-            }
-            catch (e : Exception)
-            {
+            } catch (e: Exception) {
                 Log.d(logTag, "userRepository checkActivityMember() exception: $e")
                 Triple(false, e.message.toString(), false)
             }
@@ -238,6 +219,17 @@ class UserRepository(
         }
     }
 
+    override suspend fun getCreatedActivities(): Response<FavoriteActivitiesResponse> {
+        return withContext(coroutineDispatcher) {
+            val firebaseId = firebaseAuth.currentUser!!.uid
+
+            val response = userService.getUserActivities(firebaseId)
+
+            Log.d(logTag, "getCreatedActivities: $response")
+            return@withContext response
+        }
+    }
+
     override suspend fun getFavoriteActivities(): Response<FavoriteActivitiesResponse> {
         return withContext(coroutineDispatcher) {
             val firebaseId = firebaseAuth.currentUser!!.uid
@@ -245,6 +237,17 @@ class UserRepository(
             val response = userService.getUserFavoriteActivities(firebaseId)
 
             Log.d(logTag, "getFavoriteActivities: $response")
+            return@withContext response
+        }
+    }
+
+    override suspend fun getJoinedActivities(): Response<JoinedActivitiesResponse> {
+        return withContext(coroutineDispatcher) {
+            val firebaseId = firebaseAuth.currentUser!!.uid
+
+            val response = userService.getUserJoinedActivities(firebaseId)
+
+            Log.d(logTag, "getJoinedActivities: $response")
             return@withContext response
         }
     }

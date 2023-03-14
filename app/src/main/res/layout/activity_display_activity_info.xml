@@ -264,7 +264,8 @@
                             android:layout_marginStart="10dp"
                             android:background="@drawable/heart_regular"
                             android:clickable="true"
-                            android:focusable="true" />
+                            android:focusable="true"
+                            android:visibility="gone"/>
 
                     </LinearLayout>
 

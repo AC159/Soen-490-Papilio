@@ -50,31 +50,37 @@ class MockUserRepository : IUserRepository
         return Response.success(null)
     }
 
-    override suspend fun isActivityFavorited(activityId: String?): Response<CheckFavoriteResponse> {
+    override suspend fun isActivityFavorited(activityId : String?) : Response<CheckFavoriteResponse>
+    {
         return Response.success(
             CheckFavoriteResponse(
-            isActivityFound = true
+                isActivityFound = true
+            )
         )
-        )
     }
 
-    override suspend fun addFavoriteActivity(activityId: Number): Response<FavoriteResponse> {
+    override suspend fun addFavoriteActivity(activityId : Number) : Response<FavoriteResponse>
+    {
         return Response.success(null)
     }
 
-    override suspend fun removeFavoriteActivity(activityId: Number): Response<FavoriteResponse> {
+    override suspend fun removeFavoriteActivity(activityId : Number) : Response<FavoriteResponse>
+    {
         return Response.success(null)
     }
 
-    override suspend fun getFavoriteActivities(): Response<FavoriteActivitiesResponse> {
+    override suspend fun getFavoriteActivities() : Response<FavoriteActivitiesResponse>
+    {
         return Response.success(null)
     }
 
-    override suspend fun getJoinedActivities(): Response<JoinedActivitiesResponse> {
+    override suspend fun getJoinedActivities() : Response<JoinedActivitiesResponse>
+    {
         return Response.success(null)
     }
 
-    override suspend fun getCreatedActivities(): Response<FavoriteActivitiesResponse> {
+    override suspend fun getCreatedActivities() : Response<FavoriteActivitiesResponse>
+    {
         return Response.success(null)
     }
 

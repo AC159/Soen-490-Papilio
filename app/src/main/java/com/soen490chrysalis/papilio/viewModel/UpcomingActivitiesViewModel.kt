@@ -11,46 +11,50 @@ import com.soen490chrysalis.papilio.services.network.responses.JoinedActivitiesR
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
-class UpcomingActivitiesViewModel(private val userRepository: IUserRepository) : ViewModel() {
+class UpcomingActivitiesViewModel(private val userRepository : IUserRepository) : ViewModel()
+{
 
     private val logTag = UpcomingActivitiesViewModel::class.java.simpleName
-    var activitiesResponse: MutableLiveData<FavoriteActivitiesResponse> =
+    var activitiesResponse : MutableLiveData<FavoriteActivitiesResponse> =
         MutableLiveData<FavoriteActivitiesResponse>()
 
-    fun getUpcomingActivities() {
+    fun getUpcomingActivities()
+    {
         viewModelScope.launch {
 
-              try {
-                  val getFirstActivityResponse = userRepository.getCreatedActivities()
-                  val firstResponse = FavoriteActivitiesResponse(
-                      getFirstActivityResponse.body()!!.count,
-                      getFirstActivityResponse.body()!!.activities,
-                  )
-                  Log.d(".getCreatedActivities()", firstResponse.toString())
+            try
+            {
+                val getFirstActivityResponse = userRepository.getCreatedActivities()
+                val firstResponse = FavoriteActivitiesResponse(
+                    getFirstActivityResponse.body()!!.count,
+                    getFirstActivityResponse.body()!!.activities,
+                )
+                Log.d(".getCreatedActivities()", firstResponse.toString())
 
-                  val getActivityResponse = userRepository.getJoinedActivities()
-                  val secondResponse = JoinedActivitiesResponse(
-                      getActivityResponse.body()!!.count,
-                      getActivityResponse.body()!!.row
-                  )
-                  Log.d(".getJoinedActivities()", secondResponse.toString())
+                val getActivityResponse = userRepository.getJoinedActivities()
+                val secondResponse = JoinedActivitiesResponse(
+                    getActivityResponse.body()!!.count,
+                    getActivityResponse.body()!!.row
+                )
+                Log.d(".getJoinedActivities()", secondResponse.toString())
 
-                  val tempList = mutableListOf<ActivityObject>()
-                  for(activity in secondResponse.row)
-                  {
-                      tempList.add(activity.activity)
-                  }
+                val tempList = mutableListOf<ActivityObject>()
+                for (activity in secondResponse.row)
+                {
+                    tempList.add(activity.activity)
+                }
 
-                  activitiesResponse.value = FavoriteActivitiesResponse(
-                      count = firstResponse.count + secondResponse.count,
-                      activities = firstResponse.activities.plus(tempList)
-                  )
+                activitiesResponse.value = FavoriteActivitiesResponse(
+                    count = firstResponse.count + secondResponse.count,
+                    activities = firstResponse.activities.plus(tempList)
+                )
 
-                  Log.d(".getUpcomingActivities", activitiesResponse.value.toString())
-              }
-              catch (e: Exception) {
-                  Log.d(logTag, "userRepository.getUpcomingActivities() - exception:\n $e")
-              }
+                Log.d(".getUpcomingActivities", activitiesResponse.value.toString())
+            }
+            catch (e : Exception)
+            {
+                Log.d(logTag, "userRepository.getUpcomingActivities() - exception:\n $e")
+            }
 
         }
     }
@@ -59,7 +63,7 @@ class UpcomingActivitiesViewModel(private val userRepository: IUserRepository) :
     {
         val finalActivityList : MutableList<ActivityObject> = mutableListOf()
 
-        for(activity in activitiesResponse.value?.activities!!)
+        for (activity in activitiesResponse.value?.activities!!)
         {
             val activityStartTime = activity.startTime
             val dateString = activityStartTime!!.substring(0, activityStartTime.indexOf("T"))
@@ -68,7 +72,7 @@ class UpcomingActivitiesViewModel(private val userRepository: IUserRepository) :
             val activityDate =
                 LocalDate.of(dateParts[0].toInt(), dateParts[1].toInt(), dateParts[2].toInt())
 
-            if((activityDate.isAfter(currentDate) || activityDate.equals(currentDate)) && activityDate.monthValue == month && activityDate.year == currentDate.year)
+            if ((activityDate.isAfter(currentDate) || activityDate.equals(currentDate)) && activityDate.monthValue == month && activityDate.year == currentDate.year)
             {
                 finalActivityList.add(activity)
             }

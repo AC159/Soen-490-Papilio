@@ -14,55 +14,56 @@ import retrofit2.Response
     Author: Anastassy Cap
     Date: October 5, 2022
 */
-interface IUserRepository {
-    fun initialize(googleSignInClient: GoogleSignInClient)
+interface IUserRepository
+{
+    fun initialize(googleSignInClient : GoogleSignInClient)
 
-    fun getUser(): FirebaseUser?
+    fun getUser() : FirebaseUser?
 
-    suspend fun getUserByFirebaseId(): GetUserByFirebaseIdResponse?
+    suspend fun getUserByFirebaseId() : GetUserByFirebaseIdResponse?
 
     suspend fun createUser(
-        user: FirebaseUser?
-    ): Response<Void>
+        user : FirebaseUser?
+    ) : Response<Void>
 
     suspend fun isActivityFavorited(
-        activityId: String?
-    ): Response<CheckFavoriteResponse>
+        activityId : String?
+    ) : Response<CheckFavoriteResponse>
 
     suspend fun addFavoriteActivity(
-        activityId: Number
-    ): Response<FavoriteResponse>
+        activityId : Number
+    ) : Response<FavoriteResponse>
 
     suspend fun removeFavoriteActivity(
-        activityId: Number
-    ): Response<FavoriteResponse>
+        activityId : Number
+    ) : Response<FavoriteResponse>
 
-    suspend fun getFavoriteActivities(): Response<FavoriteActivitiesResponse>
+    suspend fun getFavoriteActivities() : Response<FavoriteActivitiesResponse>
 
-    suspend fun getJoinedActivities(): Response<JoinedActivitiesResponse>
+    suspend fun getJoinedActivities() : Response<JoinedActivitiesResponse>
 
-    suspend fun getCreatedActivities(): Response<FavoriteActivitiesResponse>
+    suspend fun getCreatedActivities() : Response<FavoriteActivitiesResponse>
 
 
     suspend fun updateUser(
-        variableMap: Map<String, Any>
-    ): Response<Void>
+        variableMap : Map<String, Any>
+    ) : Response<Void>
 
-    suspend fun firebaseAuthWithGoogle(idToken: String): Pair<Boolean, String>
+    suspend fun firebaseAuthWithGoogle(idToken : String) : Pair<Boolean, String>
 
     suspend fun firebaseCreateAccountWithEmailAndPassword(
-        firstName: String, lastName: String, emailAddress: String, password: String
-    ): Pair<Boolean, String>
+        firstName : String, lastName : String, emailAddress : String, password : String
+    ) : Pair<Boolean, String>
 
     suspend fun firebaseLoginWithEmailAndPassword(
-        emailAddress: String, password: String
-    ): Pair<Boolean, String>
+        emailAddress : String, password : String
+    ) : Pair<Boolean, String>
 
-    suspend fun getNewChatTokenForUser(firebaseId: String): String?
+    suspend fun getNewChatTokenForUser(firebaseId : String) : String?
 
-    suspend fun addUserToActivity(activity_id: String): Pair<Boolean, String>
+    suspend fun addUserToActivity(activity_id : String) : Pair<Boolean, String>
 
-    suspend fun removeUserFromActivity(activity_id: String): Pair<Boolean, String>
+    suspend fun removeUserFromActivity(activity_id : String) : Pair<Boolean, String>
 
-    suspend fun checkActivityMember(activity_id: String): Triple<Boolean, String, Boolean>
+    suspend fun checkActivityMember(activity_id : String) : Triple<Boolean, String, Boolean>
 }

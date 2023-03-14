@@ -3,8 +3,7 @@ package com.soen490chrysalis.papilio.repository.mocks
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.FirebaseUser
 import com.soen490chrysalis.papilio.repository.users.IUserRepository
-import com.soen490chrysalis.papilio.services.network.responses.GetUserByFirebaseIdResponse
-import com.soen490chrysalis.papilio.services.network.responses.UserObject
+import com.soen490chrysalis.papilio.services.network.responses.*
 import org.mockito.Mockito
 import retrofit2.Response
 
@@ -49,6 +48,22 @@ class MockUserRepository : IUserRepository
     ) : Response<Void>
     {
         return Response.success(null)
+    }
+
+    override suspend fun isActivityFavorited(activityId: String?): Response<CheckFavoriteResponse> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun addFavoriteActivity(activityId: Number): Response<FavoriteResponse> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun removeFavoriteActivity(activityId: Number): Response<FavoriteResponse> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getFavoriteActivities(): Response<FavoriteActivitiesResponse> {
+        TODO("Not yet implemented")
     }
 
     override suspend fun updateUser(

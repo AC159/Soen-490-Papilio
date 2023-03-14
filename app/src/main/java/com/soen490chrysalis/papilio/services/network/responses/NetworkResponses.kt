@@ -10,16 +10,16 @@ import com.squareup.moshi.Json
  */
 
 data class UserObject(
-    val firstName : String,
-    val lastName : String,
-    val email : String,
+    val firstName: String,
+    val lastName: String,
+    val email: String,
     @Json(name = "firebase_id")
-    val firebaseId : String,
-    val countryCode : String?,
-    val phone : String?,
-    val createdAt : String,
-    val updatedAt : String,
-    val bio : String
+    val firebaseId: String,
+    val countryCode: String?,
+    val phone: String?,
+    val createdAt: String,
+    val updatedAt: String,
+    val bio: String
 )
 
 data class ActivityObject(
@@ -57,9 +57,14 @@ data class ActivityResponse(
     val currentPage: String
 )
 
+data class FavoriteActivitiesResponse(
+    val count: String,
+    val activities: List<ActivityObject>
+)
+
 data class SingleActivityResponse(
     val found: Boolean,
-    val activity : ActivityObject
+    val activity: ActivityObject
 )
 
 data class SearchActivityResponse(
@@ -70,8 +75,29 @@ data class SearchActivityResponse(
 
 // Response object for the /api/user/get/:firebaseId endpoint
 data class GetUserByFirebaseIdResponse(
-    val found : Boolean,
-    val user : UserObject
+    val found: Boolean,
+    val user: UserObject
+)
+
+data class FavoriteUserObject(
+    @Json(name = "firebase_id")
+    val firebaseId: String?,
+    val firstName: String?,
+    val lastName: String?,
+    val countryCode: String?,
+    val phone: String?,
+    val email: String?,
+    val bio: String?,
+    val favoriteActivities: IntArray?
+)
+
+data class FavoriteResponse(
+    val success: Boolean?,
+    val update: FavoriteUserObject?
+)
+
+data class CheckFavoriteResponse(
+    val isActivityFound: Boolean,
 )
 
 data class CheckUserIsMemberOfActivityResponse(

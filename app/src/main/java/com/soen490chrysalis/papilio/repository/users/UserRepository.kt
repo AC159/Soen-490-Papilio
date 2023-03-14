@@ -5,6 +5,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.*
 import com.soen490chrysalis.papilio.services.network.*
 import com.soen490chrysalis.papilio.services.network.requests.*
+import com.soen490chrysalis.papilio.services.network.responses.CheckFavoriteResponse
+import com.soen490chrysalis.papilio.services.network.responses.FavoriteActivitiesResponse
+import com.soen490chrysalis.papilio.services.network.responses.FavoriteResponse
 import com.soen490chrysalis.papilio.services.network.responses.GetUserByFirebaseIdResponse
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -28,42 +31,32 @@ import retrofit2.Response
 */
 
 class UserRepository(
-    private var firebaseAuth : FirebaseAuth,
-    private val userService : IUserApiService,
-    private val coroutineDispatcher : CoroutineDispatcher = Dispatchers.IO
-) : IUserRepository
-{
+    private var firebaseAuth: FirebaseAuth,
+    private val userService: IUserApiService,
+    private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO
+) : IUserRepository {
     private val logTag = UserRepository::class.java.simpleName
 
-    private var googleSignInClient : GoogleSignInClient? = null
+    private var googleSignInClient: GoogleSignInClient? = null
 
     // This function must be called if we want to start a sign in flow
-    override fun initialize(googleSignInClient : GoogleSignInClient)
-    {
+    override fun initialize(googleSignInClient: GoogleSignInClient) {
         this.googleSignInClient = googleSignInClient
     }
 
-    override fun getUser() : FirebaseUser?
-    {
+    override fun getUser(): FirebaseUser? {
         return firebaseAuth.currentUser
     }
 
-    override suspend fun getUserByFirebaseId() : GetUserByFirebaseIdResponse?
-    {
-        return withContext(coroutineDispatcher)
-        {
-            try
-            {
-                val response =
-                    userService.getUserByFirebaseId(firebaseAuth.currentUser?.uid).body()
+    override suspend fun getUserByFirebaseId(): GetUserByFirebaseIdResponse? {
+        return withContext(coroutineDispatcher) {
+            try {
+                val response = userService.getUserByFirebaseId(firebaseAuth.currentUser?.uid).body()
                 Log.d(logTag, "userRepository getUserByFirebaseId() response: $response")
                 return@withContext response
-            }
-            catch (e : Exception)
-            {
+            } catch (e: Exception) {
                 Log.d(
-                    logTag,
-                    "userRepository getUserByFirebaseId() exception occurred: ${e.message}"
+                    logTag, "userRepository getUserByFirebaseId() exception occurred: ${e.message}"
                 )
                 println(e.message)
             }
@@ -177,9 +170,8 @@ class UserRepository(
        Date: November 11, 2022
     */
     override suspend fun createUser(
-        user : FirebaseUser?,
-    ) : Response<Void>
-    {
+        user: FirebaseUser?,
+    ): Response<Void> {
 
         val displayName = user!!.displayName
         val tokens = displayName!!.split(" ")
@@ -196,6 +188,67 @@ class UserRepository(
         return response
     }
 
+    override suspend fun isActivityFavorited(activityId: String?): Response<CheckFavoriteResponse> {
+        return withContext(coroutineDispatcher) {
+            val firebaseId = firebaseAuth.currentUser!!.uid
+
+            val response = userService.checkActivityFavorited(firebaseId, activityId)
+
+            Log.d(logTag, "isActivityFavorited: $response")
+            return@withContext response
+        }
+    }
+
+    override suspend fun addFavoriteActivity(activityId: Number): Response<FavoriteResponse> {
+        return withContext(coroutineDispatcher) {
+            val firebaseId = firebaseAuth.currentUser!!.uid
+
+            val editedFields: MutableMap<String, Any> = mutableMapOf()
+            editedFields["favoriteActivities"] = activityId
+
+            val response = userService.addFavoriteActivity(
+                UserUpdate(
+                    Identifier(
+                        firebaseId = firebaseId
+                    ), editedFields
+                )
+            )
+
+            Log.d(logTag, "addFavoriteActivity: $response")
+            return@withContext response
+        }
+    }
+
+    override suspend fun removeFavoriteActivity(activityId: Number): Response<FavoriteResponse> {
+        return withContext(coroutineDispatcher) {
+            val firebaseId = firebaseAuth.currentUser!!.uid
+            val editedFields: MutableMap<String, Any> = mutableMapOf()
+            editedFields["favoriteActivities"] = activityId
+
+            val response = userService.removeFavoriteActivity(
+                UserUpdate(
+                    Identifier(
+                        firebaseId = firebaseId
+                    ), editedFields
+                )
+            )
+
+            Log.d(logTag, "removeFavoriteActivity: $response")
+            return@withContext response
+        }
+    }
+
+    override suspend fun getFavoriteActivities(): Response<FavoriteActivitiesResponse> {
+        return withContext(coroutineDispatcher) {
+            val firebaseId = firebaseAuth.currentUser!!.uid
+
+            val response = userService.getUserFavoriteActivities(firebaseId)
+
+            Log.d(logTag, "getFavoriteActivities: $response")
+            return@withContext response
+        }
+    }
+
     /*
        DESCRIPTION:
        Utility function that makes a request to the backend to update a user.
@@ -208,11 +261,9 @@ class UserRepository(
        Date: January 1st, 2023
     */
     override suspend fun updateUser(
-        variableMap : Map<String, Any>
-    ) : Response<Void>
-    {
-        return withContext(coroutineDispatcher)
-        {
+        variableMap: Map<String, Any>
+    ): Response<Void> {
+        return withContext(coroutineDispatcher) {
             val firebaseId = firebaseAuth.currentUser!!.uid
 
             val response = userService.updateUser(UserUpdate(Identifier(firebaseId), variableMap))
@@ -222,38 +273,27 @@ class UserRepository(
         }
     }
 
-    override suspend fun firebaseAuthWithGoogle(idToken : String) : Pair<Boolean, String>
-    {
-        return withContext(coroutineDispatcher)
-        {
-            val response : Pair<Boolean, String> = try
-            {
+    override suspend fun firebaseAuthWithGoogle(idToken: String): Pair<Boolean, String> {
+        return withContext(coroutineDispatcher) {
+            val response: Pair<Boolean, String> = try {
                 val credential = GoogleAuthProvider.getCredential(idToken, null)
-                val authResult : AuthResult = firebaseAuth.signInWithCredential(credential).await()
+                val authResult: AuthResult = firebaseAuth.signInWithCredential(credential).await()
 
                 // Now that we have successfully authenticated, we can create a user in the database
-                val userCreationRes : Response<Void> = createUser(authResult.user)
+                val userCreationRes: Response<Void> = createUser(authResult.user)
                 Log.d(logTag, "userCreationResponse: $userCreationRes")
 
                 Pair(userCreationRes.isSuccessful, userCreationRes.message())
-            }
-            catch (e : FirebaseAuthInvalidUserException)
-            {
+            } catch (e: FirebaseAuthInvalidUserException) {
                 Log.d(logTag, "FirebaseAuthInvalidUserException: $e")
                 Pair(false, "User has been disabled or does not exist!")
-            }
-            catch (e : FirebaseAuthInvalidCredentialsException)
-            {
+            } catch (e: FirebaseAuthInvalidCredentialsException) {
                 Log.d(logTag, "FirebaseAuthInvalidCredentialsException: $e")
                 Pair(false, "Invalid credentials!")
-            }
-            catch (e : FirebaseAuthUserCollisionException)
-            {
+            } catch (e: FirebaseAuthUserCollisionException) {
                 Log.d(logTag, "FirebaseAuthUserCollisionException: $e")
                 Pair(false, "Email already exists!")
-            }
-            catch (e : Exception)
-            {
+            } catch (e: Exception) {
                 Log.d(logTag, "firebaseAuthWithGoogleError: $e")
                 Pair(false, e.message.toString())
             }
@@ -263,49 +303,35 @@ class UserRepository(
     }
 
     override suspend fun firebaseCreateAccountWithEmailAndPassword(
-        firstName : String,
-        lastName : String,
-        emailAddress : String,
-        password : String
-    ) : Pair<Boolean, String>
-    {
-        return withContext(coroutineDispatcher)
-        {
-            val response : Pair<Boolean, String> = try
-            {
-                val authResult : AuthResult =
+        firstName: String, lastName: String, emailAddress: String, password: String
+    ): Pair<Boolean, String> {
+        return withContext(coroutineDispatcher) {
+            val response: Pair<Boolean, String> = try {
+                val authResult: AuthResult =
                     firebaseAuth.createUserWithEmailAndPassword(emailAddress, password).await()
 
                 // Update the user's display name
                 val userProfileChangeRequest =
                     UserProfileChangeRequest.Builder().setDisplayName("$firstName $lastName")
-                            .build()
+                        .build()
                 authResult.user?.updateProfile(userProfileChangeRequest)
-                        ?.await() // wait for the display name update request to finish before proceeding
+                    ?.await() // wait for the display name update request to finish before proceeding
 
                 // Now that we have successfully authenticated, we can create a user in the database
-                val userCreationRes : Response<Void> = createUser(firebaseAuth.currentUser)
+                val userCreationRes: Response<Void> = createUser(firebaseAuth.currentUser)
 
                 Log.d(logTag, "userCreationResponse: $userCreationRes")
                 Pair(userCreationRes.isSuccessful, userCreationRes.message())
-            }
-            catch (e : FirebaseAuthWeakPasswordException)
-            {
+            } catch (e: FirebaseAuthWeakPasswordException) {
                 Log.d(logTag, "FirebaseAuthWeakPasswordException $e")
                 Pair(false, "Password is too weak!")
-            }
-            catch (e : FirebaseAuthInvalidCredentialsException)
-            {
+            } catch (e: FirebaseAuthInvalidCredentialsException) {
                 Log.d(logTag, "FirebaseAuthInvalidCredentialsException $e")
                 Pair(false, "Email address is malformed!")
-            }
-            catch (e : FirebaseAuthUserCollisionException)
-            {
+            } catch (e: FirebaseAuthUserCollisionException) {
                 Log.d(logTag, "FirebaseAuthUserCollisionException $e")
                 Pair(false, "Email already exists!")
-            }
-            catch (e : Exception)
-            {
+            } catch (e: Exception) {
                 Log.d(logTag, "firebaseCreateAccountWithEmail&Password - createUser() error: $e")
                 Pair(false, e.message.toString())
             }
@@ -315,35 +341,25 @@ class UserRepository(
     }
 
     override suspend fun firebaseLoginWithEmailAndPassword(
-        emailAddress : String,
-        password : String
-    ) : Pair<Boolean, String>
-    {
-        return withContext(coroutineDispatcher)
-        {
-            val response : Pair<Boolean, String> = try
-            {
-                val authResult : AuthResult =
+        emailAddress: String, password: String
+    ): Pair<Boolean, String> {
+        return withContext(coroutineDispatcher) {
+            val response: Pair<Boolean, String> = try {
+                val authResult: AuthResult =
                     firebaseAuth.signInWithEmailAndPassword(emailAddress, password).await()
 
                 // Now that we have successfully authenticated, we can create a user in the database
-                val userCreationRes : Response<Void> = createUser(authResult.user)
+                val userCreationRes: Response<Void> = createUser(authResult.user)
                 Log.d(logTag, "userCreationResponse: $userCreationRes")
 
                 Pair(userCreationRes.isSuccessful, userCreationRes.message())
-            }
-            catch (e : FirebaseAuthInvalidUserException)
-            {
+            } catch (e: FirebaseAuthInvalidUserException) {
                 Log.d(logTag, "FirebaseAuthInvalidUserException: $e")
                 Pair(false, "User has been disabled or does not exist!")
-            }
-            catch (e : FirebaseAuthInvalidCredentialsException)
-            {
+            } catch (e: FirebaseAuthInvalidCredentialsException) {
                 Log.d(logTag, "FirebaseAuthInvalidCredentialsException: $e")
                 Pair(false, "Wrong password!")
-            }
-            catch (e : Exception)
-            {
+            } catch (e: Exception) {
                 Log.d(logTag, "firebaseSignInWithEmail&PasswordError: $e")
                 Pair(false, e.message.toString())
             }

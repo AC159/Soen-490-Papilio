@@ -4,6 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
+import android.widget.ImageButton
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -30,11 +32,15 @@ import com.soen490chrysalis.papilio.viewModel.factories.ActivityInfoViewModelFac
 class DisplayActivityInfoActivity : AppCompatActivity() {
     private val logTag = DisplayActivityInfoActivity::class.java.simpleName
     private lateinit var binding: ActivityDisplayActivityInfoBinding
+    private var isActivityFavorited: Boolean = false
+    private lateinit var favoriteButton: ImageButton
     private lateinit var activityInfoViewModel: ActivityInfoViewModel
+    private var canFavorite = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDisplayActivityInfoBinding.inflate(layoutInflater)
+
         setContentView(binding.root)
 
         // Create Action Bar val so we can 1) display it with a proper title and 2) put a working back button on it
@@ -46,6 +52,18 @@ class DisplayActivityInfoActivity : AppCompatActivity() {
             actionBar.title = "Activity Info"
         }
 
+        val infoTile: TextView = binding.infoTitle
+        val infoDescription: TextView = binding.infoDescription
+        val infoIndividualCost: TextView = binding.individualCost
+        val infoGroupCost: TextView = binding.groupCost
+        val infoAddress: TextView = binding.infoLocation
+        val infoImages0: ImageView = binding.infoImageView0
+        val infoImages1: ImageView = binding.infoImageView1
+        val infoImages2: ImageView = binding.infoImageView2
+        val infoImages3: ImageView = binding.infoImageView4
+        val infoImages4: ImageView = binding.infoImageView0
+        val mapView: MapView = binding.mapView
+        favoriteButton = binding.favoriteButton
         activityInfoViewModel = ViewModelProvider(
             this,
             ActivityInfoViewModelFactory()
@@ -56,7 +74,7 @@ class DisplayActivityInfoActivity : AppCompatActivity() {
 
         // we need to determine if the user has already joined this activity or not and display the text button accordingly
         // Disable the 'join' button while we process the request & display a progress indicator
-        DisableButtonAndShowProgressIndicator(binding.joinButton)
+        DisableButtonAndShowProgressIndicator(binding.joinButton as MaterialButton)
         activityInfoViewModel.checkActivityMember(activity_id)
 
         activityInfoViewModel.checkActivityMemberResponse.observe(this) {
@@ -66,12 +84,12 @@ class DisplayActivityInfoActivity : AppCompatActivity() {
             } else displaySnackBar(it.errorMessage)
 
             // re-enable the 'join' button
-            EnableButtonAndRemoveProgressIndicator(binding.joinButton)
+            EnableButtonAndRemoveProgressIndicator(binding.joinButton as MaterialButton)
         }
 
         // Set an click listener on the 'join' button of the activity
         binding.joinButton.setOnClickListener {
-            DisableButtonAndShowProgressIndicator(binding.joinButton)
+            DisableButtonAndShowProgressIndicator(binding.joinButton as MaterialButton)
             if (binding.joinButton.text.toString()
                     .lowercase() == "join"
             ) activityInfoViewModel.joinActivity(activity_id)
@@ -80,7 +98,7 @@ class DisplayActivityInfoActivity : AppCompatActivity() {
 
         // Listen to the API response when the user wants to join an activity
         activityInfoViewModel.jonActivityResponse.observe(this) {
-            EnableButtonAndRemoveProgressIndicator(binding.joinButton)
+            EnableButtonAndRemoveProgressIndicator(binding.joinButton as MaterialButton)
 
             // Change the text of the button if the user successfully joined the activity
             if (it.isSuccess) binding.joinButton.text = "Leave"
@@ -90,7 +108,7 @@ class DisplayActivityInfoActivity : AppCompatActivity() {
 
         // Listen to the API response when the user wants to leave an activity
         activityInfoViewModel.leaveActivityResponse.observe(this) {
-            EnableButtonAndRemoveProgressIndicator(binding.joinButton)
+            EnableButtonAndRemoveProgressIndicator(binding.joinButton as MaterialButton)
 
             // Change the text of the button if the user successfully left the activity
             if (it.isSuccess) binding.joinButton.text = "Join"
@@ -98,17 +116,6 @@ class DisplayActivityInfoActivity : AppCompatActivity() {
             displaySnackBar(it.errorMessage)
         }
 
-        val infoTile: TextView = binding.infoTitle
-        val infoDescription: TextView = binding.infoDescription
-        val infoIndividualCost: TextView = binding.individualCost
-        val infoGroupCost: TextView = binding.groupCost
-        val infoAddress: TextView = binding.infoLocation
-        val infoImages0: ImageView = binding.infoImageView0
-        val infoImages1: ImageView = binding.infoImageView1
-        val infoImages2: ImageView = binding.infoImageView2
-        val infoImages3: ImageView = binding.infoImageView3
-        val infoImages4: ImageView = binding.infoImageView4
-        val mapView: MapView = binding.mapView
         val infoContact: Button = binding.infoContact
 
         val title = bundle.getString("title")
@@ -117,6 +124,67 @@ class DisplayActivityInfoActivity : AppCompatActivity() {
         val groupCost = bundle.getString("groupCost")
         val location = bundle.getString("location")
         val hasImages = bundle.getBoolean("images")
+        val activityId = bundle.getString("id")?.toInt()
+
+        val fav = bundle.getBoolean("isFavorited")
+        if(fav)
+        {
+            isActivityFavorited = fav
+            changeFavoriteButton()
+            favoriteButton.visibility = View.VISIBLE
+            canFavorite = true
+        }
+        else
+        {
+            if (activityId != null) {
+                activityInfoViewModel.checkActivityFavorited(activityId)
+            }
+            activityInfoViewModel.checkActivityFavoritedResponse.observe(
+                this,
+                androidx.lifecycle.Observer {
+                    isActivityFavorited = it.isActivityFound
+                    changeFavoriteButton()
+                    favoriteButton.visibility = View.VISIBLE
+                    canFavorite = true
+                })
+        }
+
+        favoriteButton.setOnClickListener {
+            if(canFavorite)
+            {
+                if (!isActivityFavorited) {
+                    if (activityId != null) {
+                        canFavorite = false
+                        isActivityFavorited = true
+                        activityInfoViewModel.addFavoriteActivity(activityId)
+                        changeFavoriteButton()
+                    }
+                } else {
+                    if (activityId != null) {
+                        canFavorite = false
+                        isActivityFavorited = false
+                        activityInfoViewModel.removeFavoriteActivity(activityId)
+                        changeFavoriteButton()
+                    }
+                }
+            }
+        }
+
+        activityInfoViewModel.activityFavoritedResponse.observe(this, androidx.lifecycle.Observer {
+            if(isActivityFavorited)
+            {
+                displaySnackBar("Activity Favorited!")
+                canFavorite = true
+            }
+            else
+            {
+                displaySnackBar("Activity Unfavorited!")
+                canFavorite = true
+            }
+        })
+
+
+
         val contactString = bundle.getString("contact")
 
 
@@ -270,6 +338,14 @@ class DisplayActivityInfoActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    fun changeFavoriteButton() {
+        if (isActivityFavorited) {
+            favoriteButton.setBackgroundResource(R.drawable.heart_filled)
+        } else {
+            favoriteButton.setBackgroundResource(R.drawable.heart_regular)
+        }
     }
 
     private fun DisableButtonAndShowProgressIndicator(button: MaterialButton) {

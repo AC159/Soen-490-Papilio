@@ -82,6 +82,34 @@ class CreateActivityViewModelTest
     }
 
     @Test
+    fun validateActivityIndividualCost()
+    {
+        var result =
+            createActivityViewModel.validateActivityIndividualCost("not a number!")
+        assert(result == "Not a number!")
+
+        result = createActivityViewModel.validateActivityIndividualCost("-1")
+        assert(result == "Number of participants must be greater than or equal to 0!")
+
+        result = createActivityViewModel.validateActivityIndividualCost("5")
+        assert(result == null)
+    }
+
+    @Test
+    fun validateActivityGroupCost()
+    {
+        var result =
+            createActivityViewModel.validateActivityGroupCost("not a number!")
+        assert(result == "Not a number!")
+
+        result = createActivityViewModel.validateActivityGroupCost("-1")
+        assert(result == "Number of participants must be greater than or equal to 0!")
+
+        result = createActivityViewModel.validateActivityGroupCost("10")
+        assert(result == null)
+    }
+
+    @Test
     fun validateActivityPictureUris()
     {
         val pictures : MutableList<Pair<String, InputStream>> = ArrayList()
@@ -137,13 +165,13 @@ class CreateActivityViewModelTest
         val addressSuggestions = ArrayList<String>()
         createActivityViewModel.activityAddressSuggestions.value = addressSuggestions
         var addressValidation = createActivityViewModel.validateActivityAddress()
-        assert( addressValidation == "You must select an address from the dropdown!" )
+        assert(addressValidation == "You must select an address from the dropdown!")
 
         addressSuggestions.add("some mapbox address")
         createActivityViewModel.activityAddressSuggestions.value = addressSuggestions
         addressValidation = createActivityViewModel.validateActivityAddress()
 
-        assert( addressValidation == null )
+        assert(addressValidation == null)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -156,6 +184,8 @@ class CreateActivityViewModelTest
         createActivityViewModel.postNewActivity(
             "Activity title",
             "Some description",
+            5,
+            10,
             5,
             pictures,
             EventDate(2023, 1, 15),
@@ -179,6 +209,8 @@ class CreateActivityViewModelTest
         createActivityViewModel.postNewActivity(
             "Activity title",
             "Some description",
+            5,
+            10,
             5,
             pictures,
             EventDate(2023, 1, 15),

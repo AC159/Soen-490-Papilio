@@ -28,29 +28,29 @@ import kotlin.collections.HashMap
 
 
 class ActivityRepository(
-    private var firebaseAuth : FirebaseAuth,
-    private val userAPIService : IUserApiService,
+    private var firebaseAuth: FirebaseAuth,
+    private val userAPIService: IUserApiService,
     private val activityAPIService: IActivityApiService,
-    private val coroutineDispatcher : CoroutineDispatcher = Dispatchers.IO
-) : IActivityRepository
-{
+    private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO
+) : IActivityRepository {
     private val logTag = ActivityRepository::class.java.simpleName
 
     @Suppress("BlockingMethodInNonBlockingContext")
     override suspend fun postNewUserActivity(
-        activityTitle : String,
-        description : String,
-        groupSize : Int,
-        pictures : List<Pair<String, InputStream>>,
-        activityDate : EventDate,
-        startTime : EventTime,
-        endTime : EventTime,
-        activityAddress : String
-    ) : Response<Void>
-    {
+        activityTitle: String,
+        description: String,
+        costPerIndividual: Int,
+        costPerGroup: Int,
+        groupSize: Int,
+        pictures: List<Pair<String, InputStream>>,
+        activityDate: EventDate,
+        startTime: EventTime,
+        endTime: EventTime,
+        activityAddress: String
+    ): Response<Void> {
         return withContext(coroutineDispatcher)
         {
-            val calendar : Calendar = Calendar.getInstance()
+            val calendar: Calendar = Calendar.getInstance()
 
             // Set the activity start date and time
             calendar.set(
@@ -61,8 +61,9 @@ class ActivityRepository(
                 startTime.minute
             )
 
-            val outputFmt = SimpleDateFormat("yyyy-MM-dd HH:mm:'00.000 +00:00'") // ISO-8601 date format
-            val activityStartTime : String = outputFmt.format(calendar.time)
+            val outputFmt =
+                SimpleDateFormat("yyyy-MM-dd HH:mm:'00.000 +00:00'") // ISO-8601 date format
+            val activityStartTime: String = outputFmt.format(calendar.time)
 
             calendar.set(
                 activityDate.year,
@@ -72,22 +73,20 @@ class ActivityRepository(
                 endTime.minute
             )
 
-            val activityEndTime : String = outputFmt.format(calendar.time)
+            val activityEndTime: String = outputFmt.format(calendar.time)
 
             Log.d(logTag, "Activity start & end times: $activityStartTime, $activityEndTime")
 
-            val images : MutableList<MultipartBody.Part> = ArrayList()
-            for (pair in pictures)
-            {
+            val images: MutableList<MultipartBody.Part> = ArrayList()
+            for (pair in pictures) {
                 val inputStream = pair.second
                 val imageFileExtension = pair.first
 
                 val file = File.createTempFile("tempFile", null, null)
-                val out : OutputStream = FileOutputStream(file)
+                val out: OutputStream = FileOutputStream(file)
                 val buf = ByteArray(1024)
-                var len : Int
-                while (inputStream.read(buf).also { len = it } > 0)
-                {
+                var len: Int
+                while (inputStream.read(buf).also { len = it } > 0) {
                     out.write(buf, 0, len)
                 }
                 out.close()
@@ -102,13 +101,15 @@ class ActivityRepository(
                 images.add(currentImage)
             }
 
-            val activityRequestBody : MutableMap<String, Any> = HashMap()
+            val activityRequestBody: MutableMap<String, Any> = HashMap()
             activityRequestBody["activity[title]"] = activityTitle
             activityRequestBody["activity[description]"] = description
             activityRequestBody["activity[startTime]"] = activityStartTime
             activityRequestBody["activity[endTime]"] = activityEndTime
             activityRequestBody["activity[address]"] = activityAddress
             activityRequestBody["activity[groupSize]"] = groupSize
+            activityRequestBody["activity[costPerIndividual]"] = costPerIndividual
+            activityRequestBody["activity[costPerGroup]"] = costPerGroup
 
             Log.d(logTag, "Finished converting images to a Multipart request body")
 

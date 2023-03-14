@@ -56,28 +56,56 @@ class CreateActivityViewModel(private val activityRepository : IActivityReposito
         return "Number of participants must be greater than 0!"
     }
 
+    fun validateActivityIndividualCost(individualCost : String) : String?
+    {
+        try
+        {
+            val nbrOfIndividualCost = Integer.parseInt(individualCost)
+            if (nbrOfIndividualCost >= 0) return null
+        }
+        catch (e : java.lang.NumberFormatException)
+        {
+            return "Not a number!"
+        }
+        return "Number of participants must be greater than or equal to 0!"
+    }
+
+    fun validateActivityGroupCost(groupCost : String) : String?
+    {
+        try
+        {
+            val nbrOfGroupCost = Integer.parseInt(groupCost)
+            if (nbrOfGroupCost >= 0) return null
+        }
+        catch (e : java.lang.NumberFormatException)
+        {
+            return "Not a number!"
+        }
+        return "Number of participants must be greater than or equal to 0!"
+    }
+
     fun validateActivityPictureUris(pictures : List<Pair<String, InputStream>>) : String?
     {
         if (pictures.isNotEmpty()) return null
         return "Don't forget to add some pictures!"
     }
 
-    fun validateActivityDate( date : String ) : String?
+    fun validateActivityDate(date : String) : String?
     {
         println("Date validation: ${date.trim(' ').lowercase(Locale.getDefault())}")
-        if ( date.trim(' ').lowercase(Locale.getDefault()) != "select date" ) return null
+        if (date.trim(' ').lowercase(Locale.getDefault()) != "select date") return null
         return "You must select a date!"
     }
 
-    fun validateStartTime( startTime : EventTime ) : String?
+    fun validateStartTime(startTime : EventTime) : String?
     {
-        if ( startTime.hourOfDay != -1 && startTime.minute != -1 ) return null
+        if (startTime.hourOfDay != -1 && startTime.minute != -1) return null
         return "You must select a start time!"
     }
 
-    fun validateEndTime( endTime : EventTime ) : String?
+    fun validateEndTime(endTime : EventTime) : String?
     {
-        if ( endTime.hourOfDay != -1 && endTime.minute != -1 ) return null
+        if (endTime.hourOfDay != -1 && endTime.minute != -1) return null
         return "You must select an end time!"
     }
 
@@ -134,6 +162,8 @@ class CreateActivityViewModel(private val activityRepository : IActivityReposito
     fun postNewActivity(
         activityTitle : String,
         description : String,
+        costPerIndividual : Int,
+        costPerGroup : Int,
         groupSize : Int,
         pictures : List<Pair<String, InputStream>>,
         activityDate : EventDate,
@@ -147,6 +177,8 @@ class CreateActivityViewModel(private val activityRepository : IActivityReposito
                 val response = activityRepository.postNewUserActivity(
                     activityTitle,
                     description,
+                    costPerIndividual,
+                    costPerGroup,
                     groupSize,
                     pictures,
                     activityDate,

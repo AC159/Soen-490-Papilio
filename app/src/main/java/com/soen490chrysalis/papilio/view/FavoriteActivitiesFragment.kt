@@ -43,6 +43,7 @@ class FavoriteActivitiesFragment : Fragment() {
     private lateinit var progressCircleContainer: LinearLayout
     private lateinit var layoutActivityList: ScrollView
     private lateinit var activityContainer: LinearLayout
+    private var shouldRefreshOnResume = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,7 +62,6 @@ class FavoriteActivitiesFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentFavoriteActivitiesBinding.inflate(inflater, container, false)
-
         return binding.root
     }
 
@@ -155,6 +155,9 @@ class FavoriteActivitiesFragment : Fragment() {
                                     }
                                 }
                             } else intent.putExtra("images", false)
+                            intent.putExtra("isFavorited", true)
+
+                            displayProgressCircle(true)
 
                             startActivity(intent)
 

@@ -26,25 +26,18 @@ import com.mapbox.search.result.SearchResult
 import com.mapbox.search.result.SearchSuggestion
 import com.soen490chrysalis.papilio.R
 import com.soen490chrysalis.papilio.databinding.ActivityDisplayActivityInfoBinding
-import com.soen490chrysalis.papilio.viewModel.DisplayActivityViewModel
-import com.soen490chrysalis.papilio.viewModel.factories.DisplayActivityViewModelFactory
 import com.soen490chrysalis.papilio.viewModel.ActivityInfoViewModel
 import com.soen490chrysalis.papilio.viewModel.factories.ActivityInfoViewModelFactory
 
 class DisplayActivityInfoActivity : AppCompatActivity() {
     private val logTag = DisplayActivityInfoActivity::class.java.simpleName
-    private lateinit var displayActivityViewModel: DisplayActivityViewModel
     private lateinit var binding: ActivityDisplayActivityInfoBinding
     private var isActivityFavorited: Boolean = false
     private lateinit var favoriteButton: ImageButton
     private lateinit var activityInfoViewModel: ActivityInfoViewModel
+    private var canFavorite = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val displayActivityViewModelFactory = DisplayActivityViewModelFactory()
-        displayActivityViewModel = ViewModelProvider(
-            this,
-            displayActivityViewModelFactory
-        )[DisplayActivityViewModel::class.java]
         super.onCreate(savedInstanceState)
         binding = ActivityDisplayActivityInfoBinding.inflate(layoutInflater)
 
@@ -133,33 +126,65 @@ class DisplayActivityInfoActivity : AppCompatActivity() {
         val hasImages = bundle.getBoolean("images")
         val activityId = bundle.getString("id")?.toInt()
 
-        if (activityId != null) {
-            displayActivityViewModel.checkActivityFavorited(activityId)
+        val fav = bundle.getBoolean("isFavorited")
+        if(fav)
+        {
+            isActivityFavorited = fav
+            changeFavoriteButton()
+            favoriteButton.visibility = View.VISIBLE
+            canFavorite = true
+        }
+        else
+        {
+            if (activityId != null) {
+                activityInfoViewModel.checkActivityFavorited(activityId)
+            }
+            activityInfoViewModel.checkActivityFavoritedResponse.observe(
+                this,
+                androidx.lifecycle.Observer {
+                    isActivityFavorited = it.isActivityFound
+                    changeFavoriteButton()
+                    favoriteButton.visibility = View.VISIBLE
+                    canFavorite = true
+                })
         }
 
-        displayActivityViewModel.checkActivityFavoritedResponse.observe(
-            this,
-            androidx.lifecycle.Observer {
-                isActivityFavorited = it.isActivityFound
-                changeFavoriteButton()
-                favoriteButton.visibility = View.VISIBLE
-            })
-
         favoriteButton.setOnClickListener {
-            if (!isActivityFavorited) {
-                if (activityId != null) {
-                    isActivityFavorited = true
-                    displayActivityViewModel.addFavoriteActivity(activityId)
-                    changeFavoriteButton()
-                }
-            } else {
-                if (activityId != null) {
-                    isActivityFavorited = false
-                    displayActivityViewModel.removeFavoriteActivity(activityId)
-                    changeFavoriteButton()
+            if(canFavorite)
+            {
+                if (!isActivityFavorited) {
+                    if (activityId != null) {
+                        canFavorite = false
+                        isActivityFavorited = true
+                        activityInfoViewModel.addFavoriteActivity(activityId)
+                        changeFavoriteButton()
+                    }
+                } else {
+                    if (activityId != null) {
+                        canFavorite = false
+                        isActivityFavorited = false
+                        activityInfoViewModel.removeFavoriteActivity(activityId)
+                        changeFavoriteButton()
+                    }
                 }
             }
         }
+
+        activityInfoViewModel.activityFavoritedResponse.observe(this, androidx.lifecycle.Observer {
+            if(isActivityFavorited)
+            {
+                displaySnackBar("Activity Favorited!")
+                canFavorite = true
+            }
+            else
+            {
+                displaySnackBar("Activity Unfavorited!")
+                canFavorite = true
+            }
+        })
+
+
+
         val contactString = bundle.getString("contact")
 
 

@@ -11,6 +11,8 @@ class MockActivityRepository : IActivityRepository {
     override suspend fun postNewUserActivity(
         activityTitle: String,
         description: String,
+        costPerIndividualCost: Int,
+        costPerGroupCost: Int,
         groupSize: Int,
         pictures: List<Pair<String, InputStream>>,
         activityDate: EventDate,

@@ -44,9 +44,11 @@
         </LinearLayout>
 
         <ScrollView
+            android:id="@+id/month_container_scroll"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="15sp">
+            android:layout_marginBottom="15sp"
+            android:visibility="gone">
 
             <LinearLayout
                 android:id="@+id/month_container"
@@ -59,6 +61,21 @@
             </LinearLayout>
 
         </ScrollView>
+
+        <LinearLayout
+            android:id="@+id/progressBarContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center">
+
+            <ProgressBar
+                android:id="@+id/progressBar1"
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
 
     </LinearLayout>
 

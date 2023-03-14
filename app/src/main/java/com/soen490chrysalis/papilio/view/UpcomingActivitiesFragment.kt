@@ -7,9 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.ScrollView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.google.firebase.auth.FirebaseAuth
 import com.soen490chrysalis.papilio.databinding.ActivityActivitiesBoxSmallBinding
 import com.soen490chrysalis.papilio.databinding.FragmentActivitiesBinding
 import com.soen490chrysalis.papilio.databinding.UpcomingActivitiesMonthContainerBinding
@@ -48,6 +50,8 @@ class UpcomingActivitiesFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var monthContainer: LinearLayout
+    private lateinit var progressBar: LinearLayout
+    private lateinit var monthScrollContainer:ScrollView
     private var dateToday: LocalDate = LocalDate.now()
 
     override fun onCreateView(
@@ -66,6 +70,8 @@ class UpcomingActivitiesFragment : Fragment() {
         val view = binding.root
 
         monthContainer = binding.monthContainer
+        progressBar = binding.progressBarContainer
+        monthScrollContainer = binding.monthContainerScroll
 
         val createActivityButton = binding.createActivityBtn
         createActivityButton.setOnClickListener {
@@ -77,7 +83,11 @@ class UpcomingActivitiesFragment : Fragment() {
 
         val currentMonth = dateToday.monthValue
 
+        val user = FirebaseAuth.getInstance().currentUser
+
         upcomingActivitiesViewModel.activitiesResponse.observe(viewLifecycleOwner, Observer {
+
+            displayProgressCircle(false)
 
             for (i in currentMonth..12) {
                 val tempDate = LocalDate.of(dateToday.year, i, 1)
@@ -105,8 +115,12 @@ class UpcomingActivitiesFragment : Fragment() {
                         val dateParts = dateString.split("-")
 
                         activityBoxSmallBinding.activityBoxDay.text = dateParts[2]
-
                         activityBoxSmallBinding.activityBoxTitle.text = activity.title
+
+                        if(activity.userId == user?.uid)
+                        {
+                            activityBoxSmallBinding.activityBoxUserCreated.visibility = View.VISIBLE
+                        }
 
                         activityBoxSmallBinding.activityBox.setOnClickListener {
                             val intent =
@@ -165,6 +179,11 @@ class UpcomingActivitiesFragment : Fragment() {
         })
 
         return view
+    }
+
+    fun displayProgressCircle(shouldDisplay: Boolean) {
+        progressBar.visibility = if (shouldDisplay) View.VISIBLE else View.GONE
+        monthScrollContainer.visibility = if (shouldDisplay) View.GONE else View.VISIBLE
     }
 
     companion object {

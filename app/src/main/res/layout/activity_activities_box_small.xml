@@ -60,7 +60,8 @@
                     android:scaleY="0.8"
                     android:layout_gravity="center"
                     android:backgroundTint="@color/orange"
-                    android:background="@drawable/checked"/>
+                    android:background="@drawable/checked"
+                    android:visibility="gone"/>
 
 
                 <ImageView

@@ -51,27 +51,31 @@ class MockUserRepository : IUserRepository
     }
 
     override suspend fun isActivityFavorited(activityId: String?): Response<CheckFavoriteResponse> {
-        TODO("Not yet implemented")
+        return Response.success(
+            CheckFavoriteResponse(
+            isActivityFound = true
+        )
+        )
     }
 
     override suspend fun addFavoriteActivity(activityId: Number): Response<FavoriteResponse> {
-        TODO("Not yet implemented")
+        return Response.success(null)
     }
 
     override suspend fun removeFavoriteActivity(activityId: Number): Response<FavoriteResponse> {
-        TODO("Not yet implemented")
+        return Response.success(null)
     }
 
     override suspend fun getFavoriteActivities(): Response<FavoriteActivitiesResponse> {
-        TODO("Not yet implemented")
+        return Response.success(null)
     }
 
     override suspend fun getJoinedActivities(): Response<JoinedActivitiesResponse> {
-        TODO("Not yet implemented")
+        return Response.success(null)
     }
 
     override suspend fun getCreatedActivities(): Response<FavoriteActivitiesResponse> {
-        TODO("Not yet implemented")
+        return Response.success(null)
     }
 
     override suspend fun updateUser(

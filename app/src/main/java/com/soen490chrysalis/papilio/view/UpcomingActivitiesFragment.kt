@@ -51,20 +51,16 @@ class UpcomingActivitiesFragment : Fragment() {
 
     private lateinit var monthContainer: LinearLayout
     private lateinit var progressBar: LinearLayout
-    private lateinit var monthScrollContainer:ScrollView
+    private lateinit var monthScrollContainer: ScrollView
     private var dateToday: LocalDate = LocalDate.now()
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         val upcomingActivitiesVMFactory = UpcomingActivitiesViewModelFactory()
-        upcomingActivitiesViewModel =
-            ViewModelProvider(
-                this,
-                upcomingActivitiesVMFactory
-            )[UpcomingActivitiesViewModel::class.java]
+        upcomingActivitiesViewModel = ViewModelProvider(
+            this, upcomingActivitiesVMFactory
+        )[UpcomingActivitiesViewModel::class.java]
 
         _binding = FragmentActivitiesBinding.inflate(inflater, container, false)
         val view = binding.root
@@ -117,8 +113,7 @@ class UpcomingActivitiesFragment : Fragment() {
                         activityBoxSmallBinding.activityBoxDay.text = dateParts[2]
                         activityBoxSmallBinding.activityBoxTitle.text = activity.title
 
-                        if(activity.userId == user?.uid)
-                        {
+                        if (activity.userId == user?.uid) {
                             activityBoxSmallBinding.activityBoxUserCreated.visibility = View.VISIBLE
                         }
 
@@ -163,10 +158,10 @@ class UpcomingActivitiesFragment : Fragment() {
                     monthContainerBinding.card.setOnClickListener {
                         for (c in 1 until monthContainerBinding.root.childCount) {
                             val currentActivityBox = monthContainerBinding.root.getChildAt(c)
-                            if (currentActivityBox.visibility == View.GONE)
-                                monthContainerBinding.root.getChildAt(c).visibility = View.VISIBLE
-                            else
-                                monthContainerBinding.root.getChildAt(c).visibility = View.GONE
+                            if (currentActivityBox.visibility == View.GONE) monthContainerBinding.root.getChildAt(
+                                c
+                            ).visibility = View.VISIBLE
+                            else monthContainerBinding.root.getChildAt(c).visibility = View.GONE
                         }
                     }
 
@@ -197,12 +192,11 @@ class UpcomingActivitiesFragment : Fragment() {
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            ActivitiesFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+        fun newInstance(param1: String, param2: String) = ActivitiesFragment().apply {
+            arguments = Bundle().apply {
+                putString(ARG_PARAM1, param1)
+                putString(ARG_PARAM2, param2)
             }
+        }
     }
 }

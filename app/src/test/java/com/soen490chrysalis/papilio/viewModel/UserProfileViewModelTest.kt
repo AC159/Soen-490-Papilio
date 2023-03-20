@@ -58,6 +58,16 @@ class UserProfileViewModelTest
         every { Log.e(any(), any()) } returns 0
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun getUserByFirebaseId() = runTest {
+        userProfileViewModel.getUserByFirebaseId()
+        advanceUntilIdle()
+        assert(userProfileViewModel.userObject.value != null)
+        assert(userProfileViewModel.userObject.value!!.requestIsFinished)
+        assert(userProfileViewModel.userObject.value!!.userObject!!.email == "validEmail@gmail.com")
+    }
+
     @Test
     fun addEditedField_CheckIfEmptyAfterAdding() = runTest {
         userProfileViewModel.addEditedField("field name", "field value")

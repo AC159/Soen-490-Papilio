@@ -23,11 +23,11 @@ class ActivityInfoViewModel(private val userRepository : IUserRepository) : View
     var checkActivityMemberResponse = MutableLiveData<CheckActivityMember>()
     var jonActivityResponse = MutableLiveData<APIResponse>()
     var leaveActivityResponse = MutableLiveData<APIResponse>()
-    var activitiesResponse: MutableLiveData<FavoriteActivitiesResponse> =
+    var activitiesResponse : MutableLiveData<FavoriteActivitiesResponse> =
         MutableLiveData<FavoriteActivitiesResponse>()
-    var checkActivityFavoritedResponse: MutableLiveData<CheckFavoriteResponse> =
+    var checkActivityFavoritedResponse : MutableLiveData<CheckFavoriteResponse> =
         MutableLiveData<CheckFavoriteResponse>()
-    var activityFavoritedResponse: MutableLiveData<FavoriteResponse> =
+    var activityFavoritedResponse : MutableLiveData<FavoriteResponse> =
         MutableLiveData<FavoriteResponse>()
 
     // Function that fetches information about whether or not a user has joined an activity
@@ -59,23 +59,29 @@ class ActivityInfoViewModel(private val userRepository : IUserRepository) : View
         }
     }
 
-    fun checkActivityFavorited(activityId: Number) {
+    fun checkActivityFavorited(activityId : Number)
+    {
         viewModelScope.launch {
-            try {
+            try
+            {
                 val getActivityResponse = userRepository.isActivityFavorited(activityId.toString())
                 checkActivityFavoritedResponse.value = CheckFavoriteResponse(
                     getActivityResponse.body()!!.isActivityFound
                 )
                 Log.d("checkActivityFavorited", activitiesResponse.value.toString())
-            } catch (e: Exception) {
+            }
+            catch (e : Exception)
+            {
                 Log.d(logTag, "userRepository.checkActivityFavorited - exception:\n $e")
             }
         }
     }
 
-    fun addFavoriteActivity(activityId: Number) {
+    fun addFavoriteActivity(activityId : Number)
+    {
         viewModelScope.launch {
-            try {
+            try
+            {
                 val getActivityResponse = userRepository.addFavoriteActivity(activityId)
 
                 Log.d("addFavoriteActivity", getActivityResponse.message())
@@ -84,15 +90,19 @@ class ActivityInfoViewModel(private val userRepository : IUserRepository) : View
                     getActivityResponse.body()?.success,
                     getActivityResponse.body()?.update
                 )
-            } catch (e: Exception) {
+            }
+            catch (e : Exception)
+            {
                 Log.d(logTag, "userRepository.addFavoriteActivity - exception:\n $e")
             }
         }
     }
 
-    fun removeFavoriteActivity(activityId: Number) {
+    fun removeFavoriteActivity(activityId : Number)
+    {
         viewModelScope.launch {
-            try {
+            try
+            {
                 val getActivityResponse = userRepository.removeFavoriteActivity(activityId)
 
                 Log.d("removeFavoriteActivity", getActivityResponse.message())
@@ -101,7 +111,9 @@ class ActivityInfoViewModel(private val userRepository : IUserRepository) : View
                     getActivityResponse.body()?.success,
                     getActivityResponse.body()?.update
                 )
-            } catch (e: Exception) {
+            }
+            catch (e : Exception)
+            {
                 Log.d(logTag, "userRepository.removeFavoriteActivity - exception:\n $e")
             }
         }

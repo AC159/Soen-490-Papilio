@@ -1,8 +1,8 @@
-package com.soen490chrysalis.papilio.viewModel
+package com.soen490chrysalis.papilio.viewModel.factories
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.firebase.auth.FirebaseAuth
-import com.soen490chrysalis.papilio.viewModel.factories.UserChatViewModelFactory
+import com.soen490chrysalis.papilio.viewModel.UserChatViewModel
 import io.mockk.every
 import io.mockk.mockkStatic
 import org.junit.Rule

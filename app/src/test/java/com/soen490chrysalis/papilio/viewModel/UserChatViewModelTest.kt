@@ -1,6 +1,5 @@
 package com.soen490chrysalis.papilio.viewModel
 
-import android.util.Log
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -10,12 +9,9 @@ import com.soen490chrysalis.papilio.services.network.IUserApiService
 import com.soen490chrysalis.papilio.testUtils.MainCoroutineRule
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import io.mockk.every
-import io.mockk.mockkStatic
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
-import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.Before
 import org.junit.Rule

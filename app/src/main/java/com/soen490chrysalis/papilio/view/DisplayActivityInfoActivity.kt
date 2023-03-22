@@ -83,12 +83,32 @@ class DisplayActivityInfoActivity : AppCompatActivity()
         )[ActivityInfoViewModel::class.java]
 
         val bundle : Bundle = intent.extras!!
-        val activity_id = bundle.getString("id")!!
+        val title = bundle.getString("title")
+        val description = bundle.getString("description")
+        val individualCost = bundle.getString("individualCost")
+        val groupCost = bundle.getString("groupCost")
+        val location = bundle.getString("location")
+        val hasImages = bundle.getBoolean("images")
+        val activityId = bundle.getString("id")?.toInt()
+        val fav = bundle.getBoolean("isFavorited")
+        val businessId = bundle.getString("business_id")
+
+        // This section is for logging events on firebase analytics
+        val userId = activityInfoViewModel.getUserId()
+        if (businessId != null && userId != null)
+        {
+            firebaseAnalytics.logEvent("activity_visited") {
+                param("user_id", userId)
+                param("activity_id", activityId.toString())
+                param("business_id", businessId)
+                param("time", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).toString())
+            }
+        }
 
         // we need to determine if the user has already joined this activity or not and display the text button accordingly
         // Disable the 'join' button while we process the request & display a progress indicator
         DisableButtonAndShowProgressIndicator(binding.joinButton as MaterialButton)
-        activityInfoViewModel.checkActivityMember(activity_id)
+        activityInfoViewModel.checkActivityMember(activityId.toString())
 
         activityInfoViewModel.checkActivityMemberResponse.observe(this) {
             if (it.isSuccess)
@@ -107,8 +127,8 @@ class DisplayActivityInfoActivity : AppCompatActivity()
             DisableButtonAndShowProgressIndicator(binding.joinButton as MaterialButton)
             if (binding.joinButton.text.toString()
                             .lowercase() == "join"
-            ) activityInfoViewModel.joinActivity(activity_id)
-            else activityInfoViewModel.leaveActivity(activity_id)
+            ) activityInfoViewModel.joinActivity(activityId.toString())
+            else activityInfoViewModel.leaveActivity(activityId.toString())
         }
 
         // Listen to the API response when the user wants to join an activity
@@ -116,7 +136,25 @@ class DisplayActivityInfoActivity : AppCompatActivity()
             EnableButtonAndRemoveProgressIndicator(binding.joinButton as MaterialButton)
 
             // Change the text of the button if the user successfully joined the activity
-            if (it.isSuccess) binding.joinButton.text = "Leave"
+            if (it.isSuccess)
+            {
+                binding.joinButton.text = "Leave"
+
+                if (businessId != null && userId != null)
+                {
+                    // Log firebase analytics event only if the operation was successful
+                    firebaseAnalytics.logEvent("activity_registered") {
+                        param("user_id", userId)
+                        param("activity_id", activityId.toString())
+                        param("business_id", businessId)
+                        param("time",
+                            LocalDateTime.now()
+                                    .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+                                    .toString()
+                        )
+                    }
+                }
+            }
 
             displaySnackBar(it.errorMessage)
         }
@@ -132,28 +170,6 @@ class DisplayActivityInfoActivity : AppCompatActivity()
         }
 
         val infoContact : Button = binding.infoContact
-
-        val title = bundle.getString("title")
-        val description = bundle.getString("description")
-        val individualCost = bundle.getString("individualCost")
-        val groupCost = bundle.getString("groupCost")
-        val location = bundle.getString("location")
-        val hasImages = bundle.getBoolean("images")
-        val activityId = bundle.getString("id")?.toInt()
-        val fav = bundle.getBoolean("isFavorited")
-        val userId = bundle.getString("user_id")
-        val businessId = bundle.getString("business_id")
-
-        // This section is for logging events on firebase analytics
-        if (businessId != null && userId != null)
-        {
-            firebaseAnalytics.logEvent("activity_visited") {
-                param("user_id", userId)
-                param("activity_id", activityId.toString())
-                param("business_id", businessId)
-                param("time", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).toString())
-            }
-        }
 
         if (fav)
         {

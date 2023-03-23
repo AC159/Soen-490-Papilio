@@ -50,38 +50,34 @@ class MockUserRepository : IUserRepository
         return Response.success(null)
     }
 
-    override suspend fun isActivityFavorited(activityId : String?) : Response<CheckFavoriteResponse>
+    override suspend fun isActivityFavorited(activityId : String?) : Triple<Boolean, String, CheckFavoriteResponse>
     {
-        return Response.success(
-            CheckFavoriteResponse(
-                isActivityFound = true
-            )
-        )
+        return Triple(true, "", CheckFavoriteResponse(false))
     }
 
-    override suspend fun addFavoriteActivity(activityId : Number) : Response<FavoriteResponse>
+    override suspend fun addFavoriteActivity(activityId : Number) : Triple<Boolean, String, FavoriteResponse>
     {
-        return Response.success(null)
+        return Triple(true, "", FavoriteResponse(true, null))
     }
 
-    override suspend fun removeFavoriteActivity(activityId : Number) : Response<FavoriteResponse>
+    override suspend fun removeFavoriteActivity(activityId : Number) : Triple<Boolean, String, FavoriteResponse>
     {
-        return Response.success(null)
+        return Triple(true, "", FavoriteResponse(true, null))
     }
 
-    override suspend fun getFavoriteActivities() : Response<FavoriteActivitiesResponse>
+    override suspend fun getFavoriteActivities() : Triple<Boolean, String, FavoriteActivitiesResponse>
     {
-        return Response.success(null)
+        return Triple(true, "", FavoriteActivitiesResponse("1", listOf<ActivityObject>()))
     }
 
-    override suspend fun getJoinedActivities() : Response<JoinedActivitiesResponse>
+    override suspend fun getJoinedActivities() : Triple<Boolean, String, JoinedActivitiesResponse>
     {
-        return Response.success(null)
+        return Triple(true, "", JoinedActivitiesResponse("1", listOf<JoinedActivityObject>()))
     }
 
-    override suspend fun getCreatedActivities() : Response<FavoriteActivitiesResponse>
+    override suspend fun getCreatedActivities() : Triple<Boolean, String, FavoriteActivitiesResponse>
     {
-        return Response.success(null)
+        return Triple(true, "", FavoriteActivitiesResponse("1", listOf<ActivityObject>()))
     }
 
     override suspend fun updateUser(

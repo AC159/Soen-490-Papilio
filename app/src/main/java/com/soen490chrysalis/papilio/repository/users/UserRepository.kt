@@ -169,85 +169,127 @@ class UserRepository(
         return response
     }
 
-    override suspend fun isActivityFavorited(activityId: String?): Response<CheckFavoriteResponse> {
+    override suspend fun isActivityFavorited(activityId: String?): Triple<Boolean, String, CheckFavoriteResponse> {
         return withContext(coroutineDispatcher) {
             val firebaseId = firebaseAuth.currentUser!!.uid
 
-            val response = userService.checkActivityFavorited(firebaseId, activityId)
+            val response : Triple<Boolean, String, CheckFavoriteResponse> = try {
+                val result = userService.checkActivityFavorited(firebaseId, activityId)
+                Log.d(logTag, "isActivityFavorited: $result")
+                Triple(result.isSuccessful, result.message(), result.body()!!)
+            }
+            catch (e: Exception) {
+                Log.d(logTag, "userRepository isActivityFavorited() exception: $e")
+                Triple(false, e.message.toString(), CheckFavoriteResponse(false))
+            }
 
-            Log.d(logTag, "isActivityFavorited: $response")
             return@withContext response
         }
     }
 
-    override suspend fun addFavoriteActivity(activityId: Number): Response<FavoriteResponse> {
+    override suspend fun addFavoriteActivity(activityId: Number): Triple<Boolean, String, FavoriteResponse> {
         return withContext(coroutineDispatcher) {
             val firebaseId = firebaseAuth.currentUser!!.uid
 
             val editedFields: MutableMap<String, Any> = mutableMapOf()
             editedFields["favoriteActivities"] = activityId
 
-            val response = userService.addFavoriteActivity(
-                UserUpdate(
-                    Identifier(
-                        firebaseId = firebaseId
-                    ), editedFields
+            val response = try {
+                val result = userService.addFavoriteActivity(
+                    UserUpdate(
+                        Identifier(
+                            firebaseId = firebaseId
+                        ), editedFields
+                    )
                 )
-            )
+                Log.d(logTag, "addFavoriteActivity: $result")
+                Triple(result.isSuccessful, result.message(), result.body()!!)
+            }
+            catch (e: Exception) {
+                Log.d(logTag, "userRepository addFavoriteActivity() exception: $e")
+                Triple(false, e.message.toString(), FavoriteResponse(false, null))
+            }
 
-            Log.d(logTag, "addFavoriteActivity: $response")
             return@withContext response
         }
     }
 
-    override suspend fun removeFavoriteActivity(activityId: Number): Response<FavoriteResponse> {
+    override suspend fun removeFavoriteActivity(activityId: Number): Triple<Boolean, String, FavoriteResponse>{
         return withContext(coroutineDispatcher) {
             val firebaseId = firebaseAuth.currentUser!!.uid
             val editedFields: MutableMap<String, Any> = mutableMapOf()
             editedFields["favoriteActivities"] = activityId
 
-            val response = userService.removeFavoriteActivity(
-                UserUpdate(
-                    Identifier(
-                        firebaseId = firebaseId
-                    ), editedFields
+            val response = try {
+                val result = userService.removeFavoriteActivity(
+                    UserUpdate(
+                        Identifier(
+                            firebaseId = firebaseId
+                        ), editedFields
+                    )
                 )
-            )
+                Log.d(logTag, "removeFavoriteActivity: $result")
+                Triple(result.isSuccessful, result.message(), result.body()!!)
+            }
+            catch (e: Exception) {
+                Log.d(logTag, "userRepository removeFavoriteActivity() exception: $e")
+                Triple(false, e.message.toString(), FavoriteResponse(false, null))
+            }
 
-            Log.d(logTag, "removeFavoriteActivity: $response")
             return@withContext response
         }
     }
 
-    override suspend fun getCreatedActivities(): Response<FavoriteActivitiesResponse> {
+    override suspend fun getCreatedActivities(): Triple<Boolean, String, FavoriteActivitiesResponse> {
         return withContext(coroutineDispatcher) {
             val firebaseId = firebaseAuth.currentUser!!.uid
 
-            val response = userService.getUserActivities(firebaseId)
+            val response = try {
+                val result = userService.getUserActivities(firebaseId)
+                Log.d(logTag, "getCreatedActivities: $result")
+                Triple(result.isSuccessful, result.message(), result.body()!!)
+            }
+            catch (e: Exception) {
+                Log.d(logTag, "userRepository getCreatedActivities() exception: $e")
+                Triple(false, e.message.toString(), FavoriteActivitiesResponse("0", listOf<ActivityObject>()))
+            }
 
-            Log.d(logTag, "getCreatedActivities: $response")
             return@withContext response
         }
     }
 
-    override suspend fun getFavoriteActivities(): Response<FavoriteActivitiesResponse> {
+    override suspend fun getFavoriteActivities(): Triple<Boolean, String, FavoriteActivitiesResponse> {
         return withContext(coroutineDispatcher) {
             val firebaseId = firebaseAuth.currentUser!!.uid
 
-            val response = userService.getUserFavoriteActivities(firebaseId)
+            val response = try {
+                val result = userService.getUserFavoriteActivities(firebaseId)
+                Log.d(logTag, "getFavoriteActivities: $result")
+                Triple(result.isSuccessful, result.message(), result.body()!!)
+            }
+            catch (e: Exception) {
+                Log.d(logTag, "userRepository getFavoriteActivities() exception: $e")
+                Triple(false, e.message.toString(), FavoriteActivitiesResponse("0", listOf<ActivityObject>()))
+            }
 
-            Log.d(logTag, "getFavoriteActivities: $response")
             return@withContext response
         }
     }
 
-    override suspend fun getJoinedActivities(): Response<JoinedActivitiesResponse> {
+    override suspend fun getJoinedActivities(): Triple<Boolean, String, JoinedActivitiesResponse> {
         return withContext(coroutineDispatcher) {
             val firebaseId = firebaseAuth.currentUser!!.uid
 
-            val response = userService.getUserJoinedActivities(firebaseId)
+            val response = try {
+                val result = userService.getUserJoinedActivities(firebaseId)
+                Log.d(logTag, "getJoinedActivities: $result")
+                Triple(result.isSuccessful, result.message(), result.body()!!)
+            }
+            catch (e: Exception) {
+                Log.d(logTag, "userRepository getJoinedActivities() exception: $e")
+                Triple(false, e.message.toString(), JoinedActivitiesResponse("0", listOf<JoinedActivityObject>()))
+            }
 
-            Log.d(logTag, "getJoinedActivities: $response")
             return@withContext response
         }
     }

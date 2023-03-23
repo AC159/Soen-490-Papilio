@@ -36,12 +36,12 @@ class HomeFragmentViewModel(private val activityRepository: IActivityRepository)
             try {
                 val getAllActivitiesResponse = activityRepository.getAllActivities(page, size)
                 activityResponse.value = ActivityResponse(
-                    getAllActivitiesResponse.body()!!.count,
-                    getAllActivitiesResponse.body()!!.rows,
-                    getAllActivitiesResponse.body()!!.totalPages,
-                    getAllActivitiesResponse.body()!!.currentPage
+                    getAllActivitiesResponse.third.count,
+                    getAllActivitiesResponse.third.rows,
+                    getAllActivitiesResponse.third.totalPages,
+                    getAllActivitiesResponse.third.currentPage
                 )
-                Log.d("getAllAct", activityResponse.toString())
+                Log.d(logTag, "response from getAllAct $getAllActivitiesResponse")
             } catch (e: Exception) {
                 Log.d(logTag, "activityRepository.getAllActivities - exception:\n $e")
             }

@@ -28,21 +28,21 @@ interface IUserRepository
 
     suspend fun isActivityFavorited(
         activityId : String?
-    ) : Response<CheckFavoriteResponse>
+    ) : Triple<Boolean, String, CheckFavoriteResponse>
 
     suspend fun addFavoriteActivity(
         activityId : Number
-    ) : Response<FavoriteResponse>
+    ) : Triple<Boolean, String, FavoriteResponse>
 
     suspend fun removeFavoriteActivity(
         activityId : Number
-    ) : Response<FavoriteResponse>
+    ) : Triple<Boolean, String, FavoriteResponse>
 
-    suspend fun getFavoriteActivities() : Response<FavoriteActivitiesResponse>
+    suspend fun getFavoriteActivities() : Triple<Boolean, String, FavoriteActivitiesResponse>
 
-    suspend fun getJoinedActivities() : Response<JoinedActivitiesResponse>
+    suspend fun getJoinedActivities() : Triple<Boolean, String, JoinedActivitiesResponse>
 
-    suspend fun getCreatedActivities() : Response<FavoriteActivitiesResponse>
+    suspend fun getCreatedActivities() : Triple<Boolean, String, FavoriteActivitiesResponse>
 
 
     suspend fun updateUser(

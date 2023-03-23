@@ -26,15 +26,15 @@ class UpcomingActivitiesViewModel(private val userRepository : IUserRepository) 
             {
                 val getFirstActivityResponse = userRepository.getCreatedActivities()
                 val firstResponse = FavoriteActivitiesResponse(
-                    getFirstActivityResponse.body()!!.count,
-                    getFirstActivityResponse.body()!!.activities,
+                    getFirstActivityResponse.third.count,
+                    getFirstActivityResponse.third.activities,
                 )
                 Log.d(".getCreatedActivities()", firstResponse.toString())
 
                 val getActivityResponse = userRepository.getJoinedActivities()
                 val secondResponse = JoinedActivitiesResponse(
-                    getActivityResponse.body()!!.count,
-                    getActivityResponse.body()!!.row
+                    getActivityResponse.third.count,
+                    getActivityResponse.third.row
                 )
                 Log.d(".getJoinedActivities()", secondResponse.toString())
 
@@ -49,7 +49,8 @@ class UpcomingActivitiesViewModel(private val userRepository : IUserRepository) 
                     activities = firstResponse.activities.plus(tempList)
                 )
 
-                Log.d(".getUpcomingActivities", activitiesResponse.value.toString())
+                Log.d(logTag, " response from getFirstActivityResponse() --> $getFirstActivityResponse")
+                Log.d(logTag, " response from getJoinedActivities() --> $getActivityResponse")
             }
             catch (e : Exception)
             {

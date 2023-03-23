@@ -32,14 +32,14 @@ class CreateActivityViewModelFactoryTest
 
         // Mock FirebasePerformance and Trace
         val firebasePerformanceMock = mockk<FirebasePerformance>()
-        val myTraceMock = mockk<Trace>()
+        val traceMock = mockk<Trace>()
 
         // Mock the Firebase.performance.newTrace() method to return the mock Trace object
-        every { firebasePerformanceMock.newTrace(any()) } returns myTraceMock
+        every { firebasePerformanceMock.newTrace(any()) } returns traceMock
 
         // Mock the Trace.start() and Trace.stop() methods to return a dummy value
-        every { myTraceMock.start() } returns mockk()
-        every { myTraceMock.stop() } returns mockk()
+        every { traceMock.start() } returns mockk()
+        every { traceMock.stop() } returns mockk()
 
         // Mock the getInstance method of FirebasePerformance to return the mock instance
         every { FirebasePerformance.getInstance() } returns firebasePerformanceMock

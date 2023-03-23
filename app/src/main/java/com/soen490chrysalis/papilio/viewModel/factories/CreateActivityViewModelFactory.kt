@@ -20,11 +20,11 @@ class CreateActivityViewModelFactory : ViewModelProvider.NewInstanceFactory()
         // Initialize Firebase Auth and inject it into the user repository
         val firebaseAuth = FirebaseAuth.getInstance()
         //performance testing for retrofit service
-        val myTrace = Firebase.performance.newTrace("activity_api_retrofit_service")
-        myTrace.start()
+        val retrofitBootTrace = Firebase.performance.newTrace("retrofit-service-activity-api-boot-time")
+        retrofitBootTrace.start()
         val activityRepository : IActivityRepository =
             ActivityRepository(firebaseAuth, userAPIService = UserApi.retrofitService, activityAPIService = ActivityApi.retrofitService)
-        myTrace.stop()
+        retrofitBootTrace.stop()
         return CreateActivityViewModel(activityRepository) as T
     }
 }

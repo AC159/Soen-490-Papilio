@@ -21,11 +21,11 @@ class UserProfileViewModelFactory : ViewModelProvider.NewInstanceFactory()
         // Initialize Firebase Auth and inject it into the user repository
         val firebaseAuth = FirebaseAuth.getInstance()
         //performance testing for retrofit service
-        val myTrace = Firebase.performance.newTrace("user_api_retrofit_service")
-        myTrace.start()
+        val retrofitBootTrace = Firebase.performance.newTrace("retrofit-service-user-api-boot-time")
+        retrofitBootTrace.start()
         val userRepository : IUserRepository =
             UserRepository(firebaseAuth, userService = UserApi.retrofitService)
-        myTrace.stop()
+        retrofitBootTrace.stop()
         return UserProfileViewModel(userRepository) as T
     }
 }

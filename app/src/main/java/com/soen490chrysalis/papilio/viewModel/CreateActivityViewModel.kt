@@ -13,7 +13,6 @@ import kotlinx.coroutines.launch
 import java.io.InputStream
 import java.util.*
 import kotlin.collections.ArrayList
-import com.google.firebase.perf.metrics.AddTrace
 
 data class PostNewUserActivityResponse(var isSuccess : Boolean, var msg : String)
 
@@ -57,7 +56,6 @@ class CreateActivityViewModel(private val activityRepository : IActivityReposito
         return "Number of participants must be greater than 0!"
     }
 
-    @AddTrace(name = "picture_url_validation")
     fun validateActivityPictureUris(pictures : List<Pair<String, InputStream>>) : String?
     {
         if (pictures.isNotEmpty()) return null

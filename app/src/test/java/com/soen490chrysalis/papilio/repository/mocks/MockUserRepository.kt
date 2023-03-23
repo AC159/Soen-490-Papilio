@@ -6,6 +6,7 @@ import com.soen490chrysalis.papilio.repository.users.IUserRepository
 import com.soen490chrysalis.papilio.services.network.responses.*
 import org.mockito.Mockito
 import retrofit2.Response
+import java.io.InputStream
 
 /*
     DESCRIPTION:
@@ -38,7 +39,8 @@ class MockUserRepository : IUserRepository
             null,
             "November 13 2022",
             "November 13 2022",
-            "Hello! It's me, firstName!"
+            "Hello! It's me, firstName!",
+            "ewfj13498to3ifj0193rfg93rtg"
         )
         return GetUserByFirebaseIdResponse(true, user)
     }
@@ -82,6 +84,13 @@ class MockUserRepository : IUserRepository
 
     override suspend fun updateUser(
         variableMap : Map<String, Any>
+    ) : Response<Void>
+    {
+        return Response.success(null)
+    }
+
+    override suspend fun updateUserProfilePic(
+        image : Pair<String, InputStream>
     ) : Response<Void>
     {
         return Response.success(null)

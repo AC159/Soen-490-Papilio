@@ -76,6 +76,13 @@ interface IUserApiService {
         @Body user: UserUpdate
     ): Response<Void>
 
+    @Multipart
+    @PUT("updateUserProfilePicture/{id}")
+    suspend fun updateUserProfilePic(
+        @Path("id") id: String,
+        @Part image : MultipartBody.Part
+    ): Response<Void>
+
     @PUT("addFavoriteActivity")
     suspend fun addFavoriteActivity(
         @Body body: UserUpdate

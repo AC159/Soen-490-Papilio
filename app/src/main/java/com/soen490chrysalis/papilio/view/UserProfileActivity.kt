@@ -10,6 +10,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.text.InputFilter
 import android.text.InputType
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -107,10 +108,16 @@ class UserProfileActivity : AppCompatActivity()
                 binding.userProfileEmail.text = "Email: " + firebaseUser.email
                 binding.userProfilePicture.setImageResource(R.drawable.user_pfp_example)
 
+
                 userProfileViewModel.userObject.observe(this, Observer {
                     binding.userProfileBio.text =
                         userProfileViewModel.userObject.value?.userObject?.bio
                     binding.userProfileBioEdit.setText(userProfileViewModel.userObject.value?.userObject?.bio)
+
+                    Glide.with(this)
+                            .load(it.userObject?.image)
+                            .circleCrop()
+                            .into(binding.userProfilePicture)
 
                     val countryCode = userProfileViewModel.userObject.value?.userObject?.countryCode
                     val phone = userProfileViewModel.userObject.value?.userObject?.phone
@@ -358,6 +365,11 @@ class UserProfileActivity : AppCompatActivity()
             {
 
                 val uri : Uri = data?.data!!
+                Log.d("BINGO->>", data.toString())
+                val inputStream = contentResolver.openInputStream(uri)
+                val fileExtension = "jpg"
+
+                userProfileViewModel.updateUserProfilePic(Pair(fileExtension, inputStream!!))
 
                 Glide.with(this)
                         .load(uri)

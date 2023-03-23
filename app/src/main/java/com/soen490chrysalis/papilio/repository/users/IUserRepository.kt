@@ -4,6 +4,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.FirebaseUser
 import com.soen490chrysalis.papilio.services.network.responses.*
 import retrofit2.Response
+import java.io.InputStream
 
 /*
     DESCRIPTION:
@@ -47,6 +48,10 @@ interface IUserRepository
 
     suspend fun updateUser(
         variableMap : Map<String, Any>
+    ) : Response<Void>
+
+    suspend fun updateUserProfilePic(
+        image: Pair<String, InputStream>
     ) : Response<Void>
 
     suspend fun firebaseAuthWithGoogle(idToken : String) : Pair<Boolean, String>

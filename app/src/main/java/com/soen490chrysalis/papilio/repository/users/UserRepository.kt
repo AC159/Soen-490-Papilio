@@ -10,7 +10,15 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.ResponseBody
 import retrofit2.Response
+import java.io.File
+import java.io.FileOutputStream
+import java.io.InputStream
+import java.io.OutputStream
 
 /*
     DESCRIPTION:
@@ -315,6 +323,38 @@ class UserRepository(
 
             Log.d(logTag, "Update user: $response")
             return@withContext response
+        }
+    }
+
+    override suspend fun updateUserProfilePic(
+        image: Pair<String, InputStream>
+    ): Response<Void> {
+        return withContext(coroutineDispatcher) {
+                val firebaseId = firebaseAuth.currentUser!!.uid
+
+                val inputStream = image.second
+                val imageFileExtension = image.first
+
+                val file = File.createTempFile("tempFile", null, null)
+                val out: OutputStream = FileOutputStream(file)
+                val buf = ByteArray(1024)
+                var len: Int
+                while (inputStream.read(buf).also { len = it } > 0) {
+                    out.write(buf, 0, len)
+                }
+                out.close()
+                inputStream.close()
+
+                val currentImage = MultipartBody.Part.createFormData(
+                    "image", // this name must match the name given in the backend
+                    file.name,
+                    file.asRequestBody("image/$imageFileExtension".toMediaType())
+                )
+
+                val response = userService.updateUserProfilePic(firebaseId, currentImage)
+
+                Log.d(logTag, "Update user profile pic: $response")
+                return@withContext response
         }
     }
 

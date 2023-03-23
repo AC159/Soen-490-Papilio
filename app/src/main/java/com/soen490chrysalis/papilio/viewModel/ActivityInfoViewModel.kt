@@ -30,6 +30,11 @@ class ActivityInfoViewModel(private val userRepository : IUserRepository) : View
     var activityFavoritedResponse: MutableLiveData<FavoriteResponse> =
         MutableLiveData<FavoriteResponse>()
 
+    fun getUserId() : String?
+    {
+        return userRepository.getUser()?.uid
+    }
+
     // Function that fetches information about whether or not a user has joined an activity
     fun checkActivityMember(activity_id : String)
     {

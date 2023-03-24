@@ -2,7 +2,7 @@ package com.soen490chrysalis.papilio.viewModel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.firebase.auth.FirebaseAuth
-import com.soen490chrysalis.papilio.viewModel.factories.UserProfileViewModelFactory
+import com.soen490chrysalis.papilio.viewModel.UserProfileViewModelFactory
 import io.mockk.every
 import io.mockk.mockkStatic
 import org.junit.Rule

@@ -1,4 +1,4 @@
-package com.soen490chrysalis.papilio.viewModel.factories
+package com.soen490chrysalis.papilio.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

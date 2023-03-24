@@ -156,7 +156,8 @@ class UserRepositoryTest {
                     "        \"email\": \"validEmail@gmail.com\",\n" +
                     "        \"createdAt\": \"2022-11-14T02:07:02.585Z\",\n" +
                     "        \"updatedAt\": \"2022-11-14T02:07:02.585Z\",\n" +
-                    "        \"bio\": \"Hello! It's me, firstName!\"\n" +
+                    "        \"bio\": \"Hello! It's me, firstName!\",\n" +
+                    "        \"image\": \"ewfj13498to3ifj0193rfg93rtg\"\n" +
                     "    }\n" +
                     "}"
         )

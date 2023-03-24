@@ -155,7 +155,6 @@ class UserProfileActivity : AppCompatActivity()
                 binding.userProfilePhoneEditButton.visibility = View.VISIBLE
                 binding.userProfileBio.visibility = View.GONE
                 binding.userProfilePhoneEditButton.visibility = View.VISIBLE
-                binding.userProfilePicture.setImageResource(R.drawable.user_pfp_example)
 
                 // only display the "Change Password" button if the current account is not a Google account.
                 if (FirebaseAuth.getInstance().currentUser?.providerId != "google.com")
@@ -178,7 +177,6 @@ class UserProfileActivity : AppCompatActivity()
                 binding.userProfilePhoneEditButton.visibility = View.GONE
                 binding.userProfileBio.visibility = View.VISIBLE
                 binding.editProfileButton.background = ResourcesCompat.getDrawable(resources, R.drawable.edit_button, null)!!
-                binding.userProfilePicture.setImageResource(R.drawable.user_pfp_example)
 
                 if (user?.providerId != "google.com")
                 {

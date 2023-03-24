@@ -332,29 +332,35 @@ class UserRepository(
         return withContext(coroutineDispatcher) {
                 val firebaseId = firebaseAuth.currentUser!!.uid
 
-                val inputStream = image.second
-                val imageFileExtension = image.first
+                try
+                {
+                    val inputStream = image.second
+                    val imageFileExtension = image.first
 
-                val file = File.createTempFile("tempFile", null, null)
-                val out: OutputStream = FileOutputStream(file)
-                val buf = ByteArray(1024)
-                var len: Int
-                while (inputStream.read(buf).also { len = it } > 0) {
-                    out.write(buf, 0, len)
+                    val file = File.createTempFile("tempFile", null, null)
+                    val out: OutputStream = FileOutputStream(file)
+                    val buf = ByteArray(1024)
+                    var len: Int
+                    while (inputStream.read(buf).also { len = it } > 0) {
+                        out.write(buf, 0, len)
+                    }
+                    out.close()
+                    inputStream.close()
+
+                    val currentImage = MultipartBody.Part.createFormData(
+                        "image", // this name must match the name given in the backend
+                        file.name,
+                        file.asRequestBody("image/$imageFileExtension".toMediaType())
+                    )
+
+                    val response = userService.updateUserProfilePic(firebaseId, currentImage)
+
+                    Log.d(logTag, "Update user profile pic: $response")
+                    return@withContext response
+                } catch (e: Error) {
+                    Log.d(logTag, "updateUserProfilePic: $e")
+                    return@withContext Response.error(400, null)
                 }
-                out.close()
-                inputStream.close()
-
-                val currentImage = MultipartBody.Part.createFormData(
-                    "image", // this name must match the name given in the backend
-                    file.name,
-                    file.asRequestBody("image/$imageFileExtension".toMediaType())
-                )
-
-                val response = userService.updateUserProfilePic(firebaseId, currentImage)
-
-                Log.d(logTag, "Update user profile pic: $response")
-                return@withContext response
         }
     }
 

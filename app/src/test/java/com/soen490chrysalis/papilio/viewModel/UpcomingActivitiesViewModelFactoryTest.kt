@@ -2,7 +2,7 @@ package com.soen490chrysalis.papilio.viewModel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.firebase.auth.FirebaseAuth
-import com.soen490chrysalis.papilio.viewModel.factories.UserProfileViewModelFactory
+import com.soen490chrysalis.papilio.viewModel.factories.UpcomingActivitiesViewModelFactory
 import io.mockk.every
 import io.mockk.mockkStatic
 import org.junit.Rule
@@ -12,7 +12,7 @@ import org.junit.runners.JUnit4
 import org.mockito.Mockito
 
 @RunWith(JUnit4::class)
-class UserProfileViewModelFactoryTest
+class UpcomingActivitiesViewModelFactoryTest
 {
     @get:Rule
     val rule = InstantTaskExecutorRule()
@@ -26,13 +26,13 @@ class UserProfileViewModelFactoryTest
         mockkStatic(FirebaseAuth::class)
         every { FirebaseAuth.getInstance() } returns firebaseAuthMock
 
-        val userProfileViewModelFactory = UserProfileViewModelFactory()
-        val userProfileViewModel =
-            userProfileViewModelFactory.create(UserProfileViewModel::class.java)
+        val upcomingActivitiesViewModelFactory = UpcomingActivitiesViewModelFactory()
+        val upcomingActivitiesViewModel =
+            upcomingActivitiesViewModelFactory.create(UpcomingActivitiesViewModel::class.java)
 
-        println(userProfileViewModel.javaClass.simpleName)
-        println(userProfileViewModel::class.java.simpleName)
+        println(upcomingActivitiesViewModel.javaClass.simpleName)
+        println(UpcomingActivitiesViewModel::class.java.simpleName)
 
-        assert(userProfileViewModel.javaClass.simpleName == UserProfileViewModel::class.java.simpleName)
+        assert(upcomingActivitiesViewModel.javaClass.simpleName == UpcomingActivitiesViewModel::class.java.simpleName)
     }
 }

@@ -51,7 +51,7 @@ interface IUserRepository
     ) : Response<Void>
 
     suspend fun updateUserProfilePic(
-        image: Pair<String, InputStream>
+        image : Pair<String, InputStream>
     ) : Response<Void>
 
     suspend fun firebaseAuthWithGoogle(idToken : String) : Pair<Boolean, String>

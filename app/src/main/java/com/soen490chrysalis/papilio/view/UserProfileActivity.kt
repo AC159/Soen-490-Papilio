@@ -28,7 +28,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.soen490chrysalis.papilio.*
 import com.soen490chrysalis.papilio.databinding.ActivityUserProfileBinding
 import com.soen490chrysalis.papilio.viewModel.UserProfileViewModel
-import com.soen490chrysalis.papilio.viewModel.UserProfileViewModelFactory
+import com.soen490chrysalis.papilio.viewModel.factories.UserProfileViewModelFactory
 import com.soen490chrysalis.papilio.utility.UtilityFunctions
 
 class UserProfileActivity : AppCompatActivity()

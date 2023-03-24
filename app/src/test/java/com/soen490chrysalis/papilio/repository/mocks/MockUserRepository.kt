@@ -74,12 +74,92 @@ class MockUserRepository : IUserRepository
 
     override suspend fun getJoinedActivities() : Triple<Boolean, String, JoinedActivitiesResponse>
     {
-        return Triple(true, "", JoinedActivitiesResponse("1", listOf<JoinedActivityObject>()))
+        val activityObject1 = JoinedActivityObject(
+            "1", "wer232f23f", "thy2563tyj", ActivityObject(
+                "1",
+                "Activity Title",
+                "This is Activity 1",
+                "0",
+                "0",
+                "4",
+                listOf("a" + 1 + "image1", "a" + 2 + "image1"),
+                "2023-3-22T",
+                "2023-3-22T",
+                "Activity 1 Address",
+                "A1 Creation Time",
+                "A1 Update Time",
+                null,
+                "user 1"
+            )
+        )
+
+        val activityObject2 = JoinedActivityObject(
+            "2", "wer23w2f23f", "thy25163tyj", ActivityObject(
+                "2",
+                "Activity Title",
+                "This is Activity 2",
+                "0",
+                "0",
+                "4",
+                listOf("a" + 1 + "image1", "a" + 2 + "image1"),
+                "2023-3-25T",
+                "2023-3-25T",
+                "Activity 1 Address",
+                "A1 Creation Time",
+                "A1 Update Time",
+                null,
+                "user 1"
+            )
+        )
+
+        val activityList = listOf(activityObject1, activityObject2)
+
+        return Triple(
+            true, "", JoinedActivitiesResponse(activityList.count().toString(), activityList)
+        )
     }
 
     override suspend fun getCreatedActivities() : Triple<Boolean, String, FavoriteActivitiesResponse>
     {
-        return Triple(true, "", FavoriteActivitiesResponse("1", listOf<ActivityObject>()))
+        val activityObject3 = ActivityObject(
+            "3",
+            "Activity Title",
+            "This is Activity 3",
+            "0",
+            "0",
+            "4",
+            listOf("a" + 1 + "image1", "a" + 2 + "image1"),
+            "2023-2-25T",
+            "2023-2-25T",
+            "Activity 1 Address",
+            "A1 Creation Time",
+            "A1 Update Time",
+            null,
+            "user 1"
+        )
+
+        val activityObject4 = ActivityObject(
+            "4",
+            "Activity Title",
+            "This is Activity 4",
+            "0",
+            "0",
+            "4",
+            listOf("a" + 1 + "image1", "a" + 2 + "image1"),
+            "2024-3-23T",
+            "2024-3-23T",
+            "Activity 1 Address",
+            "A1 Creation Time",
+            "A1 Update Time",
+            null,
+            "user 1"
+        )
+
+        val activityList = listOf(activityObject3, activityObject4)
+
+        return Triple(
+            true, "", FavoriteActivitiesResponse(activityList.count().toString(), activityList)
+        )
     }
 
     override suspend fun updateUser(
@@ -102,18 +182,14 @@ class MockUserRepository : IUserRepository
     }
 
     override suspend fun firebaseCreateAccountWithEmailAndPassword(
-        firstName : String,
-        lastName : String,
-        emailAddress : String,
-        password : String
+        firstName : String, lastName : String, emailAddress : String, password : String
     ) : Pair<Boolean, String>
     {
         return Pair(true, "")
     }
 
     override suspend fun firebaseLoginWithEmailAndPassword(
-        emailAddress : String,
-        password : String
+        emailAddress : String, password : String
     ) : Pair<Boolean, String>
     {
         return Pair(true, "")

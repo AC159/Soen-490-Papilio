@@ -2,7 +2,7 @@ package com.soen490chrysalis.papilio.viewModel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.firebase.auth.FirebaseAuth
-import com.soen490chrysalis.papilio.viewModel.factories.UserProfileViewModelFactory
+import com.soen490chrysalis.papilio.viewModel.factories.FavoriteActivitiesViewModelFactory
 import io.mockk.every
 import io.mockk.mockkStatic
 import org.junit.Rule
@@ -12,7 +12,7 @@ import org.junit.runners.JUnit4
 import org.mockito.Mockito
 
 @RunWith(JUnit4::class)
-class UserProfileViewModelFactoryTest
+class FavoriteActivitiesViewModelFactoryTest
 {
     @get:Rule
     val rule = InstantTaskExecutorRule()
@@ -26,13 +26,13 @@ class UserProfileViewModelFactoryTest
         mockkStatic(FirebaseAuth::class)
         every { FirebaseAuth.getInstance() } returns firebaseAuthMock
 
-        val userProfileViewModelFactory = UserProfileViewModelFactory()
-        val userProfileViewModel =
-            userProfileViewModelFactory.create(UserProfileViewModel::class.java)
+        val favoriteActivitiesViewModelFactory = FavoriteActivitiesViewModelFactory()
+        val favoriteActivitiesViewModel =
+            favoriteActivitiesViewModelFactory.create(FavoriteActivitiesViewModel::class.java)
 
-        println(userProfileViewModel.javaClass.simpleName)
-        println(userProfileViewModel::class.java.simpleName)
+        println(favoriteActivitiesViewModel.javaClass.simpleName)
+        println(FavoriteActivitiesViewModel::class.java.simpleName)
 
-        assert(userProfileViewModel.javaClass.simpleName == UserProfileViewModel::class.java.simpleName)
+        assert(favoriteActivitiesViewModel.javaClass.simpleName == FavoriteActivitiesViewModel::class.java.simpleName)
     }
 }

@@ -15,6 +15,7 @@ data class UserProfileRequestResponse(val status: Int, val message: String)
 class UserProfileViewModel(private val userRepository: IUserRepository) : ViewModel() {
     var userObject: MutableLiveData<GetUserResponse> = MutableLiveData<GetUserResponse>()
     var passwordChangeResult: MutableLiveData<String> = MutableLiveData<String>()
+    var profilePicChangeResult: MutableLiveData<String> = MutableLiveData<String>()
     private var editedFields: MutableMap<String, Any> = mutableMapOf()
     var updateUserResponse: MutableLiveData<UserProfileRequestResponse> =
         MutableLiveData<UserProfileRequestResponse>()
@@ -40,6 +41,8 @@ class UserProfileViewModel(private val userRepository: IUserRepository) : ViewMo
         viewModelScope.launch {
             val userResponse = userRepository.updateUserProfilePic(image)
             Log.d("userResponse: updateUserProfilePic ->", userResponse.message())
+
+            profilePicChangeResult.value = userResponse.message()
 
         }
     }

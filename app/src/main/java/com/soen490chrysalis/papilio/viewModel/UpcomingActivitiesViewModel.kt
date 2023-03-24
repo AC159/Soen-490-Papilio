@@ -45,7 +45,7 @@ class UpcomingActivitiesViewModel(private val userRepository : IUserRepository) 
                 }
 
                 activitiesResponse.value = FavoriteActivitiesResponse(
-                    count = firstResponse.count + secondResponse.count,
+                    count = (firstResponse.count.toInt() + secondResponse.count.toInt()).toString(),
                     activities = firstResponse.activities.plus(tempList)
                 )
 

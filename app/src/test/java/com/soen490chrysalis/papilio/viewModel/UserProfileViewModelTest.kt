@@ -23,6 +23,7 @@ import org.junit.runners.JUnit4
 import org.mockito.Mockito
 import org.mockito.Mockito.verify
 import org.mockito.kotlin.times
+import java.io.File
 
 /*
     DESCRIPTION:
@@ -82,6 +83,15 @@ class UserProfileViewModelTest
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
+    fun updateUserProfilePic_Correctly() = runTest {
+        val file = File.createTempFile("tempFile", null, null)
+        userProfileViewModel.updateUserProfilePic(Pair("jpg", file.inputStream()))
+        advanceUntilIdle()
+        assert(userProfileViewModel.profilePicChangeResult.value!! == "OK")
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
     fun updateUserPassword() = runTest {
 
         mockkStatic(FirebaseAuth::class)
@@ -95,8 +105,7 @@ class UserProfileViewModelTest
         mockkStatic(EmailAuthProvider::class)
         every {
             EmailAuthProvider.getCredential(
-                "validEmail@gmail.com",
-                "old password"
+                "validEmail@gmail.com", "old password"
             )
         } returns (mockEmailAuthCredential)
 

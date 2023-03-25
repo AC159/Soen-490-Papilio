@@ -19,6 +19,7 @@ import java.io.InputStream
 class MockUserRepository : IUserRepository
 {
     private var firebaseUserMock = Mockito.mock(FirebaseUser::class.java)
+    private val simpleUser = SimpleUserObject("somefirebaseid", "validEmail@gmail.com")
 
     override fun initialize(googleSignInClient : GoogleSignInClient)
     {
@@ -90,7 +91,7 @@ class MockUserRepository : IUserRepository
                 "A1 Creation Time",
                 "A1 Update Time",
                 null,
-                "user 1"
+                simpleUser
             )
         )
 
@@ -109,7 +110,7 @@ class MockUserRepository : IUserRepository
                 "A1 Creation Time",
                 "A1 Update Time",
                 null,
-                "user 1"
+                simpleUser
             )
         )
 
@@ -136,7 +137,7 @@ class MockUserRepository : IUserRepository
             "A1 Creation Time",
             "A1 Update Time",
             null,
-            "user 1"
+            simpleUser
         )
 
         val activityObject4 = ActivityObject(
@@ -153,7 +154,7 @@ class MockUserRepository : IUserRepository
             "A1 Creation Time",
             "A1 Update Time",
             null,
-            "user 1"
+            simpleUser
         )
 
         val activityList = listOf(activityObject3, activityObject4)

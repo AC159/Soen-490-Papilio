@@ -154,20 +154,7 @@ class ActivityRepository(
             catch (e: Exception) {
                 Log.d(logTag, "activityRepository getActivity() exception: $e")
                 Triple(false, e.message.toString(), SingleActivityResponse(false, ActivityObject(
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                null
+                    null, null, null, null, null, null, null, null, null, null, null, null, null, null
                 )))
             }
 

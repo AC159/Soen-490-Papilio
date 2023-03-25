@@ -40,9 +40,9 @@ class UserProfileViewModel(private val userRepository: IUserRepository) : ViewMo
     {
         viewModelScope.launch {
             val userResponse = userRepository.updateUserProfilePic(image)
-            Log.d("userResponse: updateUserProfilePic ->", userResponse.message())
+            Log.d("userResponse: updateUserProfilePic ->", userResponse.second)
 
-            profilePicChangeResult.value = userResponse.message()
+            profilePicChangeResult.value = userResponse.second
 
         }
     }
@@ -53,10 +53,10 @@ class UserProfileViewModel(private val userRepository: IUserRepository) : ViewMo
         else {
             viewModelScope.launch {
                 val userResponse = userRepository.updateUser(editedFields)
-                Log.d("userResponse: updateUser ->", userResponse.message())
+                Log.d("userResponse: updateUser ->", userResponse.third)
 
                 updateUserResponse.value =
-                    UserProfileRequestResponse(userResponse.code(), userResponse.message())
+                    UserProfileRequestResponse(userResponse.second, userResponse.third)
 
                 val afterUpdateResponse = userRepository.getUserByFirebaseId()
 

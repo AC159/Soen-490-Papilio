@@ -369,7 +369,7 @@ class UserRepository(
     */
     override suspend fun updateUser(
         variableMap : Map<String, Any>
-    ) : Response<Void>
+    ) : Triple<Boolean, Int, String>
     {
         return withContext(coroutineDispatcher) {
             val firebaseId = firebaseAuth.currentUser!!.uid
@@ -380,12 +380,12 @@ class UserRepository(
                     userService.updateUser(UserUpdate(Identifier(firebaseId), variableMap))
 
                 Log.d(logTag, "Update user: $response")
-                return@withContext response
+                return@withContext Triple(response.isSuccessful, response.code(), response.message())
             }
             catch (e : Exception)
             {
                 Log.d(logTag, "Update user - Exception ->  $e")
-                return@withContext Response.error(400, null)
+                return@withContext Triple(false, 400, e.message+"")
             }
 
         }
@@ -393,7 +393,7 @@ class UserRepository(
 
     override suspend fun updateUserProfilePic(
         image : Pair<String, InputStream>
-    ) : Response<Void>
+    ) : Pair<Boolean, String>
     {
         return withContext(coroutineDispatcher) {
             val firebaseId = firebaseAuth.currentUser!!.uid
@@ -423,12 +423,12 @@ class UserRepository(
                 val response = userService.updateUserProfilePic(firebaseId, currentImage)
 
                 Log.d(logTag, "Update user profile pic: $response")
-                return@withContext response
+                return@withContext Pair(response.isSuccessful, response.message())
             }
             catch (e : Exception)
             {
                 Log.d(logTag, "updateUserProfilePic: $e")
-                return@withContext Response.error(400, null)
+                return@withContext Pair(false, e.message+"")
             }
         }
     }

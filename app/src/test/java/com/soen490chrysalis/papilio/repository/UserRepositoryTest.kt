@@ -691,7 +691,7 @@ class UserRepositoryTest {
         var result = userRepository.updateUserProfilePic(Pair("jpg", file.inputStream()))
         advanceUntilIdle()
         println("Result: $result")
-        assert(result.isSuccessful)
+        assert(result.first)
 
         mockedResponse = MockResponse()
                 .setResponseCode(400)
@@ -704,6 +704,6 @@ class UserRepositoryTest {
         result = userRepository.updateUserProfilePic(Pair("jpg", file.inputStream()))
         advanceUntilIdle()
         println("Result: $result")
-        assert(!result.isSuccessful)
+        assert(!result.first)
     }
 }

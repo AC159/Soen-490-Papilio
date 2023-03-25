@@ -48,11 +48,11 @@ interface IUserRepository
 
     suspend fun updateUser(
         variableMap : Map<String, Any>
-    ) : Response<Void>
+    ) : Triple<Boolean, Int, String>
 
     suspend fun updateUserProfilePic(
         image : Pair<String, InputStream>
-    ) : Response<Void>
+    ) : Pair<Boolean, String>
 
     suspend fun firebaseAuthWithGoogle(idToken : String) : Pair<Boolean, String>
 

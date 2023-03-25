@@ -155,6 +155,7 @@ class UserProfileActivity : AppCompatActivity()
                 binding.userProfilePhoneEditButton.visibility = View.VISIBLE
                 binding.userProfileBio.visibility = View.GONE
                 binding.userProfilePhoneEditButton.visibility = View.VISIBLE
+                binding.userPfpFrameLayout.foreground = ResourcesCompat.getDrawable(resources, R.drawable.user_pfp_change_overlay, null)!!
 
                 // only display the "Change Password" button if the current account is not a Google account.
                 if (FirebaseAuth.getInstance().currentUser?.providerId != "google.com")
@@ -177,6 +178,7 @@ class UserProfileActivity : AppCompatActivity()
                 binding.userProfilePhoneEditButton.visibility = View.GONE
                 binding.userProfileBio.visibility = View.VISIBLE
                 binding.editProfileButton.background = ResourcesCompat.getDrawable(resources, R.drawable.edit_button, null)!!
+                binding.userPfpFrameLayout.foreground = null
 
                 if (user?.providerId != "google.com")
                 {
@@ -361,6 +363,7 @@ class UserProfileActivity : AppCompatActivity()
         {
             Activity.RESULT_OK ->
             {
+                binding.userPfpFrameLayout.foreground = null
 
                 val uri : Uri = data?.data!!
                 Log.d("BINGO->>", data.toString())

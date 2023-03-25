@@ -164,16 +164,16 @@ class MockUserRepository : IUserRepository
 
     override suspend fun updateUser(
         variableMap : Map<String, Any>
-    ) : Response<Void>
+    ) : Triple<Boolean, Int, String>
     {
-        return Response.success(null)
+        return Triple(true, 200, "OK")
     }
 
     override suspend fun updateUserProfilePic(
         image : Pair<String, InputStream>
-    ) : Response<Void>
+    ) : Pair<Boolean, String>
     {
-        return Response.success(null)
+        return Pair(true, "OK")
     }
 
     override suspend fun firebaseAuthWithGoogle(idToken : String) : Pair<Boolean, String>

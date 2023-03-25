@@ -8,12 +8,14 @@ import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.soen490chrysalis.papilio.repository.users.IUserRepository
 import kotlinx.coroutines.launch
+import java.io.InputStream
 
 data class UserProfileRequestResponse(val status: Int, val message: String)
 
 class UserProfileViewModel(private val userRepository: IUserRepository) : ViewModel() {
     var userObject: MutableLiveData<GetUserResponse> = MutableLiveData<GetUserResponse>()
     var passwordChangeResult: MutableLiveData<String> = MutableLiveData<String>()
+    var profilePicChangeResult: MutableLiveData<String> = MutableLiveData<String>()
     private var editedFields: MutableMap<String, Any> = mutableMapOf()
     var updateUserResponse: MutableLiveData<UserProfileRequestResponse> =
         MutableLiveData<UserProfileRequestResponse>()
@@ -34,16 +36,27 @@ class UserProfileViewModel(private val userRepository: IUserRepository) : ViewMo
         return editedFields.isEmpty()
     }
 
+    fun updateUserProfilePic(image : Pair<String, InputStream>)
+    {
+        viewModelScope.launch {
+            val userResponse = userRepository.updateUserProfilePic(image)
+            Log.d("userResponse: updateUserProfilePic ->", userResponse.second)
+
+            profilePicChangeResult.value = userResponse.second
+
+        }
+    }
+
     fun updateUserProfile() {
         if (editedFields.isEmpty())
             updateUserResponse.value = UserProfileRequestResponse(0, "No Edited Fields")
         else {
             viewModelScope.launch {
                 val userResponse = userRepository.updateUser(editedFields)
-                Log.d("userResponse: updateUser ->", userResponse.message())
+                Log.d("userResponse: updateUser ->", userResponse.third)
 
                 updateUserResponse.value =
-                    UserProfileRequestResponse(userResponse.code(), userResponse.message())
+                    UserProfileRequestResponse(userResponse.second, userResponse.third)
 
                 val afterUpdateResponse = userRepository.getUserByFirebaseId()
 

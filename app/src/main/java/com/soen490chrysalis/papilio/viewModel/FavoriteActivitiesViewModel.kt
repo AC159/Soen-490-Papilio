@@ -22,10 +22,10 @@ class FavoriteActivitiesViewModel(private val userRepository: IUserRepository) :
             try {
                 val getAllActivitiesResponse = userRepository.getFavoriteActivities()
                 activitiesResponse.value = FavoriteActivitiesResponse(
-                    getAllActivitiesResponse.body()!!.count,
-                    getAllActivitiesResponse.body()!!.activities
+                    getAllActivitiesResponse.third.count,
+                    getAllActivitiesResponse.third.activities
                 )
-                Log.d("getFavoriteActivities", activitiesResponse.value.toString())
+                Log.d(logTag, "response from getFavoriteActivities() --> $getAllActivitiesResponse")
             } catch (e: Exception) {
                 Log.d(logTag, "userRepository.getFavoriteActivities - exception:\n $e")
             }

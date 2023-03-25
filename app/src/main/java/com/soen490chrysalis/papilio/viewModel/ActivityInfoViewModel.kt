@@ -69,9 +69,9 @@ class ActivityInfoViewModel(private val userRepository : IUserRepository) : View
             try {
                 val getActivityResponse = userRepository.isActivityFavorited(activityId.toString())
                 checkActivityFavoritedResponse.value = CheckFavoriteResponse(
-                    getActivityResponse.body()!!.isActivityFound
+                    getActivityResponse.third.isActivityFound
                 )
-                Log.d("checkActivityFavorited", activitiesResponse.value.toString())
+                Log.d(logTag, "response from isActivityFavorited --> $getActivityResponse")
             } catch (e: Exception) {
                 Log.d(logTag, "userRepository.checkActivityFavorited - exception:\n $e")
             }
@@ -83,11 +83,11 @@ class ActivityInfoViewModel(private val userRepository : IUserRepository) : View
             try {
                 val getActivityResponse = userRepository.addFavoriteActivity(activityId)
 
-                Log.d("addFavoriteActivity", getActivityResponse.message())
+                Log.d("addFavoriteActivity", getActivityResponse.second)
 
                 activityFavoritedResponse.value = FavoriteResponse(
-                    getActivityResponse.body()?.success,
-                    getActivityResponse.body()?.update
+                    getActivityResponse.third.success,
+                    getActivityResponse.third.update
                 )
             } catch (e: Exception) {
                 Log.d(logTag, "userRepository.addFavoriteActivity - exception:\n $e")
@@ -100,11 +100,11 @@ class ActivityInfoViewModel(private val userRepository : IUserRepository) : View
             try {
                 val getActivityResponse = userRepository.removeFavoriteActivity(activityId)
 
-                Log.d("removeFavoriteActivity", getActivityResponse.message())
+                Log.d("removeFavoriteActivity", getActivityResponse.second)
 
                 activityFavoritedResponse.value = FavoriteResponse(
-                    getActivityResponse.body()?.success,
-                    getActivityResponse.body()?.update
+                    getActivityResponse.third.success,
+                    getActivityResponse.third.update
                 )
             } catch (e: Exception) {
                 Log.d(logTag, "userRepository.removeFavoriteActivity - exception:\n $e")

@@ -2,7 +2,6 @@ package com.soen490chrysalis.papilio.repository
 
 import android.util.Log
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.TaskCompletionSource
 import com.google.firebase.auth.*
@@ -16,6 +15,7 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import io.mockk.every
 import io.mockk.mockkStatic
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -26,12 +26,11 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 import org.mockito.Mockito
-import org.mockito.kotlin.any
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-import java.io.IOException
+import java.io.File
 
 
 @RunWith(JUnit4::class)
@@ -140,7 +139,8 @@ class UserRepositoryTest {
             null,
             "2022-11-14T02:07:02.585Z",
             "2022-11-14T02:07:02.585Z",
-            "Hello! It's me, firstName!"
+            "Hello! It's me, firstName!",
+        "ewfj13498to3ifj0193rfg93rtg"
         )
 
         val mockServerResponse = MockResponse().setResponseCode(200).setBody(
@@ -155,7 +155,8 @@ class UserRepositoryTest {
                     "        \"email\": \"validEmail@gmail.com\",\n" +
                     "        \"createdAt\": \"2022-11-14T02:07:02.585Z\",\n" +
                     "        \"updatedAt\": \"2022-11-14T02:07:02.585Z\",\n" +
-                    "        \"bio\": \"Hello! It's me, firstName!\"\n" +
+                    "        \"bio\": \"Hello! It's me, firstName!\",\n" +
+                    "        \"image\": \"ewfj13498to3ifj0193rfg93rtg\"\n" +
                     "    }\n" +
                     "}"
         )
@@ -404,5 +405,305 @@ class UserRepositoryTest {
         result = userRepository.addUserToActivity(activity_id)
         println("Result: $result")
         assert(!result.first && result.second == "Client Error")
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun isActivityFavorited() = runTest {
+
+        var mockedResponse = MockResponse()
+                .setResponseCode(200)
+                .setBody("{\n" +
+                        "    \"isActivityFound\": true\n" +
+                        "}")
+        mockWebServer.enqueue(mockedResponse)
+
+        var result = userRepository.isActivityFavorited("69")
+        advanceUntilIdle()
+        println("Result: $result")
+        assert(result.first && result.second == "OK" && result.third.isActivityFound)
+
+        mockedResponse = MockResponse()
+                .setResponseCode(400)
+                .setBody("{\n" +
+                        "    \"isActivityFound\": false\n" +
+                        "}")
+        mockWebServer.enqueue(mockedResponse)
+
+        result = userRepository.isActivityFavorited("69")
+        advanceUntilIdle()
+        println("Result: $result")
+        assert(!result.first && result.second != "OK" && !result.third.isActivityFound)
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun addFavoriteActivity() = runTest {
+
+        var mockedResponse = MockResponse()
+                .setResponseCode(200)
+                .setBody("{\n" +
+                        "    \"success\": true,\n" +
+                        "    \"update\": {\n" +
+                        "        \"firebaseId\": \"er23523rt23t23t\",\n" +
+                        "        \"firstName\": \"firstName\",\n" +
+                        "        \"lastName\": \"lastName\",\n" +
+                        "        \"countryCode\": 1,\n" +
+                        "        \"phone\": \"4353622626\",\n" +
+                        "        \"email\": \"someemail@gmail.com\",\n" +
+                        "        \"bio\": \"Yo\",\n" +
+                        "        \"favoriteActivities\": null\n" +
+                        "  }\n" +
+                        "}")
+        mockWebServer.enqueue(mockedResponse)
+
+        var result = userRepository.addFavoriteActivity(69)
+        advanceUntilIdle()
+        println("Result: $result")
+        assert(result.first && result.second == "OK")
+
+        mockedResponse = MockResponse()
+                .setResponseCode(400)
+                .setBody("{\n" +
+                        "    \"success\": false,\n" +
+                        "    \"update\": null \n" +
+                        "}")
+        mockWebServer.enqueue(mockedResponse)
+
+        result = userRepository.addFavoriteActivity(69)
+        advanceUntilIdle()
+        println("Result: $result")
+        assert(!result.first && result.second != "OK")
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun removeFavoriteActivity() = runTest {
+
+        var mockedResponse = MockResponse()
+                .setResponseCode(200)
+                .setBody("{\n" +
+                        "    \"success\": true,\n" +
+                        "    \"update\": {\n" +
+                        "        \"firebaseId\": \"er23523rt23t23t\",\n" +
+                        "        \"firstName\": \"firstName\",\n" +
+                        "        \"lastName\": \"lastName\",\n" +
+                        "        \"countryCode\": 1,\n" +
+                        "        \"phone\": \"4353622626\",\n" +
+                        "        \"email\": \"someemail@gmail.com\",\n" +
+                        "        \"bio\": \"Yo\",\n" +
+                        "        \"favoriteActivities\": null\n" +
+                        "  }\n" +
+                        "}")
+        mockWebServer.enqueue(mockedResponse)
+
+        var result = userRepository.removeFavoriteActivity(69)
+        advanceUntilIdle()
+        println("Result: $result")
+        assert(result.first && result.second == "OK")
+
+        mockedResponse = MockResponse()
+                .setResponseCode(400)
+                .setBody("{\n" +
+                        "    \"success\": false,\n" +
+                        "    \"update\": null \n" +
+                        "}")
+        mockWebServer.enqueue(mockedResponse)
+
+        result = userRepository.removeFavoriteActivity(69)
+        advanceUntilIdle()
+        println("Result: $result")
+        assert(!result.first && result.second != "OK")
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun getCreatedActivities() = runTest {
+
+        var mockedResponse = MockResponse()
+                .setResponseCode(200)
+                .setBody("{\n" +
+                        "    \"count\": \"1\",\n" +
+                        "    \"activities\": [\n" +
+                        "       { \n " +
+                        "        \"id\": \"100\",\n" +
+                        "        \"title\": \"some title\",\n" +
+                        "        \"description\": \"some description\",\n" +
+                        "        \"costPerIndividual\": \"10\",\n" +
+                        "        \"costPerGroup\": 40,\n" +
+                        "        \"groupSize\": \"4\",\n" +
+                        "        \"images\": null,\n" +
+                        "        \"startTime\": \"2022-11-14T02:07:02.585Z\",\n" +
+                        "        \"endTime\": \"2022-11-14T02:07:02.585Z\",\n" +
+                        "        \"address\": \"some address\",\n" +
+                        "        \"createdAt\": \"2022-11-14T02:07:02.585Z\",\n" +
+                        "        \"updatedAt\": \"2022-11-14T02:07:02.585Z\",\n" +
+                        "        \"businessId\": null,\n" +
+                        "        \"userId\": \"er43534trt\"\n" +
+                        "       } \n " +
+                        "  ]\n" +
+                        "}")
+        mockWebServer.enqueue(mockedResponse)
+
+        var result = userRepository.getCreatedActivities()
+        advanceUntilIdle()
+        println("Result: $result")
+        assert(result.first && result.second == "OK")
+
+        mockedResponse = MockResponse()
+                .setResponseCode(400)
+                .setBody("{\n" +
+                        "    \"count\": \"0\",\n" +
+                        "    \"activities\": null, \n"+
+                        "}")
+        mockWebServer.enqueue(mockedResponse)
+
+        result = userRepository.getCreatedActivities()
+        advanceUntilIdle()
+        println("Result: $result")
+        assert(!result.first && result.second != "OK")
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun getFavoriteActivities() = runTest {
+
+        var mockedResponse = MockResponse()
+                .setResponseCode(200)
+                .setBody("{\n" +
+                        "    \"count\": \"1\",\n" +
+                        "    \"activities\": [\n" +
+                        "       { \n " +
+                        "        \"id\": \"100\",\n" +
+                        "        \"title\": \"some title\",\n" +
+                        "        \"description\": \"some description\",\n" +
+                        "        \"costPerIndividual\": \"10\",\n" +
+                        "        \"costPerGroup\": 40,\n" +
+                        "        \"groupSize\": \"4\",\n" +
+                        "        \"images\": null,\n" +
+                        "        \"startTime\": \"2022-11-14T02:07:02.585Z\",\n" +
+                        "        \"endTime\": \"2022-11-14T02:07:02.585Z\",\n" +
+                        "        \"address\": \"some address\",\n" +
+                        "        \"createdAt\": \"2022-11-14T02:07:02.585Z\",\n" +
+                        "        \"updatedAt\": \"2022-11-14T02:07:02.585Z\",\n" +
+                        "        \"businessId\": null,\n" +
+                        "        \"userId\": \"er43534trt\"\n" +
+                        "       } \n " +
+                        "  ]\n" +
+                        "}")
+        mockWebServer.enqueue(mockedResponse)
+
+        var result = userRepository.getFavoriteActivities()
+        advanceUntilIdle()
+        println("Result: $result")
+        assert(result.first && result.second == "OK")
+
+        mockedResponse = MockResponse()
+                .setResponseCode(400)
+                .setBody("{\n" +
+                        "    \"count\": \"0\",\n" +
+                        "    \"activities\": null, \n"+
+                        "}")
+        mockWebServer.enqueue(mockedResponse)
+
+        result = userRepository.getFavoriteActivities()
+        advanceUntilIdle()
+        println("Result: $result")
+        assert(!result.first && result.second != "OK")
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun getJoinedActivities() = runTest {
+
+        var mockedResponse = MockResponse()
+                .setResponseCode(200)
+                .setBody("{\n" +
+                        "    \"count\": \"1\",\n" +
+                        "    \"row\": [\n" +
+                        "       { \n " +
+                        "        \"id\": \"100\",\n" +
+                        "        \"userId\": \"sr23t2t426t\",\n" +
+                        "        \"activityId\": \"155\",\n" +
+                        "        \"activity\": {\n" +
+                        "               \"id\": \"100\",\n" +
+                        "               \"title\": \"some title\",\n" +
+                        "               \"description\": \"some description\",\n" +
+                        "               \"costPerIndividual\": \"10\",\n" +
+                        "               \"costPerGroup\": 40,\n" +
+                        "               \"groupSize\": \"4\",\n" +
+                        "               \"images\": null,\n" +
+                        "               \"startTime\": \"2022-11-14T02:07:02.585Z\",\n" +
+                        "               \"endTime\": \"2022-11-14T02:07:02.585Z\",\n" +
+                        "               \"address\": \"some address\",\n" +
+                        "               \"createdAt\": \"2022-11-14T02:07:02.585Z\",\n" +
+                        "               \"updatedAt\": \"2022-11-14T02:07:02.585Z\",\n" +
+                        "               \"businessId\": null,\n" +
+                        "               \"userId\": \"er43534trt\"\n" +
+                        "           } \n " +
+                        "       } \n " +
+                        "  ]\n" +
+                        "}")
+        mockWebServer.enqueue(mockedResponse)
+
+        var result = userRepository.getJoinedActivities()
+        advanceUntilIdle()
+        println("Result: $result")
+        assert(result.first && result.second == "OK")
+
+        mockedResponse = MockResponse()
+                .setResponseCode(400)
+                .setBody("{\n" +
+                        "    \"count\": \"0\",\n" +
+                        "    \"row\": null, \n"+
+                        "}")
+        mockWebServer.enqueue(mockedResponse)
+
+        result = userRepository.getJoinedActivities()
+        advanceUntilIdle()
+        println("Result: $result")
+        assert(!result.first && result.second != "OK")
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun updateUserProfilePic() = runTest {
+
+        var mockedResponse = MockResponse()
+                .setResponseCode(200)
+                .setBody("{\n" +
+                        "    \"success\": true,\n" +
+                        "    \"update\": {\n" +
+                        "        \"firebaseId\": \"er23523rt23t23t\",\n" +
+                        "        \"firstName\": \"firstName\",\n" +
+                        "        \"lastName\": \"lastName\",\n" +
+                        "        \"countryCode\": 1,\n" +
+                        "        \"phone\": \"4353622626\",\n" +
+                        "        \"email\": \"someemail@gmail.com\",\n" +
+                        "        \"bio\": \"Yo\",\n" +
+                        "        \"favoriteActivities\": null,\n" +
+                        "        \"image\": \"sff23532gf24g4ry45y\"\n" +
+                        "  }\n" +
+                        "}")
+        mockWebServer.enqueue(mockedResponse)
+
+        val file = File.createTempFile("temp-file", "_temp")
+        var result = userRepository.updateUserProfilePic(Pair("jpg", file.inputStream()))
+        advanceUntilIdle()
+        println("Result: $result")
+        assert(result.first)
+
+        mockedResponse = MockResponse()
+                .setResponseCode(400)
+                .setBody("{\n" +
+                        "    \"success\": false,\n" +
+                        "    \"update\": null \n"  +
+                        "}")
+        mockWebServer.enqueue(mockedResponse)
+
+        result = userRepository.updateUserProfilePic(Pair("jpg", file.inputStream()))
+        advanceUntilIdle()
+        println("Result: $result")
+        assert(!result.first)
     }
 }

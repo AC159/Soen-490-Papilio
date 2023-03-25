@@ -4,6 +4,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.FirebaseUser
 import com.soen490chrysalis.papilio.services.network.responses.*
 import retrofit2.Response
+import java.io.InputStream
 
 /*
     DESCRIPTION:
@@ -28,25 +29,29 @@ interface IUserRepository
 
     suspend fun isActivityFavorited(
         activityId : String?
-    ) : Response<CheckFavoriteResponse>
+    ) : Triple<Boolean, String, CheckFavoriteResponse>
 
     suspend fun addFavoriteActivity(
         activityId : Number
-    ) : Response<FavoriteResponse>
+    ) : Triple<Boolean, String, FavoriteResponse>
 
     suspend fun removeFavoriteActivity(
         activityId : Number
-    ) : Response<FavoriteResponse>
+    ) : Triple<Boolean, String, FavoriteResponse>
 
-    suspend fun getFavoriteActivities() : Response<FavoriteActivitiesResponse>
+    suspend fun getFavoriteActivities() : Triple<Boolean, String, FavoriteActivitiesResponse>
 
-    suspend fun getJoinedActivities() : Response<JoinedActivitiesResponse>
+    suspend fun getJoinedActivities() : Triple<Boolean, String, JoinedActivitiesResponse>
 
-    suspend fun getCreatedActivities() : Response<FavoriteActivitiesResponse>
+    suspend fun getCreatedActivities() : Triple<Boolean, String, FavoriteActivitiesResponse>
 
     suspend fun updateUser(
         variableMap : Map<String, Any>
-    ) : Response<Void>
+    ) : Triple<Boolean, Int, String>
+
+    suspend fun updateUserProfilePic(
+        image : Pair<String, InputStream>
+    ) : Pair<Boolean, String>
 
     suspend fun firebaseAuthWithGoogle(idToken : String) : Pair<Boolean, String>
 

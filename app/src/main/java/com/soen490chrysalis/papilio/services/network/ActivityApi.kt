@@ -55,7 +55,7 @@ interface IActivityApiService
 
     @POST("search")
     suspend fun searchActivities(
-    @Body keyword : ActivitySearchRequest
+        @Body keyword : ActivitySearchRequest
     ) : Response<SearchActivityResponse>
 }
 

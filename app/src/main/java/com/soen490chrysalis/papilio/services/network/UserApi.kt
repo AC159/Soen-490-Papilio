@@ -22,14 +22,14 @@ private const val BASE_URL = BuildConfig.USER_API_URL
 
 // Build the Moshi object with Kotlin adapter factory that Retrofit will be using
 private val moshi = Moshi.Builder()
-    .add(KotlinJsonAdapterFactory())
-    .build()
+        .add(KotlinJsonAdapterFactory())
+        .build()
 
 // The Retrofit object with the Moshi converter.
 private val retrofit = Retrofit.Builder()
-    .addConverterFactory(MoshiConverterFactory.create(moshi))
-    .baseUrl(BASE_URL)
-    .build()
+        .addConverterFactory(MoshiConverterFactory.create(moshi))
+        .baseUrl(BASE_URL)
+        .build()
 
 /*
     DESCRIPTION:
@@ -39,52 +39,60 @@ private val retrofit = Retrofit.Builder()
     Author: Anastassy Cap
     Date: November 1st, 2022
 */
-interface IUserApiService {
+interface IUserApiService
+{
     @GET("get/{firebaseId}")
     suspend fun getUserByFirebaseId(
-        @Path("firebaseId") firebaseId: String?
-    ): Response<GetUserByFirebaseIdResponse>
+        @Path("firebaseId") firebaseId : String?
+    ) : Response<GetUserByFirebaseIdResponse>
 
     @GET("get/{id}/activities")
     suspend fun getUserActivities(
-        @Path("id") firebaseId: String?
-    ): Response<FavoriteActivitiesResponse>
+        @Path("id") firebaseId : String?
+    ) : Response<FavoriteActivitiesResponse>
 
     @GET("get/joinedActivities/{id}")
     suspend fun getUserJoinedActivities(
-        @Path("id") firebaseId: String?
-    ): Response<JoinedActivitiesResponse>
+        @Path("id") firebaseId : String?
+    ) : Response<JoinedActivitiesResponse>
 
     @GET("get/{id}/favoriteActivities")
     suspend fun getUserFavoriteActivities(
-        @Path("id") id: String?
-    ): Response<FavoriteActivitiesResponse>
+        @Path("id") id : String?
+    ) : Response<FavoriteActivitiesResponse>
 
     @GET("get/isActivityFavorite/{id}/{activityId}")
     suspend fun checkActivityFavorited(
-        @Path("id") id: String?,
-        @Path("activityId") activityId: String?
-    ): Response<CheckFavoriteResponse>
+        @Path("id") id : String?,
+        @Path("activityId") activityId : String?
+    ) : Response<CheckFavoriteResponse>
 
     @POST("createUser")
     suspend fun createUser(
-        @Body user: UserRequest
-    ): Response<Void>
+        @Body user : UserRequest
+    ) : Response<Void>
 
     @PUT("updateUserProfile")
     suspend fun updateUser(
-        @Body user: UserUpdate
-    ): Response<Void>
+        @Body user : UserUpdate
+    ) : Response<Void>
+
+    @Multipart
+    @PUT("updateUserProfilePicture/{id}")
+    suspend fun updateUserProfilePic(
+        @Path("id") id : String,
+        @Part image : MultipartBody.Part
+    ) : Response<Void>
 
     @PUT("addFavoriteActivity")
     suspend fun addFavoriteActivity(
-        @Body body: UserUpdate
-    ): Response<FavoriteResponse>
+        @Body body : UserUpdate
+    ) : Response<FavoriteResponse>
 
     @PUT("removeFavoriteActivity")
     suspend fun removeFavoriteActivity(
-        @Body body: UserUpdate
-    ): Response<FavoriteResponse>
+        @Body body : UserUpdate
+    ) : Response<FavoriteResponse>
 
     @Multipart
     @POST("addActivity/{firebaseId}")
@@ -127,9 +135,10 @@ interface IUserApiService {
     Author: Anastassy Cap
     Date: November 1st, 2022
 */
-object UserApi {
+object UserApi
+{
     // Create a singleton object that implements the UserApiService interface
-    val retrofitService: IUserApiService by lazy {
+    val retrofitService : IUserApiService by lazy {
         retrofit.create(IUserApiService::class.java)
     }
 }

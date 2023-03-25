@@ -114,10 +114,13 @@ class UserProfileActivity : AppCompatActivity()
                         userProfileViewModel.userObject.value?.userObject?.bio
                     binding.userProfileBioEdit.setText(userProfileViewModel.userObject.value?.userObject?.bio)
 
-                    Glide.with(this)
-                            .load(it.userObject?.image)
-                            .circleCrop()
-                            .into(binding.userProfilePicture)
+                    if (it.userObject?.image != null && it.userObject?.image != "")
+                    {
+                        Glide.with(this)
+                                .load(it.userObject?.image)
+                                .circleCrop()
+                                .into(binding.userProfilePicture)
+                    }
 
                     val countryCode = userProfileViewModel.userObject.value?.userObject?.countryCode
                     val phone = userProfileViewModel.userObject.value?.userObject?.phone

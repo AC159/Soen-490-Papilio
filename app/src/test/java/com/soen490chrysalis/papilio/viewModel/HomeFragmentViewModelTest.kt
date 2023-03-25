@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.soen490chrysalis.papilio.repository.mocks.MockActivityRepository
 import com.soen490chrysalis.papilio.services.network.responses.ActivityObject
+import com.soen490chrysalis.papilio.services.network.responses.SimpleUserObject
 import com.soen490chrysalis.papilio.testUtils.MainCoroutineRule
 import com.soen490chrysalis.papilio.view.dialogs.EventDate
 import io.mockk.every
@@ -101,6 +102,7 @@ class HomeFragmentViewModelTest
     fun filterActivity() = runTest{
 
         val activityList: MutableList<ActivityObject> = mutableListOf()
+        val simpleUser = SimpleUserObject("somefirebaseId", "validEmail@gmail.com")
         for (i in 1..5) {
             val activityObject = ActivityObject(
                 i.toString(),
@@ -116,7 +118,7 @@ class HomeFragmentViewModelTest
                 "A$i Creation Time",
                 "A$i Update Time",
                 null,
-                "user $i"
+                simpleUser
             )
 
             activityList.add(activityObject)

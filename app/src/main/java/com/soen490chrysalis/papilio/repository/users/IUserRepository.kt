@@ -44,7 +44,6 @@ interface IUserRepository
 
     suspend fun getCreatedActivities() : Response<FavoriteActivitiesResponse>
 
-
     suspend fun updateUser(
         variableMap : Map<String, Any>
     ) : Response<Void>
@@ -65,5 +64,5 @@ interface IUserRepository
 
     suspend fun removeUserFromActivity(activity_id : String) : Pair<Boolean, String>
 
-    suspend fun checkActivityMember(activity_id : String) : Triple<Boolean, String, Boolean>
+    suspend fun checkActivityMember(activity_id : String) : CheckActivityMember
 }

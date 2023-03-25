@@ -2,6 +2,7 @@ package com.soen490chrysalis.papilio.repository.mocks
 
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.FirebaseUser
+import com.soen490chrysalis.papilio.repository.users.CheckActivityMember
 import com.soen490chrysalis.papilio.repository.users.IUserRepository
 import com.soen490chrysalis.papilio.services.network.responses.*
 import org.mockito.Mockito
@@ -131,8 +132,8 @@ class MockUserRepository : IUserRepository
         return Pair(true, "")
     }
 
-    override suspend fun checkActivityMember(activity_id : String) : Triple<Boolean, String, Boolean>
+    override suspend fun checkActivityMember(activity_id : String) : CheckActivityMember
     {
-        return Triple(true, "", true)
+        return CheckActivityMember(true, "", true, false)
     }
 }

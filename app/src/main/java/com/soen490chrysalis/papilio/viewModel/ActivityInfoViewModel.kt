@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.soen490chrysalis.papilio.repository.users.CheckActivityMember
 import com.soen490chrysalis.papilio.repository.users.IUserRepository
 import com.soen490chrysalis.papilio.services.network.responses.CheckFavoriteResponse
 import com.soen490chrysalis.papilio.services.network.responses.FavoriteActivitiesResponse
@@ -11,17 +12,12 @@ import com.soen490chrysalis.papilio.services.network.responses.FavoriteResponse
 import kotlinx.coroutines.launch
 
 data class APIResponse(var isSuccess : Boolean, var errorMessage : String)
-data class CheckActivityMember(
-    var isSuccess : Boolean,
-    var errorMessage : String,
-    var hasUserJoined : Boolean
-)
 
 class ActivityInfoViewModel(private val userRepository : IUserRepository) : ViewModel()
 {
     private val logTag = ActivityInfoViewModel::class.java.simpleName
     var checkActivityMemberResponse = MutableLiveData<CheckActivityMember>()
-    var jonActivityResponse = MutableLiveData<APIResponse>()
+    var joinActivityResponse = MutableLiveData<APIResponse>()
     var leaveActivityResponse = MutableLiveData<APIResponse>()
     var activitiesResponse: MutableLiveData<FavoriteActivitiesResponse> =
         MutableLiveData<FavoriteActivitiesResponse>()
@@ -41,8 +37,7 @@ class ActivityInfoViewModel(private val userRepository : IUserRepository) : View
         viewModelScope.launch {
             val result = userRepository.checkActivityMember(activity_id)
             Log.d(logTag, "response from checkActivityMember(): $result")
-            checkActivityMemberResponse.value =
-                CheckActivityMember(result.first, result.second, result.third)
+            checkActivityMemberResponse.value = result
         }
     }
 
@@ -51,7 +46,7 @@ class ActivityInfoViewModel(private val userRepository : IUserRepository) : View
         viewModelScope.launch {
             val result = userRepository.addUserToActivity(activity_id)
             Log.d(logTag, "response from joinActivity(): $result")
-            jonActivityResponse.value = APIResponse(result.first, result.second)
+            joinActivityResponse.value = APIResponse(result.first, result.second)
         }
     }
 

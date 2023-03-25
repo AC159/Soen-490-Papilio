@@ -113,7 +113,7 @@ class UpcomingActivitiesFragment : Fragment() {
                         activityBoxSmallBinding.activityBoxDay.text = dateParts[2]
                         activityBoxSmallBinding.activityBoxTitle.text = activity.title
 
-                        if (activity.userId == user?.uid) {
+                        if (activity.user?.firebase_id == user?.uid) {
                             activityBoxSmallBinding.activityBoxUserCreated.visibility = View.VISIBLE
                         }
 

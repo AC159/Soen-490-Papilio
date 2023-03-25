@@ -27,6 +27,13 @@ import retrofit2.Response
     Date: October 5, 2022
 */
 
+data class CheckActivityMember(
+    var isSuccess : Boolean,
+    var errorMessage : String,
+    var hasUserJoined : Boolean,
+    var isUserOwnerOfActivity : Boolean
+)
+
 class UserRepository(
     private var firebaseAuth: FirebaseAuth,
     private val userService: IUserApiService,
@@ -123,16 +130,18 @@ class UserRepository(
 
     override suspend fun checkActivityMember(
         activity_id: String
-    ): Triple<Boolean, String, Boolean> {
+    ): CheckActivityMember {
         return withContext(coroutineDispatcher)
         {
-            val response: Triple<Boolean, String, Boolean> = try {
+            val response: CheckActivityMember = try {
                 val result = userService.checkActivityMember(getUser()?.uid, activity_id)
                 Log.d(logTag, "userRepository checkActivityMember() response: $result")
                 Triple(result.isSuccessful, result.message(), result.body()!!.joined)
+                CheckActivityMember(result.isSuccessful, result.message(), result.body()!!.joined, result.body()!!.owned)
             } catch (e: Exception) {
                 Log.d(logTag, "userRepository checkActivityMember() exception: $e")
                 Triple(false, e.message.toString(), false)
+                CheckActivityMember(false, e.message.toString(), false, false)
             }
             return@withContext response
         }

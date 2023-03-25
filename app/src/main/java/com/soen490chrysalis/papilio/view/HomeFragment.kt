@@ -300,7 +300,7 @@ class HomeFragment : Fragment() {
                 intent.putExtra("title", activityList[position].title)
                 intent.putExtra("description", activityList[position].description)
                 intent.putExtra("contact", activityList[position].business?.email)
-                intent.putExtra("user_id", activityList[position].userId)
+                intent.putExtra("user_id", activityList[position].user?.firebase_id)
                 intent.putExtra("business_id", activityList[position].business?.businessId)
                 intent.putExtra(
                     "individualCost",

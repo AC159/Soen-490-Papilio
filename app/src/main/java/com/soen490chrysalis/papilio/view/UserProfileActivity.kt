@@ -150,12 +150,17 @@ class UserProfileActivity : AppCompatActivity()
         binding.editProfileButton.setOnClickListener {
             if (!isEditing) // if we are not already in editing mode, change the text of the button and make all editable fields visible and available for editing
             {
-                binding.editProfileButton.background = ResourcesCompat.getDrawable(resources, R.drawable.save_button, null)!!
+                binding.editProfileButton.background =
+                    ResourcesCompat.getDrawable(resources, R.drawable.save_button, null)!!
                 binding.userProfileBioEdit.visibility = View.VISIBLE
                 binding.userProfilePhoneEditButton.visibility = View.VISIBLE
                 binding.userProfileBio.visibility = View.GONE
                 binding.userProfilePhoneEditButton.visibility = View.VISIBLE
-                binding.userPfpFrameLayout.foreground = ResourcesCompat.getDrawable(resources, R.drawable.user_pfp_change_overlay, null)!!
+                binding.userPfpFrameLayout.foreground = ResourcesCompat.getDrawable(
+                    resources,
+                    R.drawable.user_pfp_change_overlay,
+                    null
+                )!!
 
                 // only display the "Change Password" button if the current account is not a Google account.
                 if (FirebaseAuth.getInstance().currentUser?.providerId != "google.com")
@@ -177,7 +182,8 @@ class UserProfileActivity : AppCompatActivity()
                 binding.userProfileBioEdit.visibility = View.GONE
                 binding.userProfilePhoneEditButton.visibility = View.GONE
                 binding.userProfileBio.visibility = View.VISIBLE
-                binding.editProfileButton.background = ResourcesCompat.getDrawable(resources, R.drawable.edit_button, null)!!
+                binding.editProfileButton.background =
+                    ResourcesCompat.getDrawable(resources, R.drawable.edit_button, null)!!
                 binding.userPfpFrameLayout.foreground = null
 
                 if (user?.providerId != "google.com")

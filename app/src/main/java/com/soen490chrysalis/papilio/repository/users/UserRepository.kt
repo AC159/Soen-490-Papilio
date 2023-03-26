@@ -156,20 +156,25 @@ class UserRepository(
     }
 
     override suspend fun checkActivityMember(
-        activity_id: String
-    ): CheckActivityMember {
+        activity_id : String
+    ) : CheckActivityMember
+    {
         return withContext(coroutineDispatcher)
         {
-            val response: CheckActivityMember = try {
+            val response : CheckActivityMember = try
+            {
                 val result = userService.checkActivityMember(getUser()?.uid, activity_id)
                 Log.d(logTag, "userRepository checkActivityMember() response: $result")
-                Triple(result.isSuccessful, result.message(), result.body()!!.joined)
-                CheckActivityMember(result.isSuccessful, result.message(), result.body()!!.joined, result.body()!!.owned)
+                CheckActivityMember(
+                    result.isSuccessful,
+                    result.message(),
+                    result.body()!!.joined,
+                    result.body()!!.owned
+                )
             }
-            catch (e: Exception)
+            catch (e : Exception)
             {
                 Log.d(logTag, "userRepository checkActivityMember() exception: $e")
-                Triple(false, e.message.toString(), false)
                 CheckActivityMember(false, e.message.toString(), false, false)
             }
             return@withContext response
@@ -387,12 +392,16 @@ class UserRepository(
                     userService.updateUser(UserUpdate(Identifier(firebaseId), variableMap))
 
                 Log.d(logTag, "Update user: $response")
-                return@withContext Triple(response.isSuccessful, response.code(), response.message())
+                return@withContext Triple(
+                    response.isSuccessful,
+                    response.code(),
+                    response.message()
+                )
             }
             catch (e : Exception)
             {
                 Log.d(logTag, "Update user - Exception ->  $e")
-                return@withContext Triple(false, 400, e.message+"")
+                return@withContext Triple(false, 400, e.message + "")
             }
 
         }
@@ -435,7 +444,7 @@ class UserRepository(
             catch (e : Exception)
             {
                 Log.d(logTag, "updateUserProfilePic: $e")
-                return@withContext Pair(false, e.message+"")
+                return@withContext Pair(false, e.message + "")
             }
         }
     }

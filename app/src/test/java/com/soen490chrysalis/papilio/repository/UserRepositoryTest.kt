@@ -395,6 +395,32 @@ class UserRepositoryTest
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
+    fun checkActivityMembershipTest() = runTest {
+        var mockServerResponse = MockResponse().setResponseCode(200).setBody("{\"joined\": true}")
+        mockWebServer.enqueue(mockServerResponse)
+
+        var result = userRepository.checkActivityMember(activity_id)
+        println("Result: $result")
+        assert(result.first && result.second == "OK" && result.third)
+
+        mockServerResponse = MockResponse().setResponseCode(200).setBody("{\"joined\": false}")
+        mockWebServer.enqueue(mockServerResponse)
+
+        result = userRepository.checkActivityMember(activity_id)
+        println("Result: $result")
+        assert(result.first && result.second == "OK" && !result.third)
+
+        mockServerResponse = MockResponse().setResponseCode(400)
+        mockWebServer.enqueue(mockServerResponse)
+
+        result = userRepository.checkActivityMember(activity_id)
+        println("Result: $result")
+        @Suppress("SENSELESS_COMPARISON")
+        assert(!result.first && result.second == "null" && !result.third)
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
     fun addUserToActivityChatTest() = runTest {
         var mockServerResponse = MockResponse().setResponseCode(200)
         mockWebServer.enqueue(mockServerResponse)
@@ -413,28 +439,42 @@ class UserRepositoryTest
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
+    fun removeUserFromActivityTest() = runTest {
+        var mockServerResponse = MockResponse().setResponseCode(200)
+        mockWebServer.enqueue(mockServerResponse)
+
+        var result = userRepository.removeUserFromActivity(activity_id)
+        println("Result: $result")
+        assert(result.first && result.second == "OK")
+
+        mockServerResponse = MockResponse().setResponseCode(400)
+        mockWebServer.enqueue(mockServerResponse)
+
+        result = userRepository.removeUserFromActivity(activity_id)
+        println("Result: $result")
+        assert(!result.first && result.second == "Client Error")
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
     fun isActivityFavorited() = runTest {
 
         var mockedResponse = MockResponse()
                 .setResponseCode(200)
-                .setBody("{\n" +
-                        "    \"isActivityFound\": true\n" +
-                        "}")
+                .setBody("{\"isActivityFound\": true}")
         mockWebServer.enqueue(mockedResponse)
 
-        var result = userRepository.isActivityFavorited("69")
+        var result = userRepository.isActivityFavorited(activity_id)
         advanceUntilIdle()
         println("Result: $result")
         assert(result.first && result.second == "OK" && result.third.isActivityFound)
 
         mockedResponse = MockResponse()
                 .setResponseCode(400)
-                .setBody("{\n" +
-                        "    \"isActivityFound\": false\n" +
-                        "}")
+                .setBody("{\"isActivityFound\": false}")
         mockWebServer.enqueue(mockedResponse)
 
-        result = userRepository.isActivityFavorited("69")
+        result = userRepository.isActivityFavorited(activity_id)
         advanceUntilIdle()
         println("Result: $result")
         assert(!result.first && result.second != "OK" && !result.third.isActivityFound)
@@ -443,30 +483,48 @@ class UserRepositoryTest
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun addFavoriteActivity() = runTest {
+        val favoriteActivities = IntArray(5)
+        favoriteActivities[0] = 1
+        favoriteActivities[1] = 2
+        favoriteActivities[2] = 3
+        favoriteActivities[3] = 4
+        favoriteActivities[4] = 5
 
-        var mockedResponse = MockResponse()
-                .setResponseCode(200)
-                .setBody("{\n" +
-                        "    \"success\": true,\n" +
-                        "    \"update\": {\n" +
-                        "        \"firebaseId\": \"er23523rt23t23t\",\n" +
-                        "        \"firstName\": \"firstName\",\n" +
-                        "        \"lastName\": \"lastName\",\n" +
-                        "        \"countryCode\": 1,\n" +
-                        "        \"phone\": \"4353622626\",\n" +
-                        "        \"email\": \"someemail@gmail.com\",\n" +
-                        "        \"bio\": \"Yo\",\n" +
-                        "        \"favoriteActivities\": null\n" +
-                        "  }\n" +
-                        "}")
-        mockWebServer.enqueue(mockedResponse)
+        val update = FavoriteUserObject(
+            "hQH3m5B4dUXoHXvbneslxcuCHR52",
+            "first",
+            "last",
+            "1",
+            "null",
+            "validEmail@gmail.com",
+            "Hello! It's me, firstName!",
+            favoriteActivities
+        )
 
-        var result = userRepository.addFavoriteActivity(69)
-        advanceUntilIdle()
+        val responseObject = FavoriteResponse(true, update)
+
+        val mockServerResponse = MockResponse().setResponseCode(200).setBody(
+            "{\n" +
+                    "    \"success\": true,\n" +
+                    "    \"update\": {\n" +
+                    "        \"firebase_id\": \"hQH3m5B4dUXoHXvbneslxcuCHR52\",\n" +
+                    "        \"firstName\": \"first\",\n" +
+                    "        \"lastName\": \"last\",\n" +
+                    "        \"countryCode\": \"1\",\n" +
+                    "        \"phone\": null,\n" +
+                    "        \"email\": \"validEmail@gmail.com\",\n" +
+                    "        \"favoriteActivities\": [1,2,3,4,5],\n" +
+                    "        \"bio\": \"Hello! It's me, firstName!\"\n" +
+                    "    }\n" +
+                    "}"
+        )
+        mockWebServer.enqueue(mockServerResponse)
+
+        var result = userRepository.addFavoriteActivity(Integer.parseInt(activity_id))
         println("Result: $result")
-        assert(result.first && result.second == "OK")
+        assert(result.third.toString() == responseObject.toString())
 
-        mockedResponse = MockResponse()
+        val mockedResponse = MockResponse()
                 .setResponseCode(400)
                 .setBody("{\n" +
                         "    \"success\": false,\n" +
@@ -474,7 +532,7 @@ class UserRepositoryTest
                         "}")
         mockWebServer.enqueue(mockedResponse)
 
-        result = userRepository.addFavoriteActivity(69)
+        result = userRepository.addFavoriteActivity(Integer.parseInt(activity_id))
         advanceUntilIdle()
         println("Result: $result")
         assert(!result.first && result.second != "OK")
@@ -483,30 +541,48 @@ class UserRepositoryTest
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun removeFavoriteActivity() = runTest {
+        val favoriteActivities = IntArray(5)
+        favoriteActivities[0] = 1
+        favoriteActivities[1] = 2
+        favoriteActivities[2] = 3
+        favoriteActivities[3] = 4
+        favoriteActivities[4] = 5
 
-        var mockedResponse = MockResponse()
-                .setResponseCode(200)
-                .setBody("{\n" +
-                        "    \"success\": true,\n" +
-                        "    \"update\": {\n" +
-                        "        \"firebaseId\": \"er23523rt23t23t\",\n" +
-                        "        \"firstName\": \"firstName\",\n" +
-                        "        \"lastName\": \"lastName\",\n" +
-                        "        \"countryCode\": 1,\n" +
-                        "        \"phone\": \"4353622626\",\n" +
-                        "        \"email\": \"someemail@gmail.com\",\n" +
-                        "        \"bio\": \"Yo\",\n" +
-                        "        \"favoriteActivities\": null\n" +
-                        "  }\n" +
-                        "}")
-        mockWebServer.enqueue(mockedResponse)
+        val update = FavoriteUserObject(
+            "hQH3m5B4dUXoHXvbneslxcuCHR52",
+            "first",
+            "last",
+            "1",
+            "null",
+            "validEmail@gmail.com",
+            "Hello! It's me, firstName!",
+            favoriteActivities
+        )
 
-        var result = userRepository.removeFavoriteActivity(69)
-        advanceUntilIdle()
+        val responseObject = FavoriteResponse(true, update)
+
+        val mockServerResponse = MockResponse().setResponseCode(200).setBody(
+            "{\n" +
+                    "    \"success\": true,\n" +
+                    "    \"update\": {\n" +
+                    "        \"firebase_id\": \"hQH3m5B4dUXoHXvbneslxcuCHR52\",\n" +
+                    "        \"firstName\": \"first\",\n" +
+                    "        \"lastName\": \"last\",\n" +
+                    "        \"countryCode\": \"1\",\n" +
+                    "        \"phone\": null,\n" +
+                    "        \"email\": \"validEmail@gmail.com\",\n" +
+                    "        \"favoriteActivities\": [1,2,3,4,5],\n" +
+                    "        \"bio\": \"Hello! It's me, firstName!\"\n" +
+                    "    }\n" +
+                    "}"
+        )
+        mockWebServer.enqueue(mockServerResponse)
+
+        var result = userRepository.removeFavoriteActivity(Integer.parseInt(activity_id))
         println("Result: $result")
-        assert(result.first && result.second == "OK")
+        assert(result.third.toString() == responseObject.toString())
 
-        mockedResponse = MockResponse()
+        val mockedResponse = MockResponse()
                 .setResponseCode(400)
                 .setBody("{\n" +
                         "    \"success\": false,\n" +
@@ -523,38 +599,98 @@ class UserRepositoryTest
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun getCreatedActivities() = runTest {
+        val activities : MutableList<ActivityObject> = mutableListOf()
+        val images : MutableList<String> = mutableListOf()
+        images.add("http://first-image-url.jpg")
+        images.add("http://second-image-url.jpg")
+        images.add("http://third-image-url.jpg")
 
-        var mockedResponse = MockResponse()
-                .setResponseCode(200)
-                .setBody("{\n" +
-                        "    \"count\": \"1\",\n" +
-                        "    \"activities\": [\n" +
-                        "       { \n " +
-                        "        \"id\": \"100\",\n" +
-                        "        \"title\": \"some title\",\n" +
-                        "        \"description\": \"some description\",\n" +
-                        "        \"costPerIndividual\": \"10\",\n" +
-                        "        \"costPerGroup\": 40,\n" +
-                        "        \"groupSize\": \"4\",\n" +
-                        "        \"images\": null,\n" +
-                        "        \"startTime\": \"2022-11-14T02:07:02.585Z\",\n" +
-                        "        \"endTime\": \"2022-11-14T02:07:02.585Z\",\n" +
-                        "        \"address\": \"some address\",\n" +
-                        "        \"createdAt\": \"2022-11-14T02:07:02.585Z\",\n" +
-                        "        \"updatedAt\": \"2022-11-14T02:07:02.585Z\",\n" +
-                        "        \"businessId\": null,\n" +
-                        "        \"userId\": \"er43534trt\"\n" +
-                        "       } \n " +
-                        "  ]\n" +
-                        "}")
-        mockWebServer.enqueue(mockedResponse)
+        activities.add(
+            ActivityObject(
+                "1234",
+                "Karting activity",
+                "Go race with your friends!",
+                "0",
+                "1000",
+                "15",
+                images,
+                "19h00",
+                "21h00",
+                "200 Nowhere street, Quebec, Canada",
+                "2022-11-14T02:07:02.585Z",
+                "2022-11-14T02:07:02.585Z",
+                null,
+                "userId123"
+            )
+        )
+
+        activities.add(
+            ActivityObject(
+                "5678",
+                "Soccer game",
+                "Play with your friends!",
+                "0",
+                "0",
+                "22",
+                images,
+                "19h00",
+                "21h00",
+                "200 Nowhere street, Quebec, Canada",
+                "2022-11-14T02:07:02.585Z",
+                "2022-11-14T02:07:02.585Z",
+                null,
+                "userId123"
+            )
+        )
+
+        val expectedResponse = FavoriteActivitiesResponse(activities.size.toString(), activities)
+
+        val mockServerResponse = MockResponse().setResponseCode(200).setBody(
+            "{\n" +
+                    "    \"count\": 2,\n" +
+                    "    \"activities\": [" +
+                    "       {\n" +
+                    "        \"id\": \"1234\",\n" +
+                    "        \"title\": \"Karting activity\",\n" +
+                    "        \"description\": \"Go race with your friends!\",\n" +
+                    "        \"costPerIndividual\": \"0\",\n" +
+                    "        \"costPerGroup\": 1000,\n" +
+                    "        \"groupSize\": \"15\",\n" +
+                    "        \"images\": [\"http://first-image-url.jpg\", \"http://second-image-url.jpg\", \"http://third-image-url.jpg\"],\n" +
+                    "        \"startTime\": \"19h00\",\n" +
+                    "        \"endTime\": \"21h00\",\n" +
+                    "        \"address\": \"200 Nowhere street, Quebec, Canada\",\n" +
+                    "        \"createdAt\": \"2022-11-14T02:07:02.585Z\",\n" +
+                    "        \"updatedAt\": \"2022-11-14T02:07:02.585Z\",\n" +
+                    "        \"business\": null,\n" +
+                    "        \"userId\": \"userId123\"\n" +
+                    "       },\n" +
+                    "       {\n" +
+                    "        \"id\": \"5678\",\n" +
+                    "        \"title\": \"Soccer game\",\n" +
+                    "        \"description\": \"Play with your friends!\",\n" +
+                    "        \"costPerIndividual\": \"0\",\n" +
+                    "        \"costPerGroup\": 0,\n" +
+                    "        \"groupSize\": \"22\",\n" +
+                    "        \"images\": [\"http://first-image-url.jpg\", \"http://second-image-url.jpg\", \"http://third-image-url.jpg\"],\n" +
+                    "        \"startTime\": \"19h00\",\n" +
+                    "        \"endTime\": \"21h00\",\n" +
+                    "        \"address\": \"200 Nowhere street, Quebec, Canada\",\n" +
+                    "        \"createdAt\": \"2022-11-14T02:07:02.585Z\",\n" +
+                    "        \"updatedAt\": \"2022-11-14T02:07:02.585Z\",\n" +
+                    "        \"business\": null,\n" +
+                    "        \"userId\": \"userId123\"\n" +
+                    "       }" +
+                    "   ]\n" +
+                    "}"
+        )
+        mockWebServer.enqueue(mockServerResponse)
 
         var result = userRepository.getCreatedActivities()
-        advanceUntilIdle()
         println("Result: $result")
-        assert(result.first && result.second == "OK")
+        assert(result.third.toString() == expectedResponse.toString())
 
-        mockedResponse = MockResponse()
+        val mockedResponse = MockResponse()
                 .setResponseCode(400)
                 .setBody("{\n" +
                         "    \"count\": \"0\",\n" +
@@ -571,38 +707,98 @@ class UserRepositoryTest
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun getFavoriteActivities() = runTest {
+        val activities : MutableList<ActivityObject> = mutableListOf()
+        val images : MutableList<String> = mutableListOf()
+        images.add("http://first-image-url.jpg")
+        images.add("http://second-image-url.jpg")
+        images.add("http://third-image-url.jpg")
 
-        var mockedResponse = MockResponse()
-                .setResponseCode(200)
-                .setBody("{\n" +
-                        "    \"count\": \"1\",\n" +
-                        "    \"activities\": [\n" +
-                        "       { \n " +
-                        "        \"id\": \"100\",\n" +
-                        "        \"title\": \"some title\",\n" +
-                        "        \"description\": \"some description\",\n" +
-                        "        \"costPerIndividual\": \"10\",\n" +
-                        "        \"costPerGroup\": 40,\n" +
-                        "        \"groupSize\": \"4\",\n" +
-                        "        \"images\": null,\n" +
-                        "        \"startTime\": \"2022-11-14T02:07:02.585Z\",\n" +
-                        "        \"endTime\": \"2022-11-14T02:07:02.585Z\",\n" +
-                        "        \"address\": \"some address\",\n" +
-                        "        \"createdAt\": \"2022-11-14T02:07:02.585Z\",\n" +
-                        "        \"updatedAt\": \"2022-11-14T02:07:02.585Z\",\n" +
-                        "        \"businessId\": null,\n" +
-                        "        \"userId\": \"er43534trt\"\n" +
-                        "       } \n " +
-                        "  ]\n" +
-                        "}")
-        mockWebServer.enqueue(mockedResponse)
+        activities.add(
+            ActivityObject(
+                "1234",
+                "Karting activity",
+                "Go race with your friends!",
+                "0",
+                "1000",
+                "15",
+                images,
+                "19h00",
+                "21h00",
+                "200 Nowhere street, Quebec, Canada",
+                "2022-11-14T02:07:02.585Z",
+                "2022-11-14T02:07:02.585Z",
+                null,
+                "userId123"
+            )
+        )
+
+        activities.add(
+            ActivityObject(
+                "5678",
+                "Soccer game",
+                "Play with your friends!",
+                "0",
+                "0",
+                "22",
+                images,
+                "19h00",
+                "21h00",
+                "200 Nowhere street, Quebec, Canada",
+                "2022-11-14T02:07:02.585Z",
+                "2022-11-14T02:07:02.585Z",
+                null,
+                "userId123"
+            )
+        )
+
+        val expectedResponse = FavoriteActivitiesResponse(activities.size.toString(), activities)
+
+        val mockServerResponse = MockResponse().setResponseCode(200).setBody(
+            "{\n" +
+                    "    \"count\": 2,\n" +
+                    "    \"activities\": [" +
+                    "       {\n" +
+                    "        \"id\": \"1234\",\n" +
+                    "        \"title\": \"Karting activity\",\n" +
+                    "        \"description\": \"Go race with your friends!\",\n" +
+                    "        \"costPerIndividual\": \"0\",\n" +
+                    "        \"costPerGroup\": 1000,\n" +
+                    "        \"groupSize\": \"15\",\n" +
+                    "        \"images\": [\"http://first-image-url.jpg\", \"http://second-image-url.jpg\", \"http://third-image-url.jpg\"],\n" +
+                    "        \"startTime\": \"19h00\",\n" +
+                    "        \"endTime\": \"21h00\",\n" +
+                    "        \"address\": \"200 Nowhere street, Quebec, Canada\",\n" +
+                    "        \"createdAt\": \"2022-11-14T02:07:02.585Z\",\n" +
+                    "        \"updatedAt\": \"2022-11-14T02:07:02.585Z\",\n" +
+                    "        \"business\": null,\n" +
+                    "        \"userId\": \"userId123\"\n" +
+                    "       },\n" +
+                    "       {\n" +
+                    "        \"id\": \"5678\",\n" +
+                    "        \"title\": \"Soccer game\",\n" +
+                    "        \"description\": \"Play with your friends!\",\n" +
+                    "        \"costPerIndividual\": \"0\",\n" +
+                    "        \"costPerGroup\": 0,\n" +
+                    "        \"groupSize\": \"22\",\n" +
+                    "        \"images\": [\"http://first-image-url.jpg\", \"http://second-image-url.jpg\", \"http://third-image-url.jpg\"],\n" +
+                    "        \"startTime\": \"19h00\",\n" +
+                    "        \"endTime\": \"21h00\",\n" +
+                    "        \"address\": \"200 Nowhere street, Quebec, Canada\",\n" +
+                    "        \"createdAt\": \"2022-11-14T02:07:02.585Z\",\n" +
+                    "        \"updatedAt\": \"2022-11-14T02:07:02.585Z\",\n" +
+                    "        \"business\": null,\n" +
+                    "        \"userId\": \"userId123\"\n" +
+                    "       }" +
+                    "   ]\n" +
+                    "}"
+        )
+        mockWebServer.enqueue(mockServerResponse)
 
         var result = userRepository.getFavoriteActivities()
-        advanceUntilIdle()
         println("Result: $result")
-        assert(result.first && result.second == "OK")
+        assert(result.third.toString() == expectedResponse.toString())
 
-        mockedResponse = MockResponse()
+        val mockedResponse = MockResponse()
                 .setResponseCode(400)
                 .setBody("{\n" +
                         "    \"count\": \"0\",\n" +
@@ -619,43 +815,73 @@ class UserRepositoryTest
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun getJoinedActivities() = runTest {
+        val activities : MutableList<JoinedActivityObject> = mutableListOf()
+        val images : MutableList<String> = mutableListOf()
+        images.add("http://first-image-url.jpg")
+        images.add("http://second-image-url.jpg")
+        images.add("http://third-image-url.jpg")
 
-        var mockedResponse = MockResponse()
-                .setResponseCode(200)
-                .setBody("{\n" +
-                        "    \"count\": \"1\",\n" +
-                        "    \"row\": [\n" +
-                        "       { \n " +
-                        "        \"id\": \"100\",\n" +
-                        "        \"userId\": \"sr23t2t426t\",\n" +
-                        "        \"activityId\": \"155\",\n" +
-                        "        \"activity\": {\n" +
-                        "               \"id\": \"100\",\n" +
-                        "               \"title\": \"some title\",\n" +
-                        "               \"description\": \"some description\",\n" +
-                        "               \"costPerIndividual\": \"10\",\n" +
-                        "               \"costPerGroup\": 40,\n" +
-                        "               \"groupSize\": \"4\",\n" +
-                        "               \"images\": null,\n" +
-                        "               \"startTime\": \"2022-11-14T02:07:02.585Z\",\n" +
-                        "               \"endTime\": \"2022-11-14T02:07:02.585Z\",\n" +
-                        "               \"address\": \"some address\",\n" +
-                        "               \"createdAt\": \"2022-11-14T02:07:02.585Z\",\n" +
-                        "               \"updatedAt\": \"2022-11-14T02:07:02.585Z\",\n" +
-                        "               \"businessId\": null,\n" +
-                        "               \"userId\": \"er43534trt\"\n" +
-                        "           } \n " +
-                        "       } \n " +
-                        "  ]\n" +
-                        "}")
-        mockWebServer.enqueue(mockedResponse)
+        activities.add(
+            JoinedActivityObject(
+                "1234",
+                "userId1234",
+                "activityId_1234",
+                ActivityObject(
+                    "1234",
+                    "Karting activity",
+                    "Go race with your friends!",
+                    "0",
+                    "1000",
+                    "15",
+                    images,
+                    "19h00",
+                    "21h00",
+                    "200 Nowhere street, Quebec, Canada",
+                    "2022-11-14T02:07:02.585Z",
+                    "2022-11-14T02:07:02.585Z",
+                    null,
+                    "userId123"
+                )
+            )
+        )
+
+        val expectedResponse = JoinedActivitiesResponse(activities.size.toString(), activities)
+
+        val mockServerResponse = MockResponse().setResponseCode(200).setBody(
+            "{\n" +
+                    "    \"count\": 1,\n" +
+                    "    \"row\": [" +
+                    "       {\n" +
+                    "        \"id\": \"1234\",\n" +
+                    "        \"userId\": \"userId1234\",\n" +
+                    "        \"activityId\": \"activityId_1234\",\n" +
+                    "        \"activity\": {\n" +
+                    "               \"id\": \"1234\",\n" +
+                    "               \"title\": \"Karting activity\",\n" +
+                    "               \"description\": \"Go race with your friends!\",\n" +
+                    "               \"costPerIndividual\": \"0\",\n" +
+                    "               \"costPerGroup\": 1000,\n" +
+                    "               \"groupSize\": \"15\",\n" +
+                    "               \"images\": [\"http://first-image-url.jpg\", \"http://second-image-url.jpg\", \"http://third-image-url.jpg\"],\n" +
+                    "               \"startTime\": \"19h00\",\n" +
+                    "               \"endTime\": \"21h00\",\n" +
+                    "               \"address\": \"200 Nowhere street, Quebec, Canada\",\n" +
+                    "               \"createdAt\": \"2022-11-14T02:07:02.585Z\",\n" +
+                    "               \"updatedAt\": \"2022-11-14T02:07:02.585Z\",\n" +
+                    "               \"business\": null,\n" +
+                    "               \"userId\": \"userId123\"\n" +
+                    "           }\n" +
+                    "       }\n" +
+                    "   ]\n" +
+                    "}"
+        )
+        mockWebServer.enqueue(mockServerResponse)
 
         var result = userRepository.getJoinedActivities()
-        advanceUntilIdle()
         println("Result: $result")
-        assert(result.first && result.second == "OK")
+        assert(result.third.toString() == expectedResponse.toString())
 
-        mockedResponse = MockResponse()
+        val mockedResponse = MockResponse()
                 .setResponseCode(400)
                 .setBody("{\n" +
                         "    \"count\": \"0\",\n" +
@@ -710,410 +936,4 @@ class UserRepositoryTest
         println("Result: $result")
         assert(!result.first)
     }
-
-//    @OptIn(ExperimentalCoroutinesApi::class)
-//    @Test
-//    fun removeUserFromActivityTest() = runTest {
-//        var mockServerResponse = MockResponse().setResponseCode(200)
-//        mockWebServer.enqueue(mockServerResponse)
-//
-//        var result = userRepository.removeUserFromActivity(activity_id)
-//        println("Result: $result")
-//        assert(result.first && result.second == "OK")
-//
-//        mockServerResponse = MockResponse().setResponseCode(400)
-//        mockWebServer.enqueue(mockServerResponse)
-//
-//        result = userRepository.removeUserFromActivity(activity_id)
-//        println("Result: $result")
-//        assert(!result.first && result.second == "Client Error")
-//    }
-//
-//    @OptIn(ExperimentalCoroutinesApi::class)
-//    @Test
-//    fun checkActivityMembershipTest() = runTest {
-//        var mockServerResponse = MockResponse().setResponseCode(200).setBody("{\"joined\": true}")
-//        mockWebServer.enqueue(mockServerResponse)
-//
-//        var result = userRepository.checkActivityMember(activity_id)
-//        println("Result: $result")
-//        assert(result.first && result.second == "OK" && result.third)
-//
-//        mockServerResponse = MockResponse().setResponseCode(200).setBody("{\"joined\": false}")
-//        mockWebServer.enqueue(mockServerResponse)
-//
-//        result = userRepository.checkActivityMember(activity_id)
-//        println("Result: $result")
-//        assert(result.first && result.second == "OK" && !result.third)
-//
-//        mockServerResponse = MockResponse().setResponseCode(400)
-//        mockWebServer.enqueue(mockServerResponse)
-//
-//        result = userRepository.checkActivityMember(activity_id)
-//        println("Result: $result")
-//        @Suppress("SENSELESS_COMPARISON")
-//        assert(!result.first && result.second == "null" && !result.third)
-//    }
-//
-//    @OptIn(ExperimentalCoroutinesApi::class)
-//    @Test
-//    fun isActivityFavoritedTest() = runTest {
-//        val mockServerResponse =
-//            MockResponse().setResponseCode(200).setBody("{\"isActivityFound\": true}")
-//        mockWebServer.enqueue(mockServerResponse)
-//
-//        val result = userRepository.isActivityFavorited(activity_id)
-//        println("Result: $result")
-//        assert(result.code() == 200 && result.body()!!.isActivityFound)
-//    }
-//
-//    @OptIn(ExperimentalCoroutinesApi::class)
-//    @Test
-//    fun addFavoriteActivityTest() = runTest {
-//        val favoriteActivities = IntArray(5)
-//        favoriteActivities[0] = 1
-//        favoriteActivities[1] = 2
-//        favoriteActivities[2] = 3
-//        favoriteActivities[3] = 4
-//        favoriteActivities[4] = 5
-//
-//        val update = FavoriteUserObject(
-//            "hQH3m5B4dUXoHXvbneslxcuCHR52",
-//            "first",
-//            "last",
-//            "1",
-//            "null",
-//            "validEmail@gmail.com",
-//            "Hello! It's me, firstName!",
-//            favoriteActivities
-//        )
-//
-//        val responseObject = FavoriteResponse(true, update)
-//
-//        val mockServerResponse = MockResponse().setResponseCode(200).setBody(
-//            "{\n" +
-//                    "    \"success\": true,\n" +
-//                    "    \"update\": {\n" +
-//                    "        \"firebase_id\": \"hQH3m5B4dUXoHXvbneslxcuCHR52\",\n" +
-//                    "        \"firstName\": \"first\",\n" +
-//                    "        \"lastName\": \"last\",\n" +
-//                    "        \"countryCode\": \"1\",\n" +
-//                    "        \"phone\": null,\n" +
-//                    "        \"email\": \"validEmail@gmail.com\",\n" +
-//                    "        \"favoriteActivities\": [1,2,3,4,5],\n" +
-//                    "        \"bio\": \"Hello! It's me, firstName!\"\n" +
-//                    "    }\n" +
-//                    "}"
-//        )
-//        mockWebServer.enqueue(mockServerResponse)
-//
-//        val result = userRepository.addFavoriteActivity(Integer.parseInt(activity_id))
-//        println("Result: ${result.body()}")
-//        assert(result.body().toString() == responseObject.toString())
-//    }
-//
-//    @OptIn(ExperimentalCoroutinesApi::class)
-//    @Test
-//    fun removeFavoriteActivityTest() = runTest {
-//        val favoriteActivities = IntArray(5)
-//        favoriteActivities[0] = 1
-//        favoriteActivities[1] = 2
-//        favoriteActivities[2] = 3
-//        favoriteActivities[3] = 4
-//        favoriteActivities[4] = 5
-//
-//        val update = FavoriteUserObject(
-//            "hQH3m5B4dUXoHXvbneslxcuCHR52",
-//            "first",
-//            "last",
-//            "1",
-//            "null",
-//            "validEmail@gmail.com",
-//            "Hello! It's me, firstName!",
-//            favoriteActivities
-//        )
-//
-//        val responseObject = FavoriteResponse(true, update)
-//
-//        val mockServerResponse = MockResponse().setResponseCode(200).setBody(
-//            "{\n" +
-//                    "    \"success\": true,\n" +
-//                    "    \"update\": {\n" +
-//                    "        \"firebase_id\": \"hQH3m5B4dUXoHXvbneslxcuCHR52\",\n" +
-//                    "        \"firstName\": \"first\",\n" +
-//                    "        \"lastName\": \"last\",\n" +
-//                    "        \"countryCode\": \"1\",\n" +
-//                    "        \"phone\": null,\n" +
-//                    "        \"email\": \"validEmail@gmail.com\",\n" +
-//                    "        \"favoriteActivities\": [1,2,3,4,5],\n" +
-//                    "        \"bio\": \"Hello! It's me, firstName!\"\n" +
-//                    "    }\n" +
-//                    "}"
-//        )
-//        mockWebServer.enqueue(mockServerResponse)
-//
-//        val result = userRepository.removeFavoriteActivity(Integer.parseInt(activity_id))
-//        println("Result: ${result.body()}")
-//        assert(result.body().toString() == responseObject.toString())
-//    }
-//
-//    @OptIn(ExperimentalCoroutinesApi::class)
-//    @Test
-//    fun getCreatedActivitiesTest() = runTest {
-//        val activities : MutableList<ActivityObject> = mutableListOf()
-//        val images : MutableList<String> = mutableListOf()
-//        images.add("http://first-image-url.jpg")
-//        images.add("http://second-image-url.jpg")
-//        images.add("http://third-image-url.jpg")
-//
-//        activities.add(
-//            ActivityObject(
-//                "1234",
-//                "Karting activity",
-//                "Go race with your friends!",
-//                "0",
-//                "1000",
-//                "15",
-//                images,
-//                "19h00",
-//                "21h00",
-//                "200 Nowhere street, Quebec, Canada",
-//                "2022-11-14T02:07:02.585Z",
-//                "2022-11-14T02:07:02.585Z",
-//                null,
-//                "userId123"
-//            )
-//        )
-//
-//        activities.add(
-//            ActivityObject(
-//                "5678",
-//                "Soccer game",
-//                "Play with your friends!",
-//                "0",
-//                "0",
-//                "22",
-//                images,
-//                "19h00",
-//                "21h00",
-//                "200 Nowhere street, Quebec, Canada",
-//                "2022-11-14T02:07:02.585Z",
-//                "2022-11-14T02:07:02.585Z",
-//                null,
-//                "userId123"
-//            )
-//        )
-//
-//        val expectedResponse = FavoriteActivitiesResponse(activities.size.toString(), activities)
-//
-//        val mockServerResponse = MockResponse().setResponseCode(200).setBody(
-//            "{\n" +
-//                    "    \"count\": 2,\n" +
-//                    "    \"activities\": [" +
-//                    "       {\n" +
-//                    "        \"id\": \"1234\",\n" +
-//                    "        \"title\": \"Karting activity\",\n" +
-//                    "        \"description\": \"Go race with your friends!\",\n" +
-//                    "        \"costPerIndividual\": \"0\",\n" +
-//                    "        \"costPerGroup\": 1000,\n" +
-//                    "        \"groupSize\": \"15\",\n" +
-//                    "        \"images\": [\"http://first-image-url.jpg\", \"http://second-image-url.jpg\", \"http://third-image-url.jpg\"],\n" +
-//                    "        \"startTime\": \"19h00\",\n" +
-//                    "        \"endTime\": \"21h00\",\n" +
-//                    "        \"address\": \"200 Nowhere street, Quebec, Canada\",\n" +
-//                    "        \"createdAt\": \"2022-11-14T02:07:02.585Z\",\n" +
-//                    "        \"updatedAt\": \"2022-11-14T02:07:02.585Z\",\n" +
-//                    "        \"business\": null,\n" +
-//                    "        \"userId\": \"userId123\"\n" +
-//                    "       },\n" +
-//                    "       {\n" +
-//                    "        \"id\": \"5678\",\n" +
-//                    "        \"title\": \"Soccer game\",\n" +
-//                    "        \"description\": \"Play with your friends!\",\n" +
-//                    "        \"costPerIndividual\": \"0\",\n" +
-//                    "        \"costPerGroup\": 0,\n" +
-//                    "        \"groupSize\": \"22\",\n" +
-//                    "        \"images\": [\"http://first-image-url.jpg\", \"http://second-image-url.jpg\", \"http://third-image-url.jpg\"],\n" +
-//                    "        \"startTime\": \"19h00\",\n" +
-//                    "        \"endTime\": \"21h00\",\n" +
-//                    "        \"address\": \"200 Nowhere street, Quebec, Canada\",\n" +
-//                    "        \"createdAt\": \"2022-11-14T02:07:02.585Z\",\n" +
-//                    "        \"updatedAt\": \"2022-11-14T02:07:02.585Z\",\n" +
-//                    "        \"business\": null,\n" +
-//                    "        \"userId\": \"userId123\"\n" +
-//                    "       }" +
-//                    "   ]\n" +
-//                    "}"
-//        )
-//        mockWebServer.enqueue(mockServerResponse)
-//
-//        val result = userRepository.getCreatedActivities()
-//        println("Result: ${result.body()}")
-//        assert(result.body().toString() == expectedResponse.toString())
-//    }
-//
-//    @OptIn(ExperimentalCoroutinesApi::class)
-//    @Test
-//    fun getFavoriteActivitiesTest() = runTest {
-//        val activities : MutableList<ActivityObject> = mutableListOf()
-//        val images : MutableList<String> = mutableListOf()
-//        images.add("http://first-image-url.jpg")
-//        images.add("http://second-image-url.jpg")
-//        images.add("http://third-image-url.jpg")
-//
-//        activities.add(
-//            ActivityObject(
-//                "1234",
-//                "Karting activity",
-//                "Go race with your friends!",
-//                "0",
-//                "1000",
-//                "15",
-//                images,
-//                "19h00",
-//                "21h00",
-//                "200 Nowhere street, Quebec, Canada",
-//                "2022-11-14T02:07:02.585Z",
-//                "2022-11-14T02:07:02.585Z",
-//                null,
-//                "userId123"
-//            )
-//        )
-//
-//        activities.add(
-//            ActivityObject(
-//                "5678",
-//                "Soccer game",
-//                "Play with your friends!",
-//                "0",
-//                "0",
-//                "22",
-//                images,
-//                "19h00",
-//                "21h00",
-//                "200 Nowhere street, Quebec, Canada",
-//                "2022-11-14T02:07:02.585Z",
-//                "2022-11-14T02:07:02.585Z",
-//                null,
-//                "userId123"
-//            )
-//        )
-//
-//        val expectedResponse = FavoriteActivitiesResponse(activities.size.toString(), activities)
-//
-//        val mockServerResponse = MockResponse().setResponseCode(200).setBody(
-//            "{\n" +
-//                    "    \"count\": 2,\n" +
-//                    "    \"activities\": [" +
-//                    "       {\n" +
-//                    "        \"id\": \"1234\",\n" +
-//                    "        \"title\": \"Karting activity\",\n" +
-//                    "        \"description\": \"Go race with your friends!\",\n" +
-//                    "        \"costPerIndividual\": \"0\",\n" +
-//                    "        \"costPerGroup\": 1000,\n" +
-//                    "        \"groupSize\": \"15\",\n" +
-//                    "        \"images\": [\"http://first-image-url.jpg\", \"http://second-image-url.jpg\", \"http://third-image-url.jpg\"],\n" +
-//                    "        \"startTime\": \"19h00\",\n" +
-//                    "        \"endTime\": \"21h00\",\n" +
-//                    "        \"address\": \"200 Nowhere street, Quebec, Canada\",\n" +
-//                    "        \"createdAt\": \"2022-11-14T02:07:02.585Z\",\n" +
-//                    "        \"updatedAt\": \"2022-11-14T02:07:02.585Z\",\n" +
-//                    "        \"business\": null,\n" +
-//                    "        \"userId\": \"userId123\"\n" +
-//                    "       },\n" +
-//                    "       {\n" +
-//                    "        \"id\": \"5678\",\n" +
-//                    "        \"title\": \"Soccer game\",\n" +
-//                    "        \"description\": \"Play with your friends!\",\n" +
-//                    "        \"costPerIndividual\": \"0\",\n" +
-//                    "        \"costPerGroup\": 0,\n" +
-//                    "        \"groupSize\": \"22\",\n" +
-//                    "        \"images\": [\"http://first-image-url.jpg\", \"http://second-image-url.jpg\", \"http://third-image-url.jpg\"],\n" +
-//                    "        \"startTime\": \"19h00\",\n" +
-//                    "        \"endTime\": \"21h00\",\n" +
-//                    "        \"address\": \"200 Nowhere street, Quebec, Canada\",\n" +
-//                    "        \"createdAt\": \"2022-11-14T02:07:02.585Z\",\n" +
-//                    "        \"updatedAt\": \"2022-11-14T02:07:02.585Z\",\n" +
-//                    "        \"business\": null,\n" +
-//                    "        \"userId\": \"userId123\"\n" +
-//                    "       }" +
-//                    "   ]\n" +
-//                    "}"
-//        )
-//        mockWebServer.enqueue(mockServerResponse)
-//
-//        val result = userRepository.getFavoriteActivities()
-//        println("Result: ${result.body()}")
-//        assert(result.body().toString() == expectedResponse.toString())
-//    }
-//
-//    @OptIn(ExperimentalCoroutinesApi::class)
-//    @Test
-//    fun getJoinedActivitiesTest() = runTest {
-//        val activities : MutableList<JoinedActivityObject> = mutableListOf()
-//        val images : MutableList<String> = mutableListOf()
-//        images.add("http://first-image-url.jpg")
-//        images.add("http://second-image-url.jpg")
-//        images.add("http://third-image-url.jpg")
-//
-//        activities.add(
-//            JoinedActivityObject(
-//                "1234",
-//                "userId1234",
-//                "activityId_1234",
-//                ActivityObject(
-//                    "1234",
-//                    "Karting activity",
-//                    "Go race with your friends!",
-//                    "0",
-//                    "1000",
-//                    "15",
-//                    images,
-//                    "19h00",
-//                    "21h00",
-//                    "200 Nowhere street, Quebec, Canada",
-//                    "2022-11-14T02:07:02.585Z",
-//                    "2022-11-14T02:07:02.585Z",
-//                    null,
-//                    "userId123"
-//                )
-//            )
-//        )
-//
-//        val expectedResponse = JoinedActivitiesResponse(activities.size.toString(), activities)
-//
-//        val mockServerResponse = MockResponse().setResponseCode(200).setBody(
-//            "{\n" +
-//                    "    \"count\": 1,\n" +
-//                    "    \"row\": [" +
-//                    "       {\n" +
-//                    "        \"id\": \"1234\",\n" +
-//                    "        \"userId\": \"userId1234\",\n" +
-//                    "        \"activityId\": \"activityId_1234\",\n" +
-//                    "        \"activity\": {\n" +
-//                    "               \"id\": \"1234\",\n" +
-//                    "               \"title\": \"Karting activity\",\n" +
-//                    "               \"description\": \"Go race with your friends!\",\n" +
-//                    "               \"costPerIndividual\": \"0\",\n" +
-//                    "               \"costPerGroup\": 1000,\n" +
-//                    "               \"groupSize\": \"15\",\n" +
-//                    "               \"images\": [\"http://first-image-url.jpg\", \"http://second-image-url.jpg\", \"http://third-image-url.jpg\"],\n" +
-//                    "               \"startTime\": \"19h00\",\n" +
-//                    "               \"endTime\": \"21h00\",\n" +
-//                    "               \"address\": \"200 Nowhere street, Quebec, Canada\",\n" +
-//                    "               \"createdAt\": \"2022-11-14T02:07:02.585Z\",\n" +
-//                    "               \"updatedAt\": \"2022-11-14T02:07:02.585Z\",\n" +
-//                    "               \"business\": null,\n" +
-//                    "               \"userId\": \"userId123\"\n" +
-//                    "           }\n" +
-//                    "       }\n" +
-//                    "   ]\n" +
-//                    "}"
-//        )
-//        mockWebServer.enqueue(mockServerResponse)
-//
-//        val result = userRepository.getJoinedActivities()
-//        println("Result: ${result.body()}")
-//        assert(result.body().toString() == expectedResponse.toString())
-//    }
 }

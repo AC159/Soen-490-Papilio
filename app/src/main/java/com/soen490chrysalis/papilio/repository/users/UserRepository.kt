@@ -379,12 +379,16 @@ class UserRepository(
                     userService.updateUser(UserUpdate(Identifier(firebaseId), variableMap))
 
                 Log.d(logTag, "Update user: $response")
-                return@withContext Triple(response.isSuccessful, response.code(), response.message())
+                return@withContext Triple(
+                    response.isSuccessful,
+                    response.code(),
+                    response.message()
+                )
             }
             catch (e : Exception)
             {
                 Log.d(logTag, "Update user - Exception ->  $e")
-                return@withContext Triple(false, 400, e.message+"")
+                return@withContext Triple(false, 400, e.message + "")
             }
 
         }
@@ -427,7 +431,7 @@ class UserRepository(
             catch (e : Exception)
             {
                 Log.d(logTag, "updateUserProfilePic: $e")
-                return@withContext Pair(false, e.message+"")
+                return@withContext Pair(false, e.message + "")
             }
         }
     }

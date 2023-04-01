@@ -7,6 +7,8 @@ import com.soen490chrysalis.papilio.repository.users.IUserRepository
 import com.soen490chrysalis.papilio.repository.users.UserRepository
 import com.soen490chrysalis.papilio.services.network.IUserApiService
 import com.soen490chrysalis.papilio.services.network.responses.CheckFavoriteResponse
+import com.soen490chrysalis.papilio.services.network.responses.FavoriteResponse
+import com.soen490chrysalis.papilio.services.network.responses.FavoriteUserObject
 import com.soen490chrysalis.papilio.testUtils.MainCoroutineRule
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -44,6 +46,20 @@ class ActivityInfoViewModelTest
     // first value is defines the success of the operation, second term is the message value
     private val success = Pair(true, "")
     private val error = Pair(false, "Oops, something went wrong!")
+
+    private val favResponse = FavoriteResponse(
+        true,
+        FavoriteUserObject(
+            mockFirebaseUserUid,
+            "firstName",
+            "lastName",
+            null,
+            null,
+            "someValidEmail@gmail.com",
+            "Some user bio",
+            null
+        )
+    )
 
     @get:Rule
     val rule = InstantTaskExecutorRule()
@@ -143,21 +159,51 @@ class ActivityInfoViewModelTest
     @Test
     fun checkActivityFavoritedTest() = runTest {
         val activityFound = CheckFavoriteResponse(true)
-        val successResponse = MockResponse().setResponseCode(200).setBody(activityFound.toString())
+        val res = Triple(true, "", activityFound)
+        val successResponse = MockResponse().setResponseCode(200).setBody(res.toString())
         Mockito.doReturn(successResponse).`when`(userRepository).isActivityFavorited(activity_id)
 
         activityInfoViewModel.checkActivityFavorited(Integer.parseInt(activity_id))
         advanceUntilIdle()
-        var result = activityInfoViewModel.checkActivityFavoritedResponse.value
-        println("Result: $result")
-        assert(result!!.isActivityFound)
-        Mockito.verify(userRepository, times(1)).isActivityFavorited(activity_id)
 
-//        Mockito.doReturn(error).`when`(userRepository).removeUserFromActivity(activity_id)
-//        activityInfoViewModel.leaveActivity(activity_id)
-//        advanceUntilIdle()
-//        result = activityInfoViewModel.leaveActivityResponse.value
-//        assert(!result!!.isSuccess && result.errorMessage == "Oops, something went wrong!")
-//        Mockito.verify(userRepository, times(2)).removeUserFromActivity(activity_id)
+        activityInfoViewModel.checkActivityFavoritedResponse.observeForever {
+            println("Result: $it")
+            assert(it!!.isActivityFound)
+        }
+        Mockito.verify(userRepository, times(1)).isActivityFavorited(activity_id)
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun addFavoriteActivityTest() = runTest {
+        val res = Triple(true, "", favResponse)
+        val successResponse = MockResponse().setResponseCode(200).setBody(res.toString())
+        Mockito.doReturn(successResponse).`when`(userRepository).addFavoriteActivity(Integer.parseInt(activity_id))
+
+        activityInfoViewModel.addFavoriteActivity(Integer.parseInt(activity_id))
+        advanceUntilIdle()
+
+        activityInfoViewModel.activityFavoritedResponse.observeForever {
+            println("Result: $it")
+            assert(it!!.success == true && it.update == favResponse.update)
+        }
+        Mockito.verify(userRepository, times(1)).addFavoriteActivity(Integer.parseInt(activity_id))
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun removeFavoriteActivityTest() = runTest {
+        val res = Triple(true, "", favResponse)
+        val successResponse = MockResponse().setResponseCode(200).setBody(res.toString())
+        Mockito.doReturn(successResponse).`when`(userRepository).removeFavoriteActivity(Integer.parseInt(activity_id))
+
+        activityInfoViewModel.removeFavoriteActivity(Integer.parseInt(activity_id))
+        advanceUntilIdle()
+
+        activityInfoViewModel.activityFavoritedResponse.observeForever {
+            println("Result: $it")
+            assert(it!!.success == true && it.update == favResponse.update)
+        }
+        Mockito.verify(userRepository, times(1)).removeFavoriteActivity(Integer.parseInt(activity_id))
     }
 }

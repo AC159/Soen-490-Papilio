@@ -70,9 +70,7 @@ class ActivityInfoViewModel(private val userRepository : IUserRepository) : View
             try
             {
                 val getActivityResponse = userRepository.isActivityFavorited(activityId.toString())
-                checkActivityFavoritedResponse.value = CheckFavoriteResponse(
-                    getActivityResponse.third.isActivityFound
-                )
+                checkActivityFavoritedResponse.value = getActivityResponse.third
                 Log.d(logTag, "response from isActivityFavorited --> $getActivityResponse")
             }
             catch (e : Exception)

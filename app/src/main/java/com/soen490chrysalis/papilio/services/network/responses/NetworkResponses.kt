@@ -19,7 +19,8 @@ data class UserObject(
     val phone: String?,
     val createdAt: String,
     val updatedAt: String,
-    val bio: String
+    val bio: String,
+    val image: String
 )
 
 data class ActivityObject(

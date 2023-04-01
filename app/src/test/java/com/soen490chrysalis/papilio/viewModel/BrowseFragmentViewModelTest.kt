@@ -3,9 +3,7 @@ package com.soen490chrysalis.papilio.viewModel
 import android.util.Log
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.soen490chrysalis.papilio.repository.mocks.MockActivityRepository
-import com.soen490chrysalis.papilio.services.network.responses.ActivityObject
 import com.soen490chrysalis.papilio.testUtils.MainCoroutineRule
-import com.soen490chrysalis.papilio.view.dialogs.EventDate
 import io.mockk.every
 import io.mockk.mockkStatic
 import kotlinx.coroutines.ExperimentalCoroutinesApi

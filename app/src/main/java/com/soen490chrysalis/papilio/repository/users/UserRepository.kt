@@ -10,7 +10,14 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import retrofit2.Response
+import java.io.File
+import java.io.FileOutputStream
+import java.io.InputStream
+import java.io.OutputStream
 
 /*
     DESCRIPTION:
@@ -193,19 +200,28 @@ class UserRepository(
         return response
     }
 
-    override suspend fun isActivityFavorited(activityId : String?) : Response<CheckFavoriteResponse>
+    override suspend fun isActivityFavorited(activityId : String?) : Triple<Boolean, String, CheckFavoriteResponse>
     {
         return withContext(coroutineDispatcher) {
             val firebaseId = firebaseAuth.currentUser!!.uid
 
-            val response = userService.checkActivityFavorited(firebaseId, activityId)
+            val response : Triple<Boolean, String, CheckFavoriteResponse> = try
+            {
+                val result = userService.checkActivityFavorited(firebaseId, activityId)
+                Log.d(logTag, "isActivityFavorited: $result")
+                Triple(result.isSuccessful, result.message(), result.body()!!)
+            }
+            catch (e : Exception)
+            {
+                Log.d(logTag, "userRepository isActivityFavorited() exception: $e")
+                Triple(false, e.message.toString(), CheckFavoriteResponse(false))
+            }
 
-            Log.d(logTag, "isActivityFavorited: $response")
             return@withContext response
         }
     }
 
-    override suspend fun addFavoriteActivity(activityId : Number) : Response<FavoriteResponse>
+    override suspend fun addFavoriteActivity(activityId : Number) : Triple<Boolean, String, FavoriteResponse>
     {
         return withContext(coroutineDispatcher) {
             val firebaseId = firebaseAuth.currentUser!!.uid
@@ -213,71 +229,128 @@ class UserRepository(
             val editedFields : MutableMap<String, Any> = mutableMapOf()
             editedFields["favoriteActivities"] = activityId
 
-            val response = userService.addFavoriteActivity(
-                UserUpdate(
-                    Identifier(
-                        firebaseId = firebaseId
-                    ), editedFields
+            val response = try
+            {
+                val result = userService.addFavoriteActivity(
+                    UserUpdate(
+                        Identifier(
+                            firebaseId = firebaseId
+                        ), editedFields
+                    )
                 )
-            )
+                Log.d(logTag, "addFavoriteActivity: $result")
+                Triple(result.isSuccessful, result.message(), result.body()!!)
+            }
+            catch (e : Exception)
+            {
+                Log.d(logTag, "userRepository addFavoriteActivity() exception: $e")
+                Triple(false, e.message.toString(), FavoriteResponse(false, null))
+            }
 
-            Log.d(logTag, "addFavoriteActivity: $response")
             return@withContext response
         }
     }
 
-    override suspend fun removeFavoriteActivity(activityId : Number) : Response<FavoriteResponse>
+    override suspend fun removeFavoriteActivity(activityId : Number) : Triple<Boolean, String, FavoriteResponse>
     {
         return withContext(coroutineDispatcher) {
             val firebaseId = firebaseAuth.currentUser!!.uid
             val editedFields : MutableMap<String, Any> = mutableMapOf()
             editedFields["favoriteActivities"] = activityId
 
-            val response = userService.removeFavoriteActivity(
-                UserUpdate(
-                    Identifier(
-                        firebaseId = firebaseId
-                    ), editedFields
+            val response = try
+            {
+                val result = userService.removeFavoriteActivity(
+                    UserUpdate(
+                        Identifier(
+                            firebaseId = firebaseId
+                        ), editedFields
+                    )
                 )
-            )
+                Log.d(logTag, "removeFavoriteActivity: $result")
+                Triple(result.isSuccessful, result.message(), result.body()!!)
+            }
+            catch (e : Exception)
+            {
+                Log.d(logTag, "userRepository removeFavoriteActivity() exception: $e")
+                Triple(false, e.message.toString(), FavoriteResponse(false, null))
+            }
 
-            Log.d(logTag, "removeFavoriteActivity: $response")
             return@withContext response
         }
     }
 
-    override suspend fun getCreatedActivities() : Response<FavoriteActivitiesResponse>
+    override suspend fun getCreatedActivities() : Triple<Boolean, String, FavoriteActivitiesResponse>
     {
         return withContext(coroutineDispatcher) {
             val firebaseId = firebaseAuth.currentUser!!.uid
 
-            val response = userService.getUserActivities(firebaseId)
+            val response = try
+            {
+                val result = userService.getUserActivities(firebaseId)
+                Log.d(logTag, "getCreatedActivities: $result")
+                Triple(result.isSuccessful, result.message(), result.body()!!)
+            }
+            catch (e : Exception)
+            {
+                Log.d(logTag, "userRepository getCreatedActivities() exception: $e")
+                Triple(
+                    false,
+                    e.message.toString(),
+                    FavoriteActivitiesResponse("0", listOf<ActivityObject>())
+                )
+            }
 
-            Log.d(logTag, "getCreatedActivities: $response")
             return@withContext response
         }
     }
 
-    override suspend fun getFavoriteActivities() : Response<FavoriteActivitiesResponse>
+    override suspend fun getFavoriteActivities() : Triple<Boolean, String, FavoriteActivitiesResponse>
     {
         return withContext(coroutineDispatcher) {
             val firebaseId = firebaseAuth.currentUser!!.uid
 
-            val response = userService.getUserFavoriteActivities(firebaseId)
+            val response = try
+            {
+                val result = userService.getUserFavoriteActivities(firebaseId)
+                Log.d(logTag, "getFavoriteActivities: $result")
+                Triple(result.isSuccessful, result.message(), result.body()!!)
+            }
+            catch (e : Exception)
+            {
+                Log.d(logTag, "userRepository getFavoriteActivities() exception: $e")
+                Triple(
+                    false,
+                    e.message.toString(),
+                    FavoriteActivitiesResponse("0", listOf<ActivityObject>())
+                )
+            }
 
-            Log.d(logTag, "getFavoriteActivities: $response")
             return@withContext response
         }
     }
 
-    override suspend fun getJoinedActivities() : Response<JoinedActivitiesResponse>
+    override suspend fun getJoinedActivities() : Triple<Boolean, String, JoinedActivitiesResponse>
     {
         return withContext(coroutineDispatcher) {
             val firebaseId = firebaseAuth.currentUser!!.uid
 
-            val response = userService.getUserJoinedActivities(firebaseId)
+            val response = try
+            {
+                val result = userService.getUserJoinedActivities(firebaseId)
+                Log.d(logTag, "getJoinedActivities: $result")
+                Triple(result.isSuccessful, result.message(), result.body()!!)
+            }
+            catch (e : Exception)
+            {
+                Log.d(logTag, "userRepository getJoinedActivities() exception: $e")
+                Triple(
+                    false,
+                    e.message.toString(),
+                    JoinedActivitiesResponse("0", listOf<JoinedActivityObject>())
+                )
+            }
 
-            Log.d(logTag, "getJoinedActivities: $response")
             return@withContext response
         }
     }
@@ -295,15 +368,67 @@ class UserRepository(
     */
     override suspend fun updateUser(
         variableMap : Map<String, Any>
-    ) : Response<Void>
+    ) : Triple<Boolean, Int, String>
     {
         return withContext(coroutineDispatcher) {
             val firebaseId = firebaseAuth.currentUser!!.uid
 
-            val response = userService.updateUser(UserUpdate(Identifier(firebaseId), variableMap))
+            try
+            {
+                val response =
+                    userService.updateUser(UserUpdate(Identifier(firebaseId), variableMap))
 
-            Log.d(logTag, "Update user: $response")
-            return@withContext response
+                Log.d(logTag, "Update user: $response")
+                return@withContext Triple(response.isSuccessful, response.code(), response.message())
+            }
+            catch (e : Exception)
+            {
+                Log.d(logTag, "Update user - Exception ->  $e")
+                return@withContext Triple(false, 400, e.message+"")
+            }
+
+        }
+    }
+
+    override suspend fun updateUserProfilePic(
+        image : Pair<String, InputStream>
+    ) : Pair<Boolean, String>
+    {
+        return withContext(coroutineDispatcher) {
+            val firebaseId = firebaseAuth.currentUser!!.uid
+
+            try
+            {
+                val inputStream = image.second
+                val imageFileExtension = image.first
+
+                val file = File.createTempFile("tempFile", null, null)
+                val out : OutputStream = FileOutputStream(file)
+                val buf = ByteArray(1024)
+                var len : Int
+                while (inputStream.read(buf).also { len = it } > 0)
+                {
+                    out.write(buf, 0, len)
+                }
+                out.close()
+                inputStream.close()
+
+                val currentImage = MultipartBody.Part.createFormData(
+                    "image", // this name must match the name given in the backend
+                    file.name,
+                    file.asRequestBody("image/$imageFileExtension".toMediaType())
+                )
+
+                val response = userService.updateUserProfilePic(firebaseId, currentImage)
+
+                Log.d(logTag, "Update user profile pic: $response")
+                return@withContext Pair(response.isSuccessful, response.message())
+            }
+            catch (e : Exception)
+            {
+                Log.d(logTag, "updateUserProfilePic: $e")
+                return@withContext Pair(false, e.message+"")
+            }
         }
     }
 

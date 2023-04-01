@@ -22,13 +22,13 @@ class BrowseFragmentViewModel(private val activityRepository: IActivityRepositor
             try {
                 val getAllActivitiesResponse = activityRepository.searchActivities(query)
                 activitiesResponse.value = SearchActivityResponse(
-                    getAllActivitiesResponse.body()!!.keyword,
-                    getAllActivitiesResponse.body()!!.count,
-                    getAllActivitiesResponse.body()!!.rows
+                    getAllActivitiesResponse.third.keyword,
+                    getAllActivitiesResponse.third.count,
+                    getAllActivitiesResponse.third.rows
                 )
-                Log.d("searchActivities", activitiesResponse.value.toString())
+                Log.d(logTag, "response from searchActivities() --> $getAllActivitiesResponse")
             } catch (e: Exception) {
-                Log.d(logTag, "activityRepository.getAllActivities - exception:\n $e")
+                Log.d(logTag, "activityRepository.searchActivities - exception:\n $e")
             }
         }
     }
@@ -38,10 +38,10 @@ class BrowseFragmentViewModel(private val activityRepository: IActivityRepositor
             try {
                 val getActivityResponse = activityRepository.getActivity(activityId)
                 activityResponse.value = SingleActivityResponse(
-                    getActivityResponse.body()!!.found,
-                    getActivityResponse.body()!!.activity,
+                    getActivityResponse.third.found,
+                    getActivityResponse.third.activity,
                 )
-                Log.d("getActivity", activitiesResponse.value.toString())
+                Log.d(logTag, "response from getActivity --> $getActivityResponse")
             } catch (e: Exception) {
                 Log.d(logTag, "activityRepository.getActivity - exception:\n $e")
             }

@@ -3,6 +3,8 @@ package com.soen490chrysalis.papilio.viewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.perf.ktx.performance
 import com.soen490chrysalis.papilio.repository.users.IUserRepository
 import com.soen490chrysalis.papilio.repository.users.UserRepository
 import com.soen490chrysalis.papilio.services.network.UserApi
@@ -18,9 +20,12 @@ class UserProfileViewModelFactory : ViewModelProvider.NewInstanceFactory()
 
         // Initialize Firebase Auth and inject it into the user repository
         val firebaseAuth = FirebaseAuth.getInstance()
-
+        //performance testing for retrofit service
+        val retrofitBootTrace = Firebase.performance.newTrace("retrofit-service-user-api-boot-time")
+        retrofitBootTrace.start()
         val userRepository : IUserRepository =
             UserRepository(firebaseAuth, userService = UserApi.retrofitService)
+        retrofitBootTrace.stop()
         return UserProfileViewModel(userRepository) as T
     }
 }

@@ -190,8 +190,8 @@ class ActivityRepositoryTest
 
         advanceUntilIdle()
 
-        assert(response.isSuccessful && response.code() == 201)
-        assert(response.body()!!.count.toInt() == response.body()!!.rows.count())
+        assert(response.first)
+        assert(response.third.count.toInt() == response.third.rows.count())
 
     }
 
@@ -229,7 +229,7 @@ class ActivityRepositoryTest
 
         advanceUntilIdle()
 
-        assert((response.isSuccessful && response.code() == 201 && response.body()!!.activity.id == "100"))
+        assert((response.first && response.third.activity.id == "100"))
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -267,8 +267,8 @@ class ActivityRepositoryTest
 
         advanceUntilIdle()
 
-        assert(response.isSuccessful && response.code() == 201)
-        assert(response.body()!!.keyword == queryString)
-        assert(response.body()!!.count.toInt() == response.body()!!.rows.count())
+        assert(response.first)
+        assert(response.third.keyword == queryString)
+        assert(response.third.count.toInt() == response.third.rows.count())
     }
 }

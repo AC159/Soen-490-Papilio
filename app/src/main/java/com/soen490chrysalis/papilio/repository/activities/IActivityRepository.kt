@@ -1,6 +1,7 @@
 package com.soen490chrysalis.papilio.repository.activities
 
 import com.soen490chrysalis.papilio.services.network.responses.ActivityResponse
+import com.soen490chrysalis.papilio.services.network.responses.FavoriteActivitiesResponse
 import com.soen490chrysalis.papilio.services.network.responses.SearchActivityResponse
 import com.soen490chrysalis.papilio.services.network.responses.SingleActivityResponse
 import com.soen490chrysalis.papilio.view.dialogs.EventDate
@@ -33,13 +34,13 @@ interface IActivityRepository
     suspend fun getAllActivities(
         page : String,
         size : String
-    ) : Response<ActivityResponse>
+    ) : Triple<Boolean, String, ActivityResponse>
 
     suspend fun getActivity(
         activityId : Number
-    ) : Response<SingleActivityResponse>
+    ) : Triple<Boolean, String, SingleActivityResponse>
 
     suspend fun searchActivities(
         query : String
-    ) : Response<SearchActivityResponse>
+    ) : Triple<Boolean, String, SearchActivityResponse>
 }

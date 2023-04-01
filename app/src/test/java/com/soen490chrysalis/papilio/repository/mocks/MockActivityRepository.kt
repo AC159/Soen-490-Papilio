@@ -26,7 +26,7 @@ class MockActivityRepository : IActivityRepository {
     override suspend fun getAllActivities(
         page: String,
         size: String
-    ): Response<ActivityResponse> {
+    ): Triple<Boolean, String, ActivityResponse> {
 
         val activityList: MutableList<ActivityObject> = mutableListOf()
         for (i in 1..size.toInt()) {
@@ -57,10 +57,10 @@ class MockActivityRepository : IActivityRepository {
             page,
         )
 
-        return Response.success(activityResponse)
+        return Triple(true, "", activityResponse)
     }
 
-    override suspend fun getActivity(activityId: Number): Response<SingleActivityResponse> {
+    override suspend fun getActivity(activityId: Number): Triple<Boolean, String, SingleActivityResponse> {
 
             val activityObject = ActivityObject(
                 activityId.toString(),
@@ -85,10 +85,10 @@ class MockActivityRepository : IActivityRepository {
             activityObject,
         )
 
-        return Response.success(activityResponse)
+        return Triple(true, "", activityResponse)
     }
 
-    override suspend fun searchActivities(query: String): Response<SearchActivityResponse> {
+    override suspend fun searchActivities(query: String): Triple<Boolean, String, SearchActivityResponse> {
 
         val activityList: MutableList<ActivityObjectLight> = mutableListOf()
         for (i in 1..5) {
@@ -108,7 +108,7 @@ class MockActivityRepository : IActivityRepository {
             activityList
         )
 
-        return Response.success(activityResponse)
+        return Triple(true, "", activityResponse)
 
     }
 }

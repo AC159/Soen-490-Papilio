@@ -30,6 +30,11 @@ class ActivityInfoViewModel(private val userRepository : IUserRepository) : View
     var activityFavoritedResponse : MutableLiveData<FavoriteResponse> =
         MutableLiveData<FavoriteResponse>()
 
+    fun getUserId() : String?
+    {
+        return userRepository.getUser()?.uid
+    }
+
     // Function that fetches information about whether or not a user has joined an activity
     fun checkActivityMember(activity_id : String)
     {
@@ -66,9 +71,9 @@ class ActivityInfoViewModel(private val userRepository : IUserRepository) : View
             {
                 val getActivityResponse = userRepository.isActivityFavorited(activityId.toString())
                 checkActivityFavoritedResponse.value = CheckFavoriteResponse(
-                    getActivityResponse.body()!!.isActivityFound
+                    getActivityResponse.third.isActivityFound
                 )
-                Log.d("checkActivityFavorited", activitiesResponse.value.toString())
+                Log.d(logTag, "response from isActivityFavorited --> $getActivityResponse")
             }
             catch (e : Exception)
             {
@@ -84,11 +89,11 @@ class ActivityInfoViewModel(private val userRepository : IUserRepository) : View
             {
                 val getActivityResponse = userRepository.addFavoriteActivity(activityId)
 
-                Log.d("addFavoriteActivity", getActivityResponse.message())
+                Log.d("addFavoriteActivity", getActivityResponse.second)
 
                 activityFavoritedResponse.value = FavoriteResponse(
-                    getActivityResponse.body()?.success,
-                    getActivityResponse.body()?.update
+                    getActivityResponse.third.success,
+                    getActivityResponse.third.update
                 )
             }
             catch (e : Exception)
@@ -105,11 +110,11 @@ class ActivityInfoViewModel(private val userRepository : IUserRepository) : View
             {
                 val getActivityResponse = userRepository.removeFavoriteActivity(activityId)
 
-                Log.d("removeFavoriteActivity", getActivityResponse.message())
+                Log.d("removeFavoriteActivity", getActivityResponse.second)
 
                 activityFavoritedResponse.value = FavoriteResponse(
-                    getActivityResponse.body()?.success,
-                    getActivityResponse.body()?.update
+                    getActivityResponse.third.success,
+                    getActivityResponse.third.update
                 )
             }
             catch (e : Exception)

@@ -1,10 +1,11 @@
-package com.soen490chrysalis.papilio.viewModel
+package com.soen490chrysalis.papilio.viewModel.factories
 
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.perf.FirebasePerformance
 import com.google.firebase.perf.metrics.Trace
 import com.soen490chrysalis.papilio.viewModel.factories.CreateActivityViewModelFactory
+import com.soen490chrysalis.papilio.viewModel.CreateActivityViewModel
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic

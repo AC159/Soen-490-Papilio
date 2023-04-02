@@ -53,7 +53,10 @@ class AccountMenuFragment : Fragment()
             //prevents user from using "back" to go to previous screen
             requireActivity().finish()
         }
-
+        binding.accountHistory.setOnClickListener {
+            val intent = Intent(requireActivity(), ActivityHistory::class.java)
+            startActivity(intent)
+        }
         return binding.root
     }
 }

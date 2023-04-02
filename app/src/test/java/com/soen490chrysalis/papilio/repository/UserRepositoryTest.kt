@@ -396,19 +396,19 @@ class UserRepositoryTest
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun checkActivityMembershipTest() = runTest {
-        var mockServerResponse = MockResponse().setResponseCode(200).setBody("{\"joined\": true}")
+        var mockServerResponse = MockResponse().setResponseCode(200).setBody("{\"joined\": true, \"owned\": true}")
         mockWebServer.enqueue(mockServerResponse)
 
         var result = userRepository.checkActivityMember(activity_id)
         println("Result: $result")
-        assert(result.first && result.second == "OK" && result.third)
+        assert(result.isSuccess && result.isUserOwnerOfActivity && result.hasUserJoined)
 
-        mockServerResponse = MockResponse().setResponseCode(200).setBody("{\"joined\": false}")
+        mockServerResponse = MockResponse().setResponseCode(200).setBody("{\"joined\": false, \"owned\": false}")
         mockWebServer.enqueue(mockServerResponse)
 
         result = userRepository.checkActivityMember(activity_id)
         println("Result: $result")
-        assert(result.first && result.second == "OK" && !result.third)
+        assert(result.isSuccess && !result.isUserOwnerOfActivity && !result.hasUserJoined)
 
         mockServerResponse = MockResponse().setResponseCode(400)
         mockWebServer.enqueue(mockServerResponse)
@@ -416,7 +416,7 @@ class UserRepositoryTest
         result = userRepository.checkActivityMember(activity_id)
         println("Result: $result")
         @Suppress("SENSELESS_COMPARISON")
-        assert(!result.first && result.second == "null" && !result.third)
+        assert(!result.isSuccess)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -620,7 +620,7 @@ class UserRepositoryTest
                 "2022-11-14T02:07:02.585Z",
                 "2022-11-14T02:07:02.585Z",
                 null,
-                "userId123"
+                null
             )
         )
 
@@ -639,7 +639,7 @@ class UserRepositoryTest
                 "2022-11-14T02:07:02.585Z",
                 "2022-11-14T02:07:02.585Z",
                 null,
-                "userId123"
+                null
             )
         )
 
@@ -663,7 +663,7 @@ class UserRepositoryTest
                     "        \"createdAt\": \"2022-11-14T02:07:02.585Z\",\n" +
                     "        \"updatedAt\": \"2022-11-14T02:07:02.585Z\",\n" +
                     "        \"business\": null,\n" +
-                    "        \"userId\": \"userId123\"\n" +
+                    "        \"user\": null\n" +
                     "       },\n" +
                     "       {\n" +
                     "        \"id\": \"5678\",\n" +
@@ -679,7 +679,7 @@ class UserRepositoryTest
                     "        \"createdAt\": \"2022-11-14T02:07:02.585Z\",\n" +
                     "        \"updatedAt\": \"2022-11-14T02:07:02.585Z\",\n" +
                     "        \"business\": null,\n" +
-                    "        \"userId\": \"userId123\"\n" +
+                    "        \"user\": null\n" +
                     "       }" +
                     "   ]\n" +
                     "}"
@@ -728,7 +728,7 @@ class UserRepositoryTest
                 "2022-11-14T02:07:02.585Z",
                 "2022-11-14T02:07:02.585Z",
                 null,
-                "userId123"
+                null
             )
         )
 
@@ -747,7 +747,7 @@ class UserRepositoryTest
                 "2022-11-14T02:07:02.585Z",
                 "2022-11-14T02:07:02.585Z",
                 null,
-                "userId123"
+                null
             )
         )
 
@@ -771,7 +771,7 @@ class UserRepositoryTest
                     "        \"createdAt\": \"2022-11-14T02:07:02.585Z\",\n" +
                     "        \"updatedAt\": \"2022-11-14T02:07:02.585Z\",\n" +
                     "        \"business\": null,\n" +
-                    "        \"userId\": \"userId123\"\n" +
+                    "        \"user\": null\n" +
                     "       },\n" +
                     "       {\n" +
                     "        \"id\": \"5678\",\n" +
@@ -787,7 +787,7 @@ class UserRepositoryTest
                     "        \"createdAt\": \"2022-11-14T02:07:02.585Z\",\n" +
                     "        \"updatedAt\": \"2022-11-14T02:07:02.585Z\",\n" +
                     "        \"business\": null,\n" +
-                    "        \"userId\": \"userId123\"\n" +
+                    "        \"user\": null\n" +
                     "       }" +
                     "   ]\n" +
                     "}"
@@ -840,7 +840,7 @@ class UserRepositoryTest
                     "2022-11-14T02:07:02.585Z",
                     "2022-11-14T02:07:02.585Z",
                     null,
-                    "userId123"
+                    null
                 )
             )
         )
@@ -869,7 +869,7 @@ class UserRepositoryTest
                     "               \"createdAt\": \"2022-11-14T02:07:02.585Z\",\n" +
                     "               \"updatedAt\": \"2022-11-14T02:07:02.585Z\",\n" +
                     "               \"business\": null,\n" +
-                    "               \"userId\": \"userId123\"\n" +
+                    "               \"user\": null\n" +
                     "           }\n" +
                     "       }\n" +
                     "   ]\n" +

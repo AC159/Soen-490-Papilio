@@ -20,7 +20,7 @@ data class UserObject(
     val createdAt: String,
     val updatedAt: String,
     val bio: String,
-    val image: String
+    val image: String?
 )
 
 data class SimpleUserObject(

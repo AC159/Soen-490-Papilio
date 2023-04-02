@@ -10,11 +10,15 @@ import com.soen490chrysalis.papilio.services.network.requests.SubmitQuiz
 import com.soen490chrysalis.papilio.services.network.responses.GenreObject
 import kotlinx.coroutines.launch
 
-class GenreViewModel(private val genreRepository : IGenreRepository, private val userRepository : IUserRepository) : ViewModel()
+class GenreViewModel(
+    private val genreRepository : IGenreRepository,
+    private val userRepository : IUserRepository
+) : ViewModel()
 {
     private val logTag = GenreViewModel::class.java.simpleName
     var genreObject : MutableLiveData<List<GenreObject>> = MutableLiveData<List<GenreObject>>()
-    var submitQuizResponse : MutableLiveData<Pair<Int, String>> = MutableLiveData<Pair<Int, String>>()
+    var submitQuizResponse : MutableLiveData<Pair<Int, String>> =
+        MutableLiveData<Pair<Int, String>>()
 
     fun getAllGenres()
     {
@@ -27,7 +31,8 @@ class GenreViewModel(private val genreRepository : IGenreRepository, private val
     fun submitQuiz(indoor : Boolean, outdoor : Boolean, genres : IntArray)
     {
         viewModelScope.launch {
-            submitQuizResponse.value = userRepository.submitQuiz(SubmitQuiz(indoor, outdoor, genres))
+            submitQuizResponse.value =
+                userRepository.submitQuiz(SubmitQuiz(indoor, outdoor, genres))
             Log.d(logTag, "Submit Quiz Response -> :\n ${submitQuizResponse.value.toString()}")
         }
     }

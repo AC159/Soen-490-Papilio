@@ -38,25 +38,29 @@ class QuizPart1 : AppCompatActivity()
             startActivity(intent)
         }
 
-        outdoorButton.setOnClickListener{
-            if (outdoorButtonSelected){
+        outdoorButton.setOnClickListener {
+            if (outdoorButtonSelected)
+            {
                 outdoorButton.setCompoundDrawables(null, null, null, null)
             }
-            else{
+            else
+            {
                 val img = resources.getDrawable(R.drawable.ic_checkmark)
-                img.setBounds(0,0,60,60)
+                img.setBounds(0, 0, 60, 60)
                 outdoorButton.setCompoundDrawables(null, null, img, null)
             }
             outdoorButtonSelected = !outdoorButtonSelected
         }
 
-        indoorButton.setOnClickListener{
-            if (indoorButtonSelected){
+        indoorButton.setOnClickListener {
+            if (indoorButtonSelected)
+            {
                 indoorButton.setCompoundDrawables(null, null, null, null)
             }
-            else{
+            else
+            {
                 val img = resources.getDrawable(R.drawable.ic_checkmark)
-                img.setBounds(0,0,60,60)
+                img.setBounds(0, 0, 60, 60)
                 indoorButton.setCompoundDrawables(null, null, img, null)
             }
             indoorButtonSelected = !indoorButtonSelected

@@ -1,5 +1,6 @@
 package com.soen490chrysalis.papilio.view
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.soen490chrysalis.papilio.R
@@ -16,9 +17,6 @@ import com.soen490chrysalis.papilio.databinding.ActivityQuizPart2Binding
 import com.soen490chrysalis.papilio.services.network.responses.GenreObject
 import com.soen490chrysalis.papilio.viewModel.GenreViewModel
 import com.soen490chrysalis.papilio.viewModel.factories.GenreViewModelFactory
-import org.json.JSONArray
-import org.json.JSONObject
-
 
 class QuizPart2Activity : AppCompatActivity()
 {
@@ -95,6 +93,10 @@ class QuizPart2Activity : AppCompatActivity()
             val outdoorButtonSelected = intent.getBooleanExtra("outdoorSelected", false)
 
             genreViewModel.submitQuiz(indoorButtonSelected, outdoorButtonSelected, selectedGenreIds)
+
+            val intent = Intent(this@QuizPart2Activity, MainActivity::class.java)
+            intent.putExtra("selectedItemId", R.id.account)
+            startActivity(intent)
         }
 
         val actionBar = supportActionBar

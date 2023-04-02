@@ -56,5 +56,5 @@ data class SubmitQuiz(
     val outdoor : Boolean,
 
     @Json(name = "genres")
-    val genres : List<Int>
+    val genres : IntArray
 )

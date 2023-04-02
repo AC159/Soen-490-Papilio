@@ -79,6 +79,7 @@ interface IUserApiService
 
     @PUT("submitQuiz/{id}")
     suspend fun submitQuiz(
+        @Path("id") id : String?,
         @Body user : SubmitQuiz
     ) : Response<Void>
 

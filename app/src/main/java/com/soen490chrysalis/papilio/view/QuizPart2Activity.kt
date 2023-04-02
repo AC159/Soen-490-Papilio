@@ -94,10 +94,7 @@ class QuizPart2Activity : AppCompatActivity()
             val indoorButtonSelected = intent.getBooleanExtra("indoorSelected", false)
             val outdoorButtonSelected = intent.getBooleanExtra("outdoorSelected", false)
 
-            val jsonObject = JSONObject()
-            jsonObject.put("indoor", indoorButtonSelected)
-            jsonObject.put("outdoor", outdoorButtonSelected)
-            jsonObject.put("genres", JSONArray(selectedGenreIds))
+            genreViewModel.submitQuiz(indoorButtonSelected, outdoorButtonSelected, selectedGenreIds)
         }
 
         val actionBar = supportActionBar

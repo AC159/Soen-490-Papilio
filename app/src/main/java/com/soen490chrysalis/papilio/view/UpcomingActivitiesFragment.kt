@@ -94,7 +94,7 @@ class UpcomingActivitiesFragment : Fragment()
                         val dateParts = dateString.split("-")
 
                         activityBoxSmallBinding.activityBoxDay.text = dateParts[2]
-                        activityBoxSmallBinding.activityBoxTitle.text = activity.title
+                        activityBoxSmallBinding.activityBoxTitle.text = activity.title!!.replace("\"", "")
 
                         if (activity.user?.firebase_id == user?.uid)
                         {

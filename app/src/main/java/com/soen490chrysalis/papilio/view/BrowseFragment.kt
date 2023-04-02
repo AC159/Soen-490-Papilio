@@ -118,8 +118,8 @@ class BrowseFragment : Fragment() {
                             Glide.with(this).load(activity.images).into(activityBoxImage)
                         }
 
-                        activityBoxTitle.text = activity.title
-                        activityBoxDesc.text = activity.description
+                        activityBoxTitle.text = activity.title!!.replace("\"", "")
+                        activityBoxDesc.text = activity.description!!.replace("\"", "")
 
                         activityBoxBinding.activityBox.setOnClickListener {
                             activity.id?.toInt()

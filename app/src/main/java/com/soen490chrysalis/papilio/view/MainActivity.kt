@@ -23,6 +23,10 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
         // Setting the listener to detect when we press one of the button on the navigation bar
         bottomNavigationView = binding.bottomnav
         bottomNavigationView?.setOnItemSelectedListener(this)
+
+        // Get the selected item id from the intent and set the selected item on the bottom navigation bar
+        val selectedItemId = intent.getIntExtra("selectedItemId", R.id.home)
+        bottomNavigationView?.selectedItemId = selectedItemId
     }
 
     // Function that loads in a page/fragment on the navigation bar when you tap the respective button

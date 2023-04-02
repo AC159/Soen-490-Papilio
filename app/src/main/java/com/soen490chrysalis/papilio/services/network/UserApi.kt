@@ -77,6 +77,12 @@ interface IUserApiService
         @Body user : UserUpdate
     ) : Response<Void>
 
+    @PUT("submitQuiz/{id}")
+    suspend fun submitQuiz(
+        @Path("id") id : String?,
+        @Body user : SubmitQuiz
+    ) : Response<Void>
+
     @Multipart
     @PUT("updateUserProfilePicture/{id}")
     suspend fun updateUserProfilePic(

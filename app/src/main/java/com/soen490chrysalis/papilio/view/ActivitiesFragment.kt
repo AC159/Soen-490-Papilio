@@ -1,13 +1,16 @@
 package com.soen490chrysalis.papilio.view
 
-import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.soen490chrysalis.papilio.databinding.FragmentActivitiesBinding
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
+import androidx.fragment.app.FragmentStatePagerAdapter
+import com.soen490chrysalis.papilio.databinding.FragmentMyActivitiesBinding
 import kotlinx.android.synthetic.main.fragment_activities.view.*
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -19,14 +22,12 @@ private const val ARG_PARAM2 = "param2"
  * Use the [PapilioFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class ActivitiesFragment : Fragment()
-{
+class ActivitiesFragment : Fragment() {
     // TODO: Rename and change types of parameters
-    private var param1 : String? = null
-    private var param2 : String? = null
+    private var param1: String? = null
+    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState : Bundle?)
-    {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
@@ -34,34 +35,45 @@ class ActivitiesFragment : Fragment()
         }
     }
 
-    private var _binding : FragmentActivitiesBinding? = null
+    private var _binding: FragmentMyActivitiesBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
-        inflater : LayoutInflater,
-        container : ViewGroup?,
-        savedInstanceState : Bundle?
-    ) : View?
-    {
-        _binding = FragmentActivitiesBinding.inflate(inflater, container, false)
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentMyActivitiesBinding.inflate(inflater, container, false)
         val view = binding.root
-        val createActivityButton = view.create_activity_fab_btn
 
-        createActivityButton?.setOnClickListener {
-            val intent = Intent(this.activity, CreateActivity::class.java)
-            startActivity(intent)
-        }
+        val adapter = ViewPagerAdapter(requireActivity().supportFragmentManager)
+        adapter.addFragment(UpcomingActivitiesFragment(), "Upcoming")
+        adapter.addFragment(FavoriteActivitiesFragment(), "Favorites")
+        binding.viewPager.adapter = adapter
+        binding.tbLayout.setupWithViewPager(binding.viewPager)
+
         return view
     }
 
-    override fun onDestroyView()
-    {
+    override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 
-    companion object
-    {
+    class ViewPagerAdapter(fm: FragmentManager) :
+        FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+        private val mFrgmentList = ArrayList<Fragment>()
+        private val mFrgmentTitleList = ArrayList<String>()
+        override fun getCount() = mFrgmentList.size
+        override fun getItem(position: Int) = mFrgmentList[position]
+        override fun getPageTitle(position: Int) = mFrgmentTitleList[position]
+        fun addFragment(fragment: Fragment, title: String) {
+            mFrgmentList.add(fragment)
+            mFrgmentTitleList.add(title)
+        }
+    }
+
+    companion object {
         /**
          * Use this factory method to create a new instance of
          * this fragment using the provided parameters.
@@ -72,7 +84,7 @@ class ActivitiesFragment : Fragment()
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1 : String, param2 : String) =
+        fun newInstance(param1: String, param2: String) =
             ActivitiesFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)

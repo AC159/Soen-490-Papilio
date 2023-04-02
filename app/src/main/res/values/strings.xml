@@ -120,6 +120,8 @@
     <string name="import_media">Import</string>
     <string name="ex_10">ex: 10</string>
     <string name="maximum_number_of_participants">Maximum number of participants:</string>
+    <string name="cost_for_individual">Individual cost:</string>
+    <string name="cost_for_group">Group cost:</string>
     <string name="description">Description...</string>
     <string name="event_description">Event Description:</string>
     <string name="ex_23h00">ex: 23h00</string>
@@ -156,4 +158,17 @@
     <string name="example_full_name">John Doe</string>
     <string name="bio_hint">Your bio goes here!</string>
     <string name="bio_edit_hint">Write your bio here…</string>
+    <string name="search_activity_hint">Search for activities...</string>
+    <string name="search_button_text">Button</string>
+    <string name="individual_cost_range">Individual Cost Range</string>
+    <string name="group_cost_range">Group Cost Range</string>
+    <string name="select_start_date">Select Start Date</string>
+    <string name="select_end_date">Select End Date</string>
+    <string name="date_range">Date Range</string>
+
+    <string-array name="rangeSliderValues" >
+        <item>0</item>
+        <item>900</item>
+    </string-array>
+
 </resources>

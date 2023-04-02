@@ -1,6 +1,9 @@
 package com.soen490chrysalis.papilio.repository.activities
 
 import com.soen490chrysalis.papilio.services.network.responses.ActivityResponse
+import com.soen490chrysalis.papilio.services.network.responses.FavoriteActivitiesResponse
+import com.soen490chrysalis.papilio.services.network.responses.SearchActivityResponse
+import com.soen490chrysalis.papilio.services.network.responses.SingleActivityResponse
 import com.soen490chrysalis.papilio.view.dialogs.EventDate
 import com.soen490chrysalis.papilio.view.dialogs.EventTime
 import retrofit2.Response
@@ -18,6 +21,8 @@ interface IActivityRepository
     suspend fun postNewUserActivity(
         activityTitle : String,
         description : String,
+        costPerIndividual : Int,
+        costPerGroup : Int,
         groupSize : Int,
         pictures : List<Pair<String, InputStream>>,
         activityDate : EventDate,
@@ -27,7 +32,15 @@ interface IActivityRepository
     ) : Response<Void>
 
     suspend fun getAllActivities(
-        page: String,
-        size: String
-    ) : Response<ActivityResponse>
+        page : String,
+        size : String
+    ) : Triple<Boolean, String, ActivityResponse>
+
+    suspend fun getActivity(
+        activityId : Number
+    ) : Triple<Boolean, String, SingleActivityResponse>
+
+    suspend fun searchActivities(
+        query : String
+    ) : Triple<Boolean, String, SearchActivityResponse>
 }

@@ -1,10 +1,8 @@
 package com.soen490chrysalis.papilio.services.network
 
 import com.soen490chrysalis.papilio.BuildConfig
-import com.soen490chrysalis.papilio.services.network.requests.SubmitQuiz
-import com.soen490chrysalis.papilio.services.network.requests.UserRequest
-import com.soen490chrysalis.papilio.services.network.requests.UserUpdate
-import com.soen490chrysalis.papilio.services.network.responses.GetUserByFirebaseIdResponse
+import com.soen490chrysalis.papilio.services.network.requests.*
+import com.soen490chrysalis.papilio.services.network.responses.*
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.MultipartBody
@@ -50,8 +48,24 @@ interface IUserApiService
 
     @GET("get/{id}/activities")
     suspend fun getUserActivities(
-        @Path("firebaseId") firebaseId : String?
-    ) : Response<GetUserByFirebaseIdResponse>
+        @Path("id") firebaseId : String?
+    ) : Response<FavoriteActivitiesResponse>
+
+    @GET("get/joinedActivities/{id}")
+    suspend fun getUserJoinedActivities(
+        @Path("id") firebaseId : String?
+    ) : Response<JoinedActivitiesResponse>
+
+    @GET("get/{id}/favoriteActivities")
+    suspend fun getUserFavoriteActivities(
+        @Path("id") id : String?
+    ) : Response<FavoriteActivitiesResponse>
+
+    @GET("get/isActivityFavorite/{id}/{activityId}")
+    suspend fun checkActivityFavorited(
+        @Path("id") id : String?,
+        @Path("activityId") activityId : String?
+    ) : Response<CheckFavoriteResponse>
 
     @POST("createUser")
     suspend fun createUser(
@@ -69,6 +83,23 @@ interface IUserApiService
     ) : Response<Void>
 
     @Multipart
+    @PUT("updateUserProfilePicture/{id}")
+    suspend fun updateUserProfilePic(
+        @Path("id") id : String,
+        @Part image : MultipartBody.Part
+    ) : Response<Void>
+
+    @PUT("addFavoriteActivity")
+    suspend fun addFavoriteActivity(
+        @Body body : UserUpdate
+    ) : Response<FavoriteResponse>
+
+    @PUT("removeFavoriteActivity")
+    suspend fun removeFavoriteActivity(
+        @Body body : UserUpdate
+    ) : Response<FavoriteResponse>
+
+    @Multipart
     @POST("addActivity/{firebaseId}")
     @JvmSuppressWildcards
     suspend fun postNewUserActivity(
@@ -76,6 +107,30 @@ interface IUserApiService
         @PartMap activity : Map<String, Any>,
         @Part images : List<MultipartBody.Part>
     ) : Response<Void>
+
+    @GET("get-chat-user-token/{firebaseId}")
+    suspend fun getUserChatToken(
+        @Path("firebaseId") firebaseId : String?
+    ) : Response<String>
+
+    @POST("activity/{user_id}/join/{activity_id}")
+    suspend fun addUserToActivity(
+        @Path("user_id") user_id : String?,
+        @Path("activity_id") activity_id : String,
+        @Body user_name : AddUserToActivityBody
+    ) : Response<Void>
+
+    @DELETE("activity/{user_id}/unjoin/{activity_id}")
+    suspend fun removeUserFromActivity(
+        @Path("user_id") user_id : String?,
+        @Path("activity_id") activity_id : String
+    ) : Response<Void>
+
+    @GET("activity/{user_id}/checkJoined/{activity_id}")
+    suspend fun checkActivityMember(
+        @Path("user_id") user_id : String?,
+        @Path("activity_id") activity_id : String
+    ) : Response<CheckUserIsMemberOfActivityResponse>
 }
 
 /*

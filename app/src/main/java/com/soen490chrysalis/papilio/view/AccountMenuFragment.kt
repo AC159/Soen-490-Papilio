@@ -6,7 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.soen490chrysalis.papilio.R
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.firebase.auth.FirebaseAuth
 import com.soen490chrysalis.papilio.databinding.AccountMenuFragmentBinding
 import kotlinx.android.synthetic.main.account_menu_fragment.*
 import kotlinx.android.synthetic.main.account_menu_fragment.view.*
@@ -19,7 +21,6 @@ import kotlinx.android.synthetic.main.account_menu_fragment.view.*
 class AccountMenuFragment : Fragment()
 {
     private lateinit var binding : AccountMenuFragmentBinding
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,16 +36,33 @@ class AccountMenuFragment : Fragment()
         val view = inflater.inflate(R.layout.account_menu_fragment, container, false)
         val profileButton = view.findViewById<androidx.appcompat.widget.AppCompatButton>(R.id.account_user_profile)
         val quizbutton = view.findViewById<androidx.appcompat.widget.AppCompatButton>(R.id.account_activity_quiz)
+        binding = AccountMenuFragmentBinding.inflate(inflater, container, false)
 
-        profileButton?.setOnClickListener {
-            val intent = Intent(this.activity, UserProfileActivity::class.java)
+        binding.accountUserProfile.setOnClickListener {
+            val intent = Intent(requireActivity(), UserProfileActivity::class.java)
             startActivity(intent)
         }
+        
         quizbutton?.setOnClickListener {
             val intent = Intent(this.activity, QuizPart1::class.java)
             startActivity(intent)
         }
 
-        return view
+        binding.accountLogout.setOnClickListener{
+            //Firebase sign out
+            FirebaseAuth.getInstance().signOut()
+
+            //Google sign out
+            val googleSignInClient = GoogleSignIn.getClient(requireContext(), GoogleSignInOptions.DEFAULT_SIGN_IN)
+            googleSignInClient.signOut()
+
+            val intent = Intent(requireActivity(), LoginActivity::class.java)
+            startActivity(intent)
+
+            //prevents user from using "back" to go to previous screen
+            requireActivity().finish()
+        }
+
+        return binding.root
     }
 }

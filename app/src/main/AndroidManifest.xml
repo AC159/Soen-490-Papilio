@@ -57,18 +57,20 @@
             android:name=".view.UserProfileActivity"
             android:exported="true" />
         <activity
+            android:name=".view.chat.ChannelActivity"
+            android:exported="true" />
+        <activity
             android:name=".view.CreateActivity"
-            android:exported="true"/>
+            android:exported="true" />
         <activity
             android:name=".view.DisplayActivityInfoActivity"
-            android:exported="true"/>
+            android:exported="true" />
         <activity
             android:name=".view.ActivitiesBoxActivity"
-            android:exported="true"/>
-
+            android:exported="true" />
         <activity
             android:name=".view.ActivityReviewBoxActivity"
-            android:exported="true"/>
+            android:exported="true" />
     </application>
 
 </manifest>

@@ -3,6 +3,8 @@ package com.soen490chrysalis.papilio.viewModel.factories
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.perf.ktx.performance
 import com.soen490chrysalis.papilio.repository.activities.ActivityRepository
 import com.soen490chrysalis.papilio.repository.activities.IActivityRepository
 import com.soen490chrysalis.papilio.services.network.ActivityApi
@@ -17,9 +19,12 @@ class CreateActivityViewModelFactory : ViewModelProvider.NewInstanceFactory()
     {
         // Initialize Firebase Auth and inject it into the user repository
         val firebaseAuth = FirebaseAuth.getInstance()
+        //performance testing for retrofit service
+        val retrofitBootTrace = Firebase.performance.newTrace("retrofit-service-activity-api-boot-time")
+        retrofitBootTrace.start()
         val activityRepository : IActivityRepository =
             ActivityRepository(firebaseAuth, userAPIService = UserApi.retrofitService, activityAPIService = ActivityApi.retrofitService)
-
+        retrofitBootTrace.stop()
         return CreateActivityViewModel(activityRepository) as T
     }
 }

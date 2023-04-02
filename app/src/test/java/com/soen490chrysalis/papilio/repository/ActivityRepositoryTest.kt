@@ -1,14 +1,10 @@
 package com.soen490chrysalis.papilio.repository
 
 import android.util.Log
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.soen490chrysalis.papilio.repository.activities.ActivityRepository
 import com.soen490chrysalis.papilio.repository.activities.IActivityRepository
-import com.soen490chrysalis.papilio.repository.users.UserRepository
 import com.soen490chrysalis.papilio.services.network.IActivityApiService
 import com.soen490chrysalis.papilio.services.network.IUserApiService
 import com.soen490chrysalis.papilio.testUtils.MainCoroutineRule
@@ -62,7 +58,7 @@ class ActivityRepositoryTest
         Mockito.`when`(mockFirebaseUser?.uid).thenReturn(mockFirebaseUserUid)
 
         mockWebServer.start()
-        println("Webserver has successfully started for UserRepository test...")
+        println("Webserver has successfully started for ActivityRepository test...")
 
         mockRetrofitUserService = Retrofit.Builder()
                 .addConverterFactory(MoshiConverterFactory.create(moshi))
@@ -71,16 +67,22 @@ class ActivityRepositoryTest
                 .create(IUserApiService::class.java)
 
         mockRetrofitActivityService = Retrofit.Builder()
-            .addConverterFactory(MoshiConverterFactory.create(moshi))
-            .baseUrl(mockWebServer.url("/")) // note the URL is different from production one
-            .build()
-            .create(IActivityApiService::class.java)
+                .addConverterFactory(MoshiConverterFactory.create(moshi))
+                .baseUrl(mockWebServer.url("/")) // note the URL is different from production one
+                .build()
+                .create(IActivityApiService::class.java)
 
         println("Instantiated mockRetrofitUserService for UserRepository test!")
 
         // Important to initialize the user repository here since the mockRetrofitUserService needs to be create beforehand
         activityRepository =
-            Mockito.spy(ActivityRepository(mockFirebaseAuth, mockRetrofitUserService, mockRetrofitActivityService))
+            Mockito.spy(
+                ActivityRepository(
+                    mockFirebaseAuth,
+                    mockRetrofitUserService,
+                    mockRetrofitActivityService
+                )
+            )
 
         // Mock all log calls
         mockkStatic(Log::class)
@@ -114,6 +116,8 @@ class ActivityRepositoryTest
             "some activity title",
             "some description",
             5,
+            10,
+            5,
             pictures,
             EventDate(2023, 10, 10),
             EventTime(0, 10),
@@ -126,5 +130,145 @@ class ActivityRepositoryTest
         assert(response.isSuccessful && response.code() == 201)
         Mockito.verify(mockFirebaseAuth, times(1)).currentUser
         Mockito.verify(mockFirebaseUser, times(1))?.uid
+    }
+
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun getAllActivities() = runTest {
+
+        val mockServerResponse = MockResponse()
+                .setResponseCode(201)
+                .setBody(
+                    "{\n" +
+                            "    \"count\": \"2\",\n" +
+                            "    \"rows\": [\n" +
+                            "    {\n" +
+                            "        \"id\": \"100\",\n" +
+                            "        \"title\": \"some title\",\n" +
+                            "        \"description\": \"some description\",\n" +
+                            "        \"costPerIndividual\": \"10\",\n" +
+                            "        \"costPerGroup\": 40,\n" +
+                            "        \"groupSize\": \"4\",\n" +
+                            "        \"images\": null,\n" +
+                            "        \"startTime\": \"2022-11-14T02:07:02.585Z\",\n" +
+                            "        \"endTime\": \"2022-11-14T02:07:02.585Z\",\n" +
+                            "        \"address\": \"some address\",\n" +
+                            "        \"createdAt\": \"2022-11-14T02:07:02.585Z\",\n" +
+                            "        \"updatedAt\": \"2022-11-14T02:07:02.585Z\",\n" +
+                            "        \"businessId\": null,\n" +
+                            "        \"userId\": \"er43534trt\"\n" +
+                            "    },\n" +
+                            "    {\n" +
+                            "        \"id\": \"101\",\n" +
+                            "        \"title\": \"some title\",\n" +
+                            "        \"description\": \"some description\",\n" +
+                            "        \"costPerIndividual\": \"10\",\n" +
+                            "        \"costPerGroup\": 40,\n" +
+                            "        \"groupSize\": \"4\",\n" +
+                            "        \"images\": null,\n" +
+                            "        \"startTime\": \"2022-11-14T02:07:02.585Z\",\n" +
+                            "        \"endTime\": \"2022-11-14T02:07:02.585Z\",\n" +
+                            "        \"address\": \"some address\",\n" +
+                            "        \"createdAt\": \"2022-11-14T02:07:02.585Z\",\n" +
+                            "        \"updatedAt\": \"2022-11-14T02:07:02.585Z\",\n" +
+                            "        \"businessId\": null,\n" +
+                            "        \"userId\": \"er43534trt\"\n" +
+                            "    }\n" +
+                            "  ],\n" +
+                            " \"totalPages\": \"1\",\n" +
+                            " \"currentPage\": \"1\"\n" +
+                            "}"
+                )
+
+        mockWebServer.enqueue(mockServerResponse)
+
+        val response = activityRepository.getAllActivities(
+            Mockito.anyInt().toString(),
+            Mockito.anyInt().toString()
+        )
+
+        advanceUntilIdle()
+
+        assert(response.first)
+        assert(response.third.count.toInt() == response.third.rows.count())
+
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun getActivity() = runTest {
+
+        val mockServerResponse = MockResponse()
+                .setResponseCode(201)
+                .setBody(
+                    "{\n" +
+                            "    \"found\": true,\n" +
+                            "    \"activity\": {\n" +
+                            "        \"id\": \"100\",\n" +
+                            "        \"title\": \"some title\",\n" +
+                            "        \"description\": \"some description\",\n" +
+                            "        \"costPerIndividual\": \"10\",\n" +
+                            "        \"costPerGroup\": 40,\n" +
+                            "        \"groupSize\": \"4\",\n" +
+                            "        \"images\": null,\n" +
+                            "        \"startTime\": \"2022-11-14T02:07:02.585Z\",\n" +
+                            "        \"endTime\": \"2022-11-14T02:07:02.585Z\",\n" +
+                            "        \"address\": \"some address\",\n" +
+                            "        \"createdAt\": \"2022-11-14T02:07:02.585Z\",\n" +
+                            "        \"updatedAt\": \"2022-11-14T02:07:02.585Z\",\n" +
+                            "        \"businessId\": null,\n" +
+                            "        \"userId\": \"er43534trt\"\n" +
+                            "    }\n" +
+                            "}"
+                )
+
+        mockWebServer.enqueue(mockServerResponse)
+
+        val response = activityRepository.getActivity(Mockito.anyInt())
+
+        advanceUntilIdle()
+
+        assert((response.first && response.third.activity.id == "100"))
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun searchActivity() = runTest {
+
+        val queryString = Mockito.anyString()
+
+        val mockServerResponse = MockResponse()
+                .setResponseCode(201)
+                .setBody(
+                    "{\n" +
+                            "    \"keyword\": \"${queryString}\",\n" +
+                            "    \"count\": \"2\",\n" +
+                            "    \"rows\": [\n" +
+                            "    {\n" +
+                            "        \"id\": \"100\",\n" +
+                            "        \"title\": \"some title\",\n" +
+                            "        \"description\": \"some description\",\n" +
+                            "        \"images\": null\n" +
+                            "    },\n" +
+                            "    {\n" +
+                            "        \"id\": \"100\",\n" +
+                            "        \"title\": \"some title\",\n" +
+                            "        \"description\": \"some description\",\n" +
+                            "        \"images\": null\n" +
+                            "    }\n" +
+                            "  ]\n" +
+                            "}"
+                )
+
+        mockWebServer.enqueue(mockServerResponse)
+
+        val response = activityRepository.searchActivities(queryString)
+
+        advanceUntilIdle()
+
+        assert(response.first)
+        assert(response.third.keyword == queryString)
+        assert(response.third.count.toInt() == response.third.rows.count())
     }
 }

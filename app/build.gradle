@@ -4,6 +4,7 @@ plugins {
     id 'kotlin-android-extensions'
     id 'com.google.gms.google-services' // google services gradle plugin
     id 'jacoco'
+    id 'com.google.firebase.firebase-perf' // performance monitoring gradle plugin
 }
 
 def localProperties = new Properties()
@@ -30,6 +31,7 @@ android {
             buildConfigField("String", "ACTIVITY_API_URL", "\"" + localProperties['ACTIVITY_API_URL'] + "\"")
             buildConfigField("String", "GENRE_API_URL", "\"" + localProperties['GENRE_API_URL'] + "\"")
             buildConfigField("String", "MAPBOX_SECRET_TOKEN", "\"" + localProperties['MAPBOX_SECRET_TOKEN'] + "\"")
+            buildConfigField("String", "STREAM_CHAT_API_KEY", "\"" + localProperties['STREAM_CHAT_API_KEY'] + "\"")
         }
         release {
             minifyEnabled false
@@ -38,9 +40,11 @@ android {
             buildConfigField("String", "ACTIVITY_API_URL", "\"" + localProperties['ACTIVITY_API_URL'] + "\"")
             buildConfigField("String", "GENRE_API_URL", "\"" + localProperties['GENRE_API_URL'] + "\"")
             buildConfigField("String", "MAPBOX_SECRET_TOKEN", "\"" + localProperties['MAPBOX_SECRET_TOKEN'] + "\"")
+            buildConfigField("String", "STREAM_CHAT_API_KEY", "\"" + localProperties['STREAM_CHAT_API_KEY'] + "\"")
         }
     }
     compileOptions {
+        coreLibraryDesugaringEnabled = true
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
     }
@@ -84,18 +88,22 @@ task jacocoUnifiedTestReport(type: JacocoReport, dependsOn: ['connectedAndroidTe
 
 dependencies {
 
+    // This is for desugaring modern java.time API for older Android API versions (Do not remove!)
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.2.2")
+
     // firebase configuration
-    implementation platform('com.google.firebase:firebase-bom:30.4.1') // Import the Firebase BoM
+    implementation platform('com.google.firebase:firebase-bom:31.2.3') // Import the Firebase BoM
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.android.gms:play-services-auth:20.3.0'
     implementation 'com.google.firebase:firebase-auth:21.0.1'
+    implementation 'com.google.firebase:firebase-perf-ktx' //performance testing
 
-    implementation "androidx.activity:activity-ktx:1.6.0"
+    implementation "androidx.activity:activity-ktx:1.6.1"
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation "org.jetbrains.kotlin:kotlin-reflect:1.7.10"
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.appcompat:appcompat:1.5.1'
-    implementation 'com.google.android.material:material:1.6.1'
+    implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.annotation:annotation:1.4.0'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.1'
@@ -103,17 +111,21 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.navigation:navigation-fragment-ktx:2.4.1'
     implementation 'androidx.navigation:navigation-ui-ktx:2.4.1'
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
     implementation 'com.github.bumptech.glide:glide:4.14.2'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.14.2'
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.4"
     implementation 'com.github.dhaval2404:imagepicker:2.1'
 
+    // Stream chat
+    implementation "io.getstream:stream-chat-android-ui-components:5.8.2"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.5.1"
+    implementation "io.coil-kt:coil:2.1.0"
+
     // For Mapbox address autofill & other stuff
     implementation "com.mapbox.search:mapbox-search-android-ui:1.0.0-beta.43"
     implementation 'com.mapbox.maps:android:10.11.0'
-
 
     // Dependencies for retrofit library for network requests
     def retrofit_version = '2.9.0'

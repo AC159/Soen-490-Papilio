@@ -1,13 +1,26 @@
 package com.soen490chrysalis.papilio.view
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
+import android.widget.ImageButton
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.progressindicator.CircularProgressIndicatorSpec
+import com.google.android.material.progressindicator.IndeterminateDrawable
+import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.analytics.ktx.logEvent
+import com.google.firebase.ktx.Firebase
 import com.mapbox.maps.*
 import com.mapbox.maps.plugin.annotation.annotations
 import com.mapbox.maps.plugin.annotation.generated.CircleAnnotationOptions
@@ -17,16 +30,26 @@ import com.mapbox.search.result.SearchResult
 import com.mapbox.search.result.SearchSuggestion
 import com.soen490chrysalis.papilio.R
 import com.soen490chrysalis.papilio.databinding.ActivityDisplayActivityInfoBinding
+import com.soen490chrysalis.papilio.viewModel.ActivityInfoViewModel
+import com.soen490chrysalis.papilio.viewModel.factories.ActivityInfoViewModelFactory
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class DisplayActivityInfoActivity : AppCompatActivity()
 {
     private val logTag = DisplayActivityInfoActivity::class.java.simpleName
     private lateinit var binding : ActivityDisplayActivityInfoBinding
+    private var isActivityFavorited : Boolean = false
+    private lateinit var favoriteButton : ImageButton
+    private lateinit var activityInfoViewModel : ActivityInfoViewModel
+    private var canFavorite = false
+    private lateinit var firebaseAnalytics : FirebaseAnalytics
 
     override fun onCreate(savedInstanceState : Bundle?)
     {
         super.onCreate(savedInstanceState)
         binding = ActivityDisplayActivityInfoBinding.inflate(layoutInflater)
+
         setContentView(binding.root)
 
         // Create Action Bar val so we can 1) display it with a proper title and 2) put a working back button on it
@@ -39,6 +62,9 @@ class DisplayActivityInfoActivity : AppCompatActivity()
             actionBar.title = "Activity Info"
         }
 
+        // Obtain the FirebaseAnalytics instance
+        firebaseAnalytics = Firebase.analytics
+
         val infoTile : TextView = binding.infoTitle
         val infoDescription : TextView = binding.infoDescription
         val infoIndividualCost : TextView = binding.individualCost
@@ -50,14 +76,166 @@ class DisplayActivityInfoActivity : AppCompatActivity()
         val infoImages3 : ImageView = binding.infoImageView4
         val infoImages4 : ImageView = binding.infoImageView0
         val mapView : MapView = binding.mapView
+        favoriteButton = binding.favoriteButton
+        activityInfoViewModel = ViewModelProvider(
+            this,
+            ActivityInfoViewModelFactory()
+        )[ActivityInfoViewModel::class.java]
 
-        val bundle : Bundle? = intent.extras
-        val title = bundle!!.getString("title")
+        val bundle : Bundle = intent.extras!!
+        val title = bundle.getString("title")
         val description = bundle.getString("description")
         val individualCost = bundle.getString("individualCost")
         val groupCost = bundle.getString("groupCost")
         val location = bundle.getString("location")
         val hasImages = bundle.getBoolean("images")
+        val activityId = bundle.getString("id")?.toInt()
+        val fav = bundle.getBoolean("isFavorited")
+        val businessId = bundle.getString("business_id")
+
+        // This section is for logging events on firebase analytics
+        val userId = activityInfoViewModel.getUserId()
+        if (businessId != null && userId != null)
+        {
+            firebaseAnalytics.logEvent("activity_visited") {
+                param("user_id", userId)
+                param("activity_id", activityId.toString())
+                param("business_id", businessId)
+                param("time", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).toString())
+            }
+        }
+
+        // we need to determine if the user has already joined this activity or not and display the text button accordingly
+        // Disable the 'join' button while we process the request & display a progress indicator
+        DisableButtonAndShowProgressIndicator(binding.joinButton as MaterialButton)
+        activityInfoViewModel.checkActivityMember(activityId.toString())
+
+        activityInfoViewModel.checkActivityMemberResponse.observe(this) {
+            if (it.isSuccess)
+            {
+                println("Observer response: $it")
+                binding.joinButton.text = if (!it.hasUserJoined) "Join" else "Leave"
+            }
+            else displaySnackBar(it.errorMessage)
+
+            // re-enable the 'join' button
+            EnableButtonAndRemoveProgressIndicator(binding.joinButton as MaterialButton)
+        }
+
+        // Set an click listener on the 'join' button of the activity
+        binding.joinButton.setOnClickListener {
+            DisableButtonAndShowProgressIndicator(binding.joinButton as MaterialButton)
+            if (binding.joinButton.text.toString()
+                            .lowercase() == "join"
+            ) activityInfoViewModel.joinActivity(activityId.toString())
+            else activityInfoViewModel.leaveActivity(activityId.toString())
+        }
+
+        // Listen to the API response when the user wants to join an activity
+        activityInfoViewModel.jonActivityResponse.observe(this) {
+            EnableButtonAndRemoveProgressIndicator(binding.joinButton as MaterialButton)
+
+            // Change the text of the button if the user successfully joined the activity
+            if (it.isSuccess)
+            {
+                binding.joinButton.text = "Leave"
+
+                if (businessId != null && userId != null)
+                {
+                    // Log firebase analytics event only if the operation was successful
+                    firebaseAnalytics.logEvent("activity_registered") {
+                        param("user_id", userId)
+                        param("activity_id", activityId.toString())
+                        param("business_id", businessId)
+                        param("time",
+                            LocalDateTime.now()
+                                    .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+                                    .toString()
+                        )
+                    }
+                }
+            }
+
+            displaySnackBar(it.errorMessage)
+        }
+
+        // Listen to the API response when the user wants to leave an activity
+        activityInfoViewModel.leaveActivityResponse.observe(this) {
+            EnableButtonAndRemoveProgressIndicator(binding.joinButton as MaterialButton)
+
+            // Change the text of the button if the user successfully left the activity
+            if (it.isSuccess) binding.joinButton.text = "Join"
+
+            displaySnackBar(it.errorMessage)
+        }
+
+        val infoContact : Button = binding.infoContact
+
+        if (fav)
+        {
+            isActivityFavorited = fav
+            changeFavoriteButton()
+            favoriteButton.visibility = View.VISIBLE
+            canFavorite = true
+        }
+        else
+        {
+            if (activityId != null)
+            {
+                activityInfoViewModel.checkActivityFavorited(activityId)
+            }
+            activityInfoViewModel.checkActivityFavoritedResponse.observe(
+                this,
+                androidx.lifecycle.Observer {
+                    isActivityFavorited = it.isActivityFound
+                    changeFavoriteButton()
+                    favoriteButton.visibility = View.VISIBLE
+                    canFavorite = true
+                })
+        }
+
+        favoriteButton.setOnClickListener {
+            if (canFavorite)
+            {
+                if (!isActivityFavorited)
+                {
+                    if (activityId != null)
+                    {
+                        canFavorite = false
+                        isActivityFavorited = true
+                        activityInfoViewModel.addFavoriteActivity(activityId)
+                        changeFavoriteButton()
+                    }
+                }
+                else
+                {
+                    if (activityId != null)
+                    {
+                        canFavorite = false
+                        isActivityFavorited = false
+                        activityInfoViewModel.removeFavoriteActivity(activityId)
+                        changeFavoriteButton()
+                    }
+                }
+            }
+        }
+
+        activityInfoViewModel.activityFavoritedResponse.observe(this, androidx.lifecycle.Observer {
+            if (isActivityFavorited)
+            {
+                displaySnackBar("Activity Favorited!")
+                canFavorite = true
+            }
+            else
+            {
+                displaySnackBar("Activity Unfavorited!")
+                canFavorite = true
+            }
+        })
+
+
+        val contactString = bundle.getString("contact")
+
 
         if (hasImages)
         {
@@ -103,7 +281,23 @@ class DisplayActivityInfoActivity : AppCompatActivity()
         infoGroupCost.text = groupCost
         infoAddress.text = location
 
-       mapView.getMapboxMap().loadStyleUri(Style.MAPBOX_STREETS)
+
+        if (contactString == null)
+        {
+            infoContact.isVisible = false
+        }
+
+        infoContact.setOnClickListener {
+
+            val callIntent : Intent = Intent(Intent.ACTION_SEND).apply {
+                type = "text/plain"
+                putExtra(Intent.EXTRA_EMAIL, arrayOf(contactString))
+            }
+            startActivity(callIntent)
+        }
+
+
+        mapView.getMapboxMap().loadStyleUri(Style.MAPBOX_STREETS)
 
         // Create a Search Engine object so we can do Forward Geocoding
         val searchEngine = SearchEngine.createSearchEngine(
@@ -211,5 +405,45 @@ class DisplayActivityInfoActivity : AppCompatActivity()
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    fun changeFavoriteButton()
+    {
+        if (isActivityFavorited)
+        {
+            favoriteButton.setBackgroundResource(R.drawable.heart_filled)
+        }
+        else
+        {
+            favoriteButton.setBackgroundResource(R.drawable.heart_regular)
+        }
+    }
+
+    private fun DisableButtonAndShowProgressIndicator(button : MaterialButton)
+    {
+        val spec =
+            CircularProgressIndicatorSpec(
+                this, null, 0,
+                com.google.android.material.R.style.Widget_Material3_CircularProgressIndicator_ExtraSmall
+            )
+        val progressIndicatorDrawable =
+            IndeterminateDrawable.createCircularDrawable(this, spec)
+        button.icon = progressIndicatorDrawable
+        button.isEnabled = false
+    }
+
+    private fun EnableButtonAndRemoveProgressIndicator(button : MaterialButton)
+    {
+        button.icon = null
+        button.isEnabled = true
+    }
+
+    private fun displaySnackBar(message : String)
+    {
+        Snackbar.make(
+            binding.coordinatorLayoutDisplayActivityInfo,
+            message,
+            Snackbar.LENGTH_LONG
+        ).show()
     }
 }

@@ -44,10 +44,6 @@ class MainActivityUITest
         Espresso.onView(ViewMatchers.withId(R.id.home_fragment)).check(
             ViewAssertions.matches(ViewMatchers.isDisplayed()))
 
-        Espresso.onView(ViewMatchers.withId(R.id.browse)).perform(ViewActions.click())
-        Espresso.onView(ViewMatchers.withId(R.id.browse_fragment)).check(
-            ViewAssertions.matches(ViewMatchers.isDisplayed()))
-
         Espresso.onView(ViewMatchers.withId(R.id.activities)).perform(ViewActions.click())
         Espresso.onView(ViewMatchers.withId(R.id.activities_fragment)).check(
             ViewAssertions.matches(ViewMatchers.isDisplayed()))

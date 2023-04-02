@@ -23,6 +23,7 @@ import org.junit.runners.JUnit4
 import org.mockito.Mockito
 import org.mockito.Mockito.verify
 import org.mockito.kotlin.times
+import java.io.File
 
 /*
     DESCRIPTION:
@@ -58,6 +59,16 @@ class UserProfileViewModelTest
         every { Log.e(any(), any()) } returns 0
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun getUserByFirebaseId() = runTest {
+        userProfileViewModel.getUserByFirebaseId()
+        advanceUntilIdle()
+        assert(userProfileViewModel.userObject.value != null)
+        assert(userProfileViewModel.userObject.value!!.requestIsFinished)
+        assert(userProfileViewModel.userObject.value!!.userObject!!.email == "validEmail@gmail.com")
+    }
+
     @Test
     fun addEditedField_CheckIfEmptyAfterAdding() = runTest {
         userProfileViewModel.addEditedField("field name", "field value")
@@ -82,6 +93,15 @@ class UserProfileViewModelTest
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
+    fun updateUserProfilePic_Correctly() = runTest {
+        val file = File.createTempFile("tempFile", null, null)
+        userProfileViewModel.updateUserProfilePic(Pair("jpg", file.inputStream()))
+        advanceUntilIdle()
+        assert(userProfileViewModel.profilePicChangeResult.value!! == "OK")
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
     fun updateUserPassword() = runTest {
 
         mockkStatic(FirebaseAuth::class)
@@ -95,8 +115,7 @@ class UserProfileViewModelTest
         mockkStatic(EmailAuthProvider::class)
         every {
             EmailAuthProvider.getCredential(
-                "validEmail@gmail.com",
-                "old password"
+                "validEmail@gmail.com", "old password"
             )
         } returns (mockEmailAuthCredential)
 

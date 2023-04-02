@@ -69,6 +69,9 @@ jobs:
         MAPBOX_SECRET_TOKEN: ${{ secrets.MAPBOX_SECRET_TOKEN }}
       run: echo MAPBOX_SECRET_TOKEN=$MAPBOX_SECRET_TOKEN >> ./local.properties
 
+    - name: Add STREAM_CHAT_API_KEY to local.properties
+      run: echo STREAM_CHAT_API_KEY=someapikey >> ./local.properties
+
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 

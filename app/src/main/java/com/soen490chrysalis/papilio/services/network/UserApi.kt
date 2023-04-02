@@ -1,6 +1,7 @@
 package com.soen490chrysalis.papilio.services.network
 
 import com.soen490chrysalis.papilio.BuildConfig
+import com.soen490chrysalis.papilio.services.network.requests.SubmitQuiz
 import com.soen490chrysalis.papilio.services.network.requests.UserRequest
 import com.soen490chrysalis.papilio.services.network.requests.UserUpdate
 import com.soen490chrysalis.papilio.services.network.responses.GetUserByFirebaseIdResponse
@@ -60,6 +61,11 @@ interface IUserApiService
     @PUT("updateUserProfile")
     suspend fun updateUser(
         @Body user : UserUpdate
+    ) : Response<Void>
+
+    @PUT("submitQuiz/{id}")
+    suspend fun submitQuiz(
+        @Body user : SubmitQuiz
     ) : Response<Void>
 
     @Multipart

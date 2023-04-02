@@ -37,3 +37,14 @@ data class UserUpdate(
     @Json(name = "update")
     val update : Map<String, Any>
 )
+
+data class SubmitQuiz(
+    @Json(name = "indoor")
+    val indoor : Boolean,
+
+    @Json(name = "outdoor")
+    val outdoor : Boolean,
+
+    @Json(name = "genres")
+    val genres : List<Int>
+)

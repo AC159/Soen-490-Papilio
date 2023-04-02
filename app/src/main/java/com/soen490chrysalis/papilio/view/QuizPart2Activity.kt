@@ -16,6 +16,8 @@ import com.soen490chrysalis.papilio.databinding.ActivityQuizPart2Binding
 import com.soen490chrysalis.papilio.services.network.responses.GenreObject
 import com.soen490chrysalis.papilio.viewModel.GenreViewModel
 import com.soen490chrysalis.papilio.viewModel.factories.GenreViewModelFactory
+import org.json.JSONArray
+import org.json.JSONObject
 
 
 class QuizPart2Activity : AppCompatActivity()
@@ -33,6 +35,8 @@ class QuizPart2Activity : AppCompatActivity()
         val viewModelFactory = GenreViewModelFactory()
         genreViewModel = ViewModelProvider(this, viewModelFactory)[GenreViewModel::class.java]
         genreViewModel.getAllGenres()
+
+        val selectedGenres = mutableListOf<Int>() //List to store selected genre IDs
 
         genreViewModel.genreObject.observe(this, Observer {
             genreList = genreViewModel.genreObject.value!!
@@ -69,6 +73,7 @@ class QuizPart2Activity : AppCompatActivity()
                     {
                         button.setCompoundDrawables(null, null, null, null)
                         isSelected[0] = false
+                        selectedGenres.remove(button.id)
                     }
                     else
                     {
@@ -76,6 +81,7 @@ class QuizPart2Activity : AppCompatActivity()
                         img.setBounds(0, 0, 60, 60)
                         button.setCompoundDrawables(null, null, img, null)
                         isSelected[0] = true
+                        selectedGenres.add(button.id)
                     }
                 }
 
@@ -84,13 +90,14 @@ class QuizPart2Activity : AppCompatActivity()
         })
 
         binding.doneBtn.setOnClickListener {
-//            question!!.text = "Which of the following arts do you enjoy more?"
-//            choice1!!.text = "ARTS AND CRAFTS"
-//            choice2!!.text = "DANCE"
-//            choice3!!.text = "MUSIC"
-//            choice4!!.text = "LITERATURE"
-//            other!!.text = "Other Arts"
-//            input!!.visibility = View.INVISIBLE
+            val selectedGenreIds = selectedGenres.toIntArray()
+            val indoorButtonSelected = intent.getBooleanExtra("indoorSelected", false)
+            val outdoorButtonSelected = intent.getBooleanExtra("outdoorSelected", false)
+
+            val jsonObject = JSONObject()
+            jsonObject.put("indoor", indoorButtonSelected)
+            jsonObject.put("outdoor", outdoorButtonSelected)
+            jsonObject.put("genres", JSONArray(selectedGenreIds))
         }
 
         val actionBar = supportActionBar

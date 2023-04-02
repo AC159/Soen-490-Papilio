@@ -323,7 +323,6 @@
                     android:gravity="center"
                     android:orientation="horizontal">
 
-
                     <Button
                         android:id="@+id/info_Contact"
                         android:layout_width="wrap_content"
@@ -337,41 +336,7 @@
 
                 </LinearLayout>
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="left"
-                    android:paddingLeft="15dp"
-                    android:paddingTop="15dp"
-                    android:text="Reviews:"
-                    android:textColor="@color/black"
-                    android:textStyle="bold" />
-
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="374dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    app:cardBackgroundColor="@color/light_blue"
-                    app:cardCornerRadius="30dp"
-                    app:strokeWidth="3dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
-                        android:layout_marginBottom="15dp"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <include layout="@layout/activity_review_box" />
-
-                        <include layout="@layout/activity_review_box" />
-                    </LinearLayout>
-
-                </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
-
 
         </ScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>

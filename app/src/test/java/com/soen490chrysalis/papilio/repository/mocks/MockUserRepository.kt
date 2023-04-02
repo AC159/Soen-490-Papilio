@@ -4,6 +4,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.FirebaseUser
 import com.soen490chrysalis.papilio.repository.users.CheckActivityMember
 import com.soen490chrysalis.papilio.repository.users.IUserRepository
+import com.soen490chrysalis.papilio.services.network.requests.SubmitQuiz
 import com.soen490chrysalis.papilio.services.network.responses.*
 import org.mockito.Mockito
 import retrofit2.Response
@@ -217,5 +218,10 @@ class MockUserRepository : IUserRepository
     override suspend fun checkActivityMember(activity_id : String) : CheckActivityMember
     {
         return CheckActivityMember(true, "", true, false)
+    }
+
+    override suspend fun submitQuiz(submitQuiz : SubmitQuiz) : Pair<Int, String>
+    {
+        return Pair(200, "Created");
     }
 }

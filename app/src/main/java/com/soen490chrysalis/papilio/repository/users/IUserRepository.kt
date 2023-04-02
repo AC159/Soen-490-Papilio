@@ -2,6 +2,7 @@ package com.soen490chrysalis.papilio.repository.users
 
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.FirebaseUser
+import com.soen490chrysalis.papilio.services.network.requests.SubmitQuiz
 import com.soen490chrysalis.papilio.services.network.responses.*
 import retrofit2.Response
 import java.io.InputStream
@@ -70,4 +71,7 @@ interface IUserRepository
     suspend fun removeUserFromActivity(activity_id : String) : Pair<Boolean, String>
 
     suspend fun checkActivityMember(activity_id : String) : CheckActivityMember
+
+    suspend fun submitQuiz(submitQuiz : SubmitQuiz) : Pair<Int, String>
+
 }

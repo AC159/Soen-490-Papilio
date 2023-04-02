@@ -97,6 +97,15 @@ data class GetUserByFirebaseIdResponse(
     val user: UserObject
 )
 
+data class GenreObject(
+    val id : String,
+    val name : String,
+    val url : String?,
+    val category : String,
+    val createdAt : String,
+    val updatedAt : String
+)
+
 data class FavoriteUserObject(
     @Json(name = "firebase_id")
     val firebaseId: String?,

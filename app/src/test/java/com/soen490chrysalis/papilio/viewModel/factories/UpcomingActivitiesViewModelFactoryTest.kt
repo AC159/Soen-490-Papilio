@@ -1,8 +1,8 @@
-package com.soen490chrysalis.papilio.viewModel
+package com.soen490chrysalis.papilio.viewModel.factories
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.firebase.auth.FirebaseAuth
-import com.soen490chrysalis.papilio.viewModel.factories.LoginViewModelFactory
+import com.soen490chrysalis.papilio.viewModel.UpcomingActivitiesViewModel
 import io.mockk.every
 import io.mockk.mockkStatic
 import org.junit.Rule
@@ -12,7 +12,7 @@ import org.junit.runners.JUnit4
 import org.mockito.Mockito
 
 @RunWith(JUnit4::class)
-class LoginViewModelFactoryTest
+class UpcomingActivitiesViewModelFactoryTest
 {
     @get:Rule
     val rule = InstantTaskExecutorRule()
@@ -26,12 +26,12 @@ class LoginViewModelFactoryTest
         mockkStatic(FirebaseAuth::class)
         every { FirebaseAuth.getInstance() } returns firebaseAuthMock
 
-        val loginViewModelFactory = LoginViewModelFactory()
-        val loginViewModel = loginViewModelFactory.create(LoginViewModel::class.java)
+        val factory = UpcomingActivitiesViewModelFactory()
+        val viewModel = factory.create(UpcomingActivitiesViewModel::class.java)
 
-        println(loginViewModel.javaClass.simpleName)
-        println(LoginViewModel::class.java.simpleName)
+        println(viewModel.javaClass.simpleName)
+        println(UpcomingActivitiesViewModel::class.java.simpleName)
 
-        assert(loginViewModel.javaClass.simpleName == LoginViewModel::class.java.simpleName)
+        assert(viewModel.javaClass.simpleName == UpcomingActivitiesViewModel::class.java.simpleName)
     }
 }

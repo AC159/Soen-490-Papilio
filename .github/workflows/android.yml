@@ -61,6 +61,9 @@ jobs:
     - name: Add ACTIVITY_API_URL to local.properties
       run: echo ACTIVITY_API_URL=http://localhost:1337/api/activity/ >> ./local.properties
 
+    - name: Add GENRE_API_URL to local.properties
+      run: echo GENRE_API_URL=http://localhost:1337/api/genre/ >> ./local.properties
+
     - name: Add MAPBOX_SECRET_TOKEN to local.properties
       env:
         MAPBOX_SECRET_TOKEN: ${{ secrets.MAPBOX_SECRET_TOKEN }}

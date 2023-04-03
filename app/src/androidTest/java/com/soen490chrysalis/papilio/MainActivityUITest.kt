@@ -53,28 +53,74 @@ class MainActivityUITest
             ViewAssertions.matches(ViewMatchers.isDisplayed()))
     }
 
+//    @Test
+//    fun checkAccountMenuButtons()
+//    {
+//        Espresso.onView(ViewMatchers.withId(R.id.account)).perform(ViewActions.click())
+//        Espresso.onView(ViewMatchers.withId(R.id.account_user_profile)).check(
+//            ViewAssertions.matches(ViewMatchers.isDisplayed()))
+//
+//        Espresso.onView(ViewMatchers.withId(R.id.account_activity_quiz)).check(
+//            ViewAssertions.matches(ViewMatchers.isDisplayed()))
+//
+//        Espresso.onView(ViewMatchers.withId(R.id.account_settings)).check(
+//            ViewAssertions.matches(ViewMatchers.isDisplayed()))
+//
+//        Espresso.onView(ViewMatchers.withId(R.id.account_help)).check(
+//            ViewAssertions.matches(ViewMatchers.isDisplayed()))
+//
+//        Espresso.onView(ViewMatchers.withId(R.id.account_about)).check(
+//            ViewAssertions.matches(ViewMatchers.isDisplayed()))
+//
+//        Espresso.onView(ViewMatchers.withId(R.id.account_logout)).check(
+//            ViewAssertions.matches(ViewMatchers.isDisplayed()))
+//    }
+
     @Test
-    fun checkAccountMenuButtons()
+    fun checkAccountUserProfileButton()
     {
         Espresso.onView(ViewMatchers.withId(R.id.account)).perform(ViewActions.click())
         Espresso.onView(ViewMatchers.withId(R.id.account_user_profile)).check(
             ViewAssertions.matches(ViewMatchers.isDisplayed()))
+    }
 
+    @Test
+    fun checkActivityQuizButton()
+    {
+        Espresso.onView(ViewMatchers.withId(R.id.account)).perform(ViewActions.click())
         Espresso.onView(ViewMatchers.withId(R.id.account_activity_quiz)).check(
-            ViewAssertions.matches(ViewMatchers.isDisplayed()))
-
-        Espresso.onView(ViewMatchers.withId(R.id.account_settings)).check(
-            ViewAssertions.matches(ViewMatchers.isDisplayed()))
-
-        Espresso.onView(ViewMatchers.withId(R.id.account_help)).check(
-            ViewAssertions.matches(ViewMatchers.isDisplayed()))
-
-        Espresso.onView(ViewMatchers.withId(R.id.account_about)).check(
-            ViewAssertions.matches(ViewMatchers.isDisplayed()))
-
-        Espresso.onView(ViewMatchers.withId(R.id.account_logout)).check(
             ViewAssertions.matches(ViewMatchers.isDisplayed()))
     }
 
+    @Test
+    fun checkAccountSettingsButton()
+    {
+        Espresso.onView(ViewMatchers.withId(R.id.account)).perform(ViewActions.click())
+        Espresso.onView(ViewMatchers.withId(R.id.account_settings)).check(
+            ViewAssertions.matches(ViewMatchers.isDisplayed()))
+    }
 
+    @Test
+    fun checkAccountHelpButton()
+    {
+        Espresso.onView(ViewMatchers.withId(R.id.account)).perform(ViewActions.click())
+        Espresso.onView(ViewMatchers.withId(R.id.account_help)).check(
+            ViewAssertions.matches(ViewMatchers.isDisplayed()))
+    }
+
+    @Test
+    fun checkAccountAboutButton()
+    {
+        Espresso.onView(ViewMatchers.withId(R.id.account)).perform(ViewActions.click())
+        Espresso.onView(ViewMatchers.withId(R.id.account_about)).check(
+            ViewAssertions.matches(ViewMatchers.isDisplayed()))
+    }
+
+    @Test
+    fun checkAccountLogoutButton()
+    {
+        Espresso.onView(ViewMatchers.withId(R.id.account)).perform(ViewActions.click())
+        Espresso.onView(ViewMatchers.withId(R.id.account_logout)).check(
+            ViewAssertions.matches(ViewMatchers.isDisplayed()))
+    }
 }

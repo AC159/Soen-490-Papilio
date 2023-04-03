@@ -120,7 +120,7 @@ class MainActivityUITest
     fun checkAccountLogoutButton()
     {
         Espresso.onView(ViewMatchers.withId(R.id.account)).perform(ViewActions.click())
-        Espresso.onView(ViewMatchers.withId(R.id.account_logout)).check(
+        Espresso.onView(ViewMatchers.withId(R.id.account_logout)).perform(ViewActions.scrollTo()).check(
             ViewAssertions.matches(ViewMatchers.isDisplayed()))
     }
 }

@@ -23,7 +23,7 @@ class GenreViewModel(
     fun getAllGenres()
     {
         viewModelScope.launch {
-            genreObject.value = genreRepository.getAllGenres().body()
+            genreObject.value = genreRepository.getAllGenres().third
             Log.d(logTag, "Received genres from the repository:\n ${genreObject.value.toString()}")
         }
     }

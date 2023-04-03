@@ -296,6 +296,7 @@ class HomeFragment : Fragment()
                     if (activityList[position].costPerGroup == "0") "FREE" else ("$" + activityList[position].costPerGroup + "/group")
                 )
                 intent.putExtra("location", activityList[position].address)
+                intent.putExtra("closed", activityList[position].closed)
 
                 if (activityList[position].images != null && activityList[position].images?.isNotEmpty() == true)
                 {

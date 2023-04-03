@@ -57,6 +57,16 @@ interface IActivityApiService
     suspend fun searchActivities(
         @Body keyword : ActivitySearchRequest
     ) : Response<SearchActivityResponse>
+
+    @POST("open/{activityId}")
+    suspend fun open(
+        @Path("activityId") activityId : Number
+    ) : Response<Void>
+
+    @POST("close/{activityId}")
+    suspend fun close(
+        @Path("activityId") activityId : Number
+    ) : Response<Void>
 }
 
 /*

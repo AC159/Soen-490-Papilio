@@ -93,6 +93,7 @@ class DisplayActivityInfoActivity : AppCompatActivity()
         val fav = bundle.getBoolean("isFavorited")
         val businessId = bundle.getString("business_id")
         val idOfActivityOwner = bundle.getString("user_id")
+        var closed = bundle.getBoolean("closed")
 
         // This section is for logging events on firebase analytics
         val userId = activityInfoViewModel.getUserId()
@@ -113,12 +114,31 @@ class DisplayActivityInfoActivity : AppCompatActivity()
         // we need to determine if the user has already joined this activity or not and display the text button accordingly
         // Disable the 'join' button while we process the request & display a progress indicator
         DisableButtonAndShowProgressIndicator(binding.joinButton as MaterialButton)
-        if (idOfActivityOwner != userId) activityInfoViewModel.checkActivityMember(activityId.toString())
+        if (idOfActivityOwner != userId)
+        {
+            activityInfoViewModel.checkActivityMember(activityId.toString())
+            if(closed)
+            {
+                binding.joinButton.visibility = View.GONE
+                binding.favoriteButton.visibility = View.GONE
+            }
+        }
         else
         {
             // Owners of activities should not be able to join/favorite their own activity
             binding.joinButton.visibility = View.GONE
             binding.favoriteButton.visibility = View.GONE
+            binding.entryButton.visibility = View.VISIBLE
+            UpdateEntryButton(closed)
+        }
+
+        binding.entryButton.setOnClickListener {
+            if(activityId != null)
+            {
+                activityInfoViewModel.SetActivityEntry(activityId.toInt(), closed)
+                closed = !closed
+                UpdateEntryButton(closed)
+            }
         }
 
         activityInfoViewModel.checkActivityMemberResponse.observe(this) {
@@ -420,6 +440,18 @@ class DisplayActivityInfoActivity : AppCompatActivity()
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    fun UpdateEntryButton(closed : Boolean)
+    {
+        if(closed)
+        {
+            binding.entryButton.text = "Turn On Entry"
+        }
+        else
+        {
+            binding.entryButton.text = "Turn Off Entry"
+        }
     }
 
     fun changeFavoriteButton()

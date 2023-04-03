@@ -43,6 +43,7 @@ class MockActivityRepository : IActivityRepository {
                 "1500",
                 "2000",
                 "Activity $i Address",
+                false,
                 "A$i Creation Time",
                 "A$i Update Time",
                 null,
@@ -75,6 +76,7 @@ class MockActivityRepository : IActivityRepository {
                 "1500",
                 "2000",
                 "Activity 1 Address",
+                false,
                 "A1 Creation Time",
                 "A1 Update Time",
                 null,
@@ -112,5 +114,15 @@ class MockActivityRepository : IActivityRepository {
 
         return Triple(true, "", activityResponse)
 
+    }
+
+    override suspend fun open(activityId : Number) : Pair<Int, String>
+    {
+        return Pair(200, "OK")
+    }
+
+    override suspend fun close(activityId : Number) : Pair<Int, String>
+    {
+        return Pair(200, "OK")
     }
 }

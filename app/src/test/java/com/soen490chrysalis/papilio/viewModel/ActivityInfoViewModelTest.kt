@@ -3,9 +3,12 @@ package com.soen490chrysalis.papilio.viewModel
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.soen490chrysalis.papilio.repository.activities.ActivityRepository
+import com.soen490chrysalis.papilio.repository.activities.IActivityRepository
 import com.soen490chrysalis.papilio.repository.users.CheckActivityMember
 import com.soen490chrysalis.papilio.repository.users.IUserRepository
 import com.soen490chrysalis.papilio.repository.users.UserRepository
+import com.soen490chrysalis.papilio.services.network.IActivityApiService
 import com.soen490chrysalis.papilio.services.network.IUserApiService
 import com.soen490chrysalis.papilio.services.network.responses.CheckFavoriteResponse
 import com.soen490chrysalis.papilio.services.network.responses.FavoriteResponse
@@ -35,9 +38,11 @@ class ActivityInfoViewModelTest
 {
     private lateinit var activityInfoViewModel : ActivityInfoViewModel
     private lateinit var userRepository : IUserRepository
+    private lateinit var activityRepository : IActivityRepository
 
     private var mockWebServer = MockWebServer()
     private lateinit var mockRetrofitUserService : IUserApiService
+    private lateinit var mockRetrofitActivityService : IActivityApiService
     private val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
     private val mockFirebaseAuth = Mockito.mock(FirebaseAuth::class.java)
     private val mockFirebaseUser = Mockito.mock(FirebaseUser::class.java)
@@ -81,6 +86,12 @@ class ActivityInfoViewModelTest
                 .build()
                 .create(IUserApiService::class.java)
 
+        mockRetrofitActivityService = Retrofit.Builder()
+                .addConverterFactory(MoshiConverterFactory.create(moshi).asLenient())
+                .baseUrl(mockWebServer.url("/")) // note the URL is different from production one
+                .build()
+                .create(IActivityApiService::class.java)
+
         println("Instantiated mockRetrofitUserService for ActivityInfoViewModelTest test!")
 
         Mockito.`when`(mockFirebaseAuth.currentUser).thenReturn(mockFirebaseUser)
@@ -88,7 +99,8 @@ class ActivityInfoViewModelTest
 
         // Important to initialize the user repository here since the mockRetrofitUserService needs to be create beforehand
         userRepository = Mockito.spy(UserRepository(mockFirebaseAuth, mockRetrofitUserService))
-        activityInfoViewModel = ActivityInfoViewModel(userRepository)
+        activityRepository = Mockito.spy(ActivityRepository(mockFirebaseAuth, mockRetrofitUserService, mockRetrofitActivityService))
+        activityInfoViewModel = ActivityInfoViewModel(userRepository, activityRepository)
 
         println("Setup method is done!")
     }

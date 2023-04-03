@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.soen490chrysalis.papilio.repository.activities.IActivityRepository
 import com.soen490chrysalis.papilio.repository.users.CheckActivityMember
 import com.soen490chrysalis.papilio.repository.users.IUserRepository
 import com.soen490chrysalis.papilio.services.network.responses.CheckFavoriteResponse
@@ -13,7 +14,7 @@ import kotlinx.coroutines.launch
 
 data class APIResponse(var isSuccess : Boolean, var errorMessage : String)
 
-class ActivityInfoViewModel(private val userRepository : IUserRepository) : ViewModel()
+class ActivityInfoViewModel(private val userRepository : IUserRepository, private val activityRepository : IActivityRepository) : ViewModel()
 {
     private val logTag = ActivityInfoViewModel::class.java.simpleName
     var checkActivityMemberResponse = MutableLiveData<CheckActivityMember>()
@@ -25,6 +26,9 @@ class ActivityInfoViewModel(private val userRepository : IUserRepository) : View
         MutableLiveData<CheckFavoriteResponse>()
     var activityFavoritedResponse : MutableLiveData<FavoriteResponse> =
         MutableLiveData<FavoriteResponse>()
+
+    var activityEntryResponse : MutableLiveData<Pair<Int, String>> =
+        MutableLiveData<Pair<Int, String>>()
 
     fun getUserId() : String?
     {
@@ -115,5 +119,22 @@ class ActivityInfoViewModel(private val userRepository : IUserRepository) : View
                 Log.d(logTag, "userRepository.removeFavoriteActivity - exception:\n $e")
             }
         }
+    }
+
+    fun SetActivityEntry(activityId : Number, closed : Boolean)
+    {
+        viewModelScope.launch {
+            if(closed)
+            {
+                val routeResult = activityRepository.open(activityId)
+                activityEntryResponse.value = Pair(routeResult.first, routeResult.second)
+            }
+            else
+            {
+                val routeResult = activityRepository.close(activityId)
+                activityEntryResponse.value = Pair(routeResult.first, routeResult.second)
+            }
+        }
+
     }
 }

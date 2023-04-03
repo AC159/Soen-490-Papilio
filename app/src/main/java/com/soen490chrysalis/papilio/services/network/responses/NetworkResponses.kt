@@ -39,6 +39,7 @@ data class ActivityObject(
     val startTime: String?,
     val endTime: String?,
     val address: String?,
+    val closed: Boolean?,
     val createdAt: String?,
     val updatedAt: String?,
     val business: BusinessObject?,

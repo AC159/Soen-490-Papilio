@@ -257,6 +257,16 @@
                             android:visibility="visible"
                             app:cornerRadius="100dp" />
 
+                        <Button
+                            android:id="@+id/entry_button"
+                            android:layout_width="192dp"
+                            android:layout_height="wrap_content"
+                            android:backgroundTint="@color/orange"
+                            android:text="Turn Off Entry"
+                            android:textColor="@color/white"
+                            android:visibility="gone"
+                            app:cornerRadius="100dp" />
+
                         <ImageButton
                             android:id="@+id/favorite_button"
                             android:layout_width="30dp"

@@ -115,6 +115,7 @@ class HomeFragmentViewModelTest
                 "2023-05-${19+i}T00:52:16.575Z",
                 "2023-05-20T00:52:16.575Z",
                 "Activity $i Address",
+                false,
                 "A$i Creation Time",
                 "A$i Update Time",
                 null,

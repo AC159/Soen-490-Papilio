@@ -150,6 +150,7 @@ class BrowseFragment : Fragment() {
                 if (activity?.costPerGroup == "0") "FREE" else ("$" + activity?.costPerGroup + "/group")
             )
             intent.putExtra("location", activity?.address)
+            intent.putExtra("closed", activity?.closed)
 
             if (activity?.images != null && activity.images.isNotEmpty()) {
                 intent.putExtra("images", true)

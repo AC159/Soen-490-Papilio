@@ -23,7 +23,7 @@ class GenreViewModel(
     fun getAllGenres()
     {
         viewModelScope.launch {
-            genreObject.value = genreRepository.getAllGenres().body()
+            genreObject.value = genreRepository.getAllGenres().third
             Log.d(logTag, "Received genres from the repository:\n ${genreObject.value.toString()}")
         }
     }
@@ -32,7 +32,7 @@ class GenreViewModel(
     {
         viewModelScope.launch {
             submitQuizResponse.value =
-                userRepository.submitQuiz(SubmitQuiz(indoor, outdoor, genres))
+                userRepository.submitQuiz(indoor, outdoor, genres)
             Log.d(logTag, "Submit Quiz Response -> :\n ${submitQuizResponse.value.toString()}")
         }
     }

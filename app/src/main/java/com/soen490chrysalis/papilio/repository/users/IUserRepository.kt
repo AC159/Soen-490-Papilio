@@ -72,6 +72,5 @@ interface IUserRepository
 
     suspend fun checkActivityMember(activity_id : String) : CheckActivityMember
 
-    suspend fun submitQuiz(submitQuiz : SubmitQuiz) : Pair<Int, String>
-
+    suspend fun submitQuiz(indoor : Boolean, outdoor : Boolean, genres : IntArray) : Pair<Int, String>
 }

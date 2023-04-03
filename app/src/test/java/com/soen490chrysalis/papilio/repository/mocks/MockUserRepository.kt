@@ -3,6 +3,7 @@ package com.soen490chrysalis.papilio.repository.mocks
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.FirebaseUser
 import com.soen490chrysalis.papilio.repository.users.IUserRepository
+import com.soen490chrysalis.papilio.services.network.requests.SubmitQuiz
 import com.soen490chrysalis.papilio.services.network.responses.*
 import org.mockito.Mockito
 import retrofit2.Response
@@ -215,5 +216,10 @@ class MockUserRepository : IUserRepository
     override suspend fun checkActivityMember(activity_id : String) : Triple<Boolean, String, Boolean>
     {
         return Triple(true, "", true)
+    }
+
+    override suspend fun submitQuiz(submitQuiz : SubmitQuiz) : Pair<Int, String>
+    {
+        return Pair(200, "Created");
     }
 }

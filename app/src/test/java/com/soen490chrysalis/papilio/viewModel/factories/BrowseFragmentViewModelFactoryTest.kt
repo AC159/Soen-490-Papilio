@@ -1,7 +1,7 @@
-package com.soen490chrysalis.papilio.viewModel
+package com.soen490chrysalis.papilio.viewModel.factories
 
 import com.google.firebase.auth.FirebaseAuth
-import com.soen490chrysalis.papilio.viewModel.factories.BrowseFragmentViewModelFactory
+import com.soen490chrysalis.papilio.viewModel.BrowseFragmentViewModel
 import io.mockk.every
 import io.mockk.mockkStatic
 import org.junit.Test

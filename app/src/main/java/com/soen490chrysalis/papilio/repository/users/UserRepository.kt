@@ -13,7 +13,6 @@ import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
-import okhttp3.ResponseBody
 import retrofit2.Response
 import java.io.File
 import java.io.FileOutputStream
@@ -380,12 +379,16 @@ class UserRepository(
                     userService.updateUser(UserUpdate(Identifier(firebaseId), variableMap))
 
                 Log.d(logTag, "Update user: $response")
-                return@withContext Triple(response.isSuccessful, response.code(), response.message())
+                return@withContext Triple(
+                    response.isSuccessful,
+                    response.code(),
+                    response.message()
+                )
             }
             catch (e : Exception)
             {
                 Log.d(logTag, "Update user - Exception ->  $e")
-                return@withContext Triple(false, 400, e.message+"")
+                return@withContext Triple(false, 400, e.message + "")
             }
 
         }
@@ -428,7 +431,7 @@ class UserRepository(
             catch (e : Exception)
             {
                 Log.d(logTag, "updateUserProfilePic: $e")
-                return@withContext Pair(false, e.message+"")
+                return@withContext Pair(false, e.message + "")
             }
         }
     }
@@ -550,6 +553,30 @@ class UserRepository(
             {
                 Log.d(logTag, "firebaseSignInWithEmail&PasswordError: $e")
                 Pair(false, e.message.toString())
+            }
+
+            return@withContext response
+        }
+    }
+
+    override suspend fun submitQuiz(submitQuiz : SubmitQuiz) : Pair<Int, String>
+    {
+        return withContext(coroutineDispatcher) {
+
+            val response : Pair<Int, String> = try
+            {
+                val firebaseId = firebaseAuth.currentUser!!.uid
+
+                // Now that we have successfully authenticated, we can create a user in the database
+                val result = userService.submitQuiz(firebaseId, submitQuiz)
+                Log.d(logTag, "submitQuiz -> $result")
+
+                Pair(result.code(), result.message())
+            }
+            catch (e : Exception)
+            {
+                Log.d(logTag, "result: $e")
+                Pair(400, e.message.toString())
             }
 
             return@withContext response

@@ -15,8 +15,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Papilio">
         <activity
-            android:name=".view.ActivityHistory"
-            android:exported="true">
+            android:name=".view.QuizPart2Activity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".view.QuizPart1"
+            android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />

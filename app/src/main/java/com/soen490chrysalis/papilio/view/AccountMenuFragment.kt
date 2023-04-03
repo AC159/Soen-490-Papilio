@@ -39,6 +39,12 @@ class AccountMenuFragment : Fragment()
             val intent = Intent(requireActivity(), UserProfileActivity::class.java)
             startActivity(intent)
         }
+        
+        binding.accountActivityQuiz.setOnClickListener {
+            val intent = Intent(this.activity, QuizPart1::class.java)
+            startActivity(intent)
+        }
+
         binding.accountLogout.setOnClickListener{
             //Firebase sign out
             FirebaseAuth.getInstance().signOut()

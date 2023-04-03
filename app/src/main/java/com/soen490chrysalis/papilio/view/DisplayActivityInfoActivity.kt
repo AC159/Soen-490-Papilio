@@ -92,6 +92,7 @@ class DisplayActivityInfoActivity : AppCompatActivity()
         val activityId = bundle.getString("id")?.toInt()
         val fav = bundle.getBoolean("isFavorited")
         val businessId = bundle.getString("business_id")
+        val idOfActivityOwner = bundle.getString("user_id")
 
         // This section is for logging events on firebase analytics
         val userId = activityInfoViewModel.getUserId()
@@ -101,14 +102,24 @@ class DisplayActivityInfoActivity : AppCompatActivity()
                 param("user_id", userId)
                 param("activity_id", activityId.toString())
                 param("business_id", businessId)
-                param("time", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).toString())
+                param(
+                    "time",
+                    LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+                            .toString()
+                )
             }
         }
 
         // we need to determine if the user has already joined this activity or not and display the text button accordingly
         // Disable the 'join' button while we process the request & display a progress indicator
         DisableButtonAndShowProgressIndicator(binding.joinButton as MaterialButton)
-        activityInfoViewModel.checkActivityMember(activityId.toString())
+        if (idOfActivityOwner != userId) activityInfoViewModel.checkActivityMember(activityId.toString())
+        else
+        {
+            // Owners of activities should not be able to join/favorite their own activity
+            binding.joinButton.visibility = View.GONE
+            binding.favoriteButton.visibility = View.GONE
+        }
 
         activityInfoViewModel.checkActivityMemberResponse.observe(this) {
             if (it.isSuccess)
@@ -132,7 +143,7 @@ class DisplayActivityInfoActivity : AppCompatActivity()
         }
 
         // Listen to the API response when the user wants to join an activity
-        activityInfoViewModel.jonActivityResponse.observe(this) {
+        activityInfoViewModel.joinActivityResponse.observe(this) {
             EnableButtonAndRemoveProgressIndicator(binding.joinButton as MaterialButton)
 
             // Change the text of the button if the user successfully joined the activity
@@ -147,7 +158,8 @@ class DisplayActivityInfoActivity : AppCompatActivity()
                         param("user_id", userId)
                         param("activity_id", activityId.toString())
                         param("business_id", businessId)
-                        param("time",
+                        param(
+                            "time",
                             LocalDateTime.now()
                                     .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
                                     .toString()
@@ -171,56 +183,59 @@ class DisplayActivityInfoActivity : AppCompatActivity()
 
         val infoContact : Button = binding.infoContact
 
-        if (fav)
+        if (idOfActivityOwner != userId)
         {
-            isActivityFavorited = fav
-            changeFavoriteButton()
-            favoriteButton.visibility = View.VISIBLE
-            canFavorite = true
-        }
-        else
-        {
-            if (activityId != null)
+            if (fav)
             {
-                activityInfoViewModel.checkActivityFavorited(activityId)
+                isActivityFavorited = fav
+                changeFavoriteButton()
+                favoriteButton.visibility = View.VISIBLE
+                canFavorite = true
             }
-            activityInfoViewModel.checkActivityFavoritedResponse.observe(
-                this,
-                androidx.lifecycle.Observer {
-                    isActivityFavorited = it.isActivityFound
-                    changeFavoriteButton()
-                    favoriteButton.visibility = View.VISIBLE
-                    canFavorite = true
-                })
-        }
-
-        favoriteButton.setOnClickListener {
-            if (canFavorite)
+            else
             {
-                if (!isActivityFavorited)
+                if (activityId != null)
                 {
-                    if (activityId != null)
-                    {
-                        canFavorite = false
-                        isActivityFavorited = true
-                        activityInfoViewModel.addFavoriteActivity(activityId)
+                    activityInfoViewModel.checkActivityFavorited(activityId)
+                }
+                activityInfoViewModel.checkActivityFavoritedResponse.observe(
+                    this,
+                    androidx.lifecycle.Observer {
+                        isActivityFavorited = it.isActivityFound
                         changeFavoriteButton()
+                        favoriteButton.visibility = View.VISIBLE
+                        canFavorite = true
+                    })
+            }
+
+            favoriteButton.setOnClickListener {
+                if (canFavorite)
+                {
+                    if (!isActivityFavorited)
+                    {
+                        if (activityId != null)
+                        {
+                            canFavorite = false
+                            isActivityFavorited = true
+                            activityInfoViewModel.addFavoriteActivity(activityId)
+                            changeFavoriteButton()
+                        }
+                    }
+                    else
+                    {
+                        if (activityId != null)
+                        {
+                            canFavorite = false
+                            isActivityFavorited = false
+                            activityInfoViewModel.removeFavoriteActivity(activityId)
+                            changeFavoriteButton()
+                        }
                     }
                 }
-                else
-                {
-                    if (activityId != null)
-                    {
-                        canFavorite = false
-                        isActivityFavorited = false
-                        activityInfoViewModel.removeFavoriteActivity(activityId)
-                        changeFavoriteButton()
-                    }
-                }
             }
         }
 
-        activityInfoViewModel.activityFavoritedResponse.observe(this, androidx.lifecycle.Observer {
+        activityInfoViewModel.activityFavoritedResponse.observe(this) {
             if (isActivityFavorited)
             {
                 displaySnackBar("Activity Favorited!")
@@ -231,7 +246,7 @@ class DisplayActivityInfoActivity : AppCompatActivity()
                 displaySnackBar("Activity Unfavorited!")
                 canFavorite = true
             }
-        })
+        }
 
 
         val contactString = bundle.getString("contact")

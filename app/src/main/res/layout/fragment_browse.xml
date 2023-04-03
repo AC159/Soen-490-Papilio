@@ -38,7 +38,7 @@
                 android:focusableInTouchMode="true"
                 android:hint="@string/search_activity_hint"
                 android:imeOptions="actionSearch"
-                android:inputType="text"
+                android:inputType="textCapWords"
                 android:padding="15dp" />
 
         </LinearLayout>

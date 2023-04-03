@@ -40,9 +40,9 @@ class FeedAdapter(
     override fun onBindViewHolder(holder : FeedViewHolder, position : Int)
     {
         val currentItem = feedList[position]
-        holder.boxTitle.text = currentItem.title
+        holder.boxTitle.text = currentItem.title!!.replace("\"", "")
 
-        holder.boxAddress.text = currentItem.address
+        holder.boxAddress.text = currentItem.address!!.replace("\"", "")
 
         val list = currentItem.startTime?.split("T")
         if (list != null) holder.boxStartTime.text = list[0]

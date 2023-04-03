@@ -8,6 +8,8 @@ import retrofit2.Response
 import java.io.InputStream
 
 class MockActivityRepository : IActivityRepository {
+    private val simpleUser = SimpleUserObject("somefirebaseid", "validEmail@gmail.com")
+
     override suspend fun postNewUserActivity(
         activityTitle: String,
         description: String,
@@ -44,7 +46,7 @@ class MockActivityRepository : IActivityRepository {
                 "A$i Creation Time",
                 "A$i Update Time",
                 null,
-                "user $i"
+                simpleUser
             )
 
             activityList.add(activityObject)
@@ -76,7 +78,7 @@ class MockActivityRepository : IActivityRepository {
                 "A1 Creation Time",
                 "A1 Update Time",
                 null,
-                "user 1"
+                simpleUser
             )
 
 

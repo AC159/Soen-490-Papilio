@@ -20,7 +20,12 @@ data class UserObject(
     val createdAt: String,
     val updatedAt: String,
     val bio: String,
-    val image: String
+    val image: String?
+)
+
+data class SimpleUserObject(
+    val firebase_id : String?,
+    val email : String?
 )
 
 data class ActivityObject(
@@ -37,7 +42,7 @@ data class ActivityObject(
     val createdAt: String?,
     val updatedAt: String?,
     val business: BusinessObject?,
-    val userId: String?
+    val user: SimpleUserObject?
 )
 
 data class BusinessObject(
@@ -100,6 +105,7 @@ data class GenreObject(
     val createdAt : String,
     val updatedAt : String
 )
+
 data class FavoriteUserObject(
     @Json(name = "firebase_id")
     val firebaseId: String?,
@@ -122,5 +128,6 @@ data class CheckFavoriteResponse(
 )
 
 data class CheckUserIsMemberOfActivityResponse(
-    val joined : Boolean
+    val joined : Boolean,
+    val owned : Boolean
 )

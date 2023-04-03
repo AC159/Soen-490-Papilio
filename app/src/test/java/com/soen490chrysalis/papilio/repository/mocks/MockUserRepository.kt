@@ -2,6 +2,7 @@ package com.soen490chrysalis.papilio.repository.mocks
 
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.FirebaseUser
+import com.soen490chrysalis.papilio.repository.users.CheckActivityMember
 import com.soen490chrysalis.papilio.repository.users.IUserRepository
 import com.soen490chrysalis.papilio.services.network.requests.SubmitQuiz
 import com.soen490chrysalis.papilio.services.network.responses.*
@@ -19,6 +20,7 @@ import java.io.InputStream
 class MockUserRepository : IUserRepository
 {
     private var firebaseUserMock = Mockito.mock(FirebaseUser::class.java)
+    private val simpleUser = SimpleUserObject("somefirebaseid", "validEmail@gmail.com")
 
     override fun initialize(googleSignInClient : GoogleSignInClient)
     {
@@ -90,7 +92,7 @@ class MockUserRepository : IUserRepository
                 "A1 Creation Time",
                 "A1 Update Time",
                 null,
-                "user 1"
+                simpleUser
             )
         )
 
@@ -109,7 +111,7 @@ class MockUserRepository : IUserRepository
                 "A1 Creation Time",
                 "A1 Update Time",
                 null,
-                "user 1"
+                simpleUser
             )
         )
 
@@ -136,7 +138,7 @@ class MockUserRepository : IUserRepository
             "A1 Creation Time",
             "A1 Update Time",
             null,
-            "user 1"
+            simpleUser
         )
 
         val activityObject4 = ActivityObject(
@@ -153,7 +155,7 @@ class MockUserRepository : IUserRepository
             "A1 Creation Time",
             "A1 Update Time",
             null,
-            "user 1"
+            simpleUser
         )
 
         val activityList = listOf(activityObject3, activityObject4)
@@ -213,9 +215,9 @@ class MockUserRepository : IUserRepository
         return Pair(true, "")
     }
 
-    override suspend fun checkActivityMember(activity_id : String) : Triple<Boolean, String, Boolean>
+    override suspend fun checkActivityMember(activity_id : String) : CheckActivityMember
     {
-        return Triple(true, "", true)
+        return CheckActivityMember(true, "", true, false)
     }
 
     override suspend fun submitQuiz(submitQuiz : SubmitQuiz) : Pair<Int, String>

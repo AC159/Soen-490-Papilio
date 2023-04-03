@@ -118,8 +118,8 @@ class BrowseFragment : Fragment() {
                             Glide.with(this).load(activity.images).into(activityBoxImage)
                         }
 
-                        activityBoxTitle.text = activity.title
-                        activityBoxDesc.text = activity.description
+                        activityBoxTitle.text = activity.title!!.replace("\"", "")
+                        activityBoxDesc.text = activity.description!!.replace("\"", "")
 
                         activityBoxBinding.activityBox.setOnClickListener {
                             activity.id?.toInt()
@@ -134,12 +134,13 @@ class BrowseFragment : Fragment() {
 
         browseFragmentViewModel.activityResponse.observe(viewLifecycleOwner, Observer {
 
-            val activity = browseFragmentViewModel.activityResponse.value?.activity;
+            val activity = browseFragmentViewModel.activityResponse.value?.activity
 
             val intent = Intent(this.activity, DisplayActivityInfoActivity::class.java)
             intent.putExtra("id", activity?.id)
             intent.putExtra("title", activity?.title)
             intent.putExtra("description", activity?.description)
+            intent.putExtra("user_id", activity?.user?.firebase_id)
             intent.putExtra(
                 "individualCost",
                 if (activity?.costPerIndividual == "0") "FREE" else ("$" + activity?.costPerIndividual + "/person")

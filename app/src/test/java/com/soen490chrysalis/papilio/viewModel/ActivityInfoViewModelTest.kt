@@ -3,6 +3,7 @@ package com.soen490chrysalis.papilio.viewModel
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.soen490chrysalis.papilio.repository.users.CheckActivityMember
 import com.soen490chrysalis.papilio.repository.users.IUserRepository
 import com.soen490chrysalis.papilio.repository.users.UserRepository
 import com.soen490chrysalis.papilio.services.network.IUserApiService
@@ -97,21 +98,24 @@ class ActivityInfoViewModelTest
     fun checkActivityMemberTest() = runTest {
         // first value is defines the success of the operation, second term is the message value
         // and the third specifies if a user has joined the specified activity or not
-        val success = Triple(true, "", true)
-        val error = Triple(false, "Oops, something went wrong!", false)
+        val success = CheckActivityMember(true, "", true, true)
+        val error = CheckActivityMember(false, "Oops, something went wrong!", false, false)
         Mockito.doReturn(success).`when`(userRepository).checkActivityMember(activity_id)
 
         activityInfoViewModel.checkActivityMember(activity_id)
         advanceUntilIdle()
-        var result = activityInfoViewModel.checkActivityMemberResponse.value
-        assert(result!!.isSuccess && result.hasUserJoined && result.errorMessage == "")
+        activityInfoViewModel.checkActivityMemberResponse.observeForever {
+            assert(it!!.isSuccess && it.hasUserJoined && it.errorMessage == "" && it.isUserOwnerOfActivity)
+        }
+
         Mockito.verify(userRepository, times(1)).checkActivityMember(activity_id)
 
         Mockito.doReturn(error).`when`(userRepository).checkActivityMember(activity_id)
         activityInfoViewModel.checkActivityMember(activity_id)
         advanceUntilIdle()
-        result = activityInfoViewModel.checkActivityMemberResponse.value
-        assert(!result!!.isSuccess && !result.hasUserJoined && result.errorMessage == "Oops, something went wrong!")
+        activityInfoViewModel.checkActivityMemberResponse.observeForever {
+            assert(!it!!.isSuccess && !it.hasUserJoined && it.errorMessage == "Oops, something went wrong!" && !it.isUserOwnerOfActivity)
+        }
         Mockito.verify(userRepository, times(2)).checkActivityMember(activity_id)
     }
 
@@ -122,7 +126,7 @@ class ActivityInfoViewModelTest
 
         activityInfoViewModel.joinActivity(activity_id)
         advanceUntilIdle()
-        var result = activityInfoViewModel.jonActivityResponse.value
+        var result = activityInfoViewModel.joinActivityResponse.value
         println("Result: $result")
         assert(result!!.isSuccess && result.errorMessage == "")
         Mockito.verify(userRepository, times(1)).addUserToActivity(activity_id)
@@ -130,7 +134,7 @@ class ActivityInfoViewModelTest
         Mockito.doReturn(error).`when`(userRepository).addUserToActivity(activity_id)
         activityInfoViewModel.joinActivity(activity_id)
         advanceUntilIdle()
-        result = activityInfoViewModel.jonActivityResponse.value
+        result = activityInfoViewModel.joinActivityResponse.value
         assert(!result!!.isSuccess && result.errorMessage == "Oops, something went wrong!")
         Mockito.verify(userRepository, times(2)).addUserToActivity(activity_id)
     }

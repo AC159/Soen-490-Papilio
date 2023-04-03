@@ -571,7 +571,7 @@ class UserRepository(
         }
     }
 
-    override suspend fun submitQuiz(submitQuiz : SubmitQuiz) : Pair<Int, String>
+    override suspend fun submitQuiz(indoor : Boolean, outdoor : Boolean, genres : IntArray) : Pair<Int, String>
     {
         return withContext(coroutineDispatcher) {
 
@@ -580,7 +580,7 @@ class UserRepository(
                 val firebaseId = firebaseAuth.currentUser!!.uid
 
                 // Now that we have successfully authenticated, we can create a user in the database
-                val result = userService.submitQuiz(firebaseId, submitQuiz)
+                val result = userService.submitQuiz(firebaseId, SubmitQuiz(indoor, outdoor, genres))
                 Log.d(logTag, "submitQuiz -> $result")
 
                 Pair(result.code(), result.message())

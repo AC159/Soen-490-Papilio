@@ -220,8 +220,8 @@ class MockUserRepository : IUserRepository
         return CheckActivityMember(true, "", true, false)
     }
 
-    override suspend fun submitQuiz(submitQuiz : SubmitQuiz) : Pair<Int, String>
+    override suspend fun submitQuiz(indoor : Boolean, outdoor : Boolean, genres : IntArray) : Pair<Int, String>
     {
-        return Pair(200, "Created");
+        return Pair(200, "Created")
     }
 }

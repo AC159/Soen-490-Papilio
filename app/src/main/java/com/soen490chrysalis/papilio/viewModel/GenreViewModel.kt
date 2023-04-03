@@ -32,7 +32,7 @@ class GenreViewModel(
     {
         viewModelScope.launch {
             submitQuizResponse.value =
-                userRepository.submitQuiz(SubmitQuiz(indoor, outdoor, genres))
+                userRepository.submitQuiz(indoor, outdoor, genres)
             Log.d(logTag, "Submit Quiz Response -> :\n ${submitQuizResponse.value.toString()}")
         }
     }

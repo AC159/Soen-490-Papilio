@@ -38,7 +38,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:padding="30dp"
-                    android:text="No Favorite Activities Found"
+                    android:text="No activities in your history"
                     android:textColor="@color/black"
                     android:textStyle="bold">
 

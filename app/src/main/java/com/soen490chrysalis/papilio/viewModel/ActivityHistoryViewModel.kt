@@ -32,6 +32,7 @@ class ActivityHistoryViewModel (private val userRepository: IUserRepository): Vi
 
                 val getActivityResponse = userRepository.getJoinedActivities()
                 val secondResponse = JoinedActivitiesResponse(
+                    getActivityResponse.third.userId,
                     getActivityResponse.third.count,
                     getActivityResponse.third.row
                 )
@@ -40,7 +41,7 @@ class ActivityHistoryViewModel (private val userRepository: IUserRepository): Vi
                 val tempList = mutableListOf<ActivityObject>()
                 for (activity in secondResponse.row)
                 {
-                    tempList.add(activity.activity)
+                    tempList.add(activity)
                 }
 
                 activitiesResponse.value = FavoriteActivitiesResponse(

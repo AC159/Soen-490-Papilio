@@ -43,4 +43,12 @@ interface IActivityRepository
     suspend fun searchActivities(
         query : String
     ) : Triple<Boolean, String, SearchActivityResponse>
+
+    suspend fun open(
+        activityId : Number,
+    ) : Pair<Int, String>
+
+    suspend fun close(
+        activityId : Number,
+    ) : Pair<Int, String>
 }

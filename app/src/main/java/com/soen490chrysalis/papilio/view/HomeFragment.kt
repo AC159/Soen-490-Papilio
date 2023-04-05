@@ -28,6 +28,7 @@ import com.soen490chrysalis.papilio.viewModel.factories.HomeFragmentViewModelFac
 
 class HomeFragment : Fragment()
 {
+    private val logTag = HomeFragment::class.simpleName
     private lateinit var homeFragmentViewModel : HomeFragmentViewModel
     private lateinit var recyclerView : RecyclerView
     private lateinit var adapter : FeedAdapter
@@ -70,7 +71,7 @@ class HomeFragment : Fragment()
         homeFragmentViewModel.getAllActivities(currentPage.toString(), pageSize.toString())
 
         homeFragmentViewModel.activityResponse.observe(viewLifecycleOwner, Observer {
-            Log.d("RECEIVED NEW DATA", it.rows.size.toString())
+            Log.d(logTag, "RECEIVED NEW DATA: ${it.rows.size}")
 
             if (isRecyclerViewInitialized)
             {
@@ -87,7 +88,6 @@ class HomeFragment : Fragment()
 
                 addActivityList = finalList
 
-                val index = activityList.size
                 addActivityList.forEach { item ->
                     activityList.add(item)
                 }
@@ -95,9 +95,9 @@ class HomeFragment : Fragment()
                 Log.d(
                     "NOTIFYING RECYCLER VIEW OF NEWLY INSERTED DATA", activityList.size.toString()
                 )
-                adapter.notifyItemRangeInserted(index - 1, addActivityList.size)
+
+                adapter.notifyDataSetChanged()
                 isLoading = false
-                progressBar.visibility = View.GONE
             }
 
             if (!isRecyclerViewInitialized)
@@ -296,6 +296,7 @@ class HomeFragment : Fragment()
                     if (activityList[position].costPerGroup == "0") "FREE" else ("$" + activityList[position].costPerGroup + "/group")
                 )
                 intent.putExtra("location", activityList[position].address)
+                intent.putExtra("closed", activityList[position].closed)
 
                 if (activityList[position].images != null && activityList[position].images?.isNotEmpty() == true)
                 {

@@ -154,7 +154,7 @@ class ActivityRepository(
             catch (e: Exception) {
                 Log.d(logTag, "activityRepository getActivity() exception: $e")
                 Triple(false, e.message.toString(), SingleActivityResponse(false, ActivityObject(
-                    null, null, null, null, null, null, null, null, null, null, null, null, null, null
+                    null, null, null, null, null, null, null, null, null, null, null, null, null, null, null
                 )))
             }
 
@@ -180,6 +180,42 @@ class ActivityRepository(
                 Triple(false, e.message.toString(), SearchActivityResponse("", "0", listOf<ActivityObjectLight>()))
             }
             Log.d(logTag, "Search activities: $response")
+
+            return@withContext response
+        }
+    }
+
+    override suspend fun open(activityId : Number) : Pair<Int, String>
+    {
+        return withContext(coroutineDispatcher)
+        {
+            val response = try {
+                val result = activityAPIService.open(activityId = activityId)
+                Pair(result.code(), result.message())
+            }
+            catch (e: Exception) {
+                Log.d(logTag, "activityRepository open exception: $e")
+                Pair(400, e.message+"")
+            }
+            Log.d(logTag, "Activity open: $response")
+
+            return@withContext response
+        }
+    }
+
+    override suspend fun close(activityId : Number) : Pair<Int, String>
+    {
+        return withContext(coroutineDispatcher)
+        {
+            val response = try {
+                val result = activityAPIService.close(activityId = activityId)
+                Pair(result.code(), result.message())
+            }
+            catch (e: Exception) {
+                Log.d(logTag, "activityRepository close exception: $e")
+                Pair(400, e.message+"")
+            }
+            Log.d(logTag, "Activity close: $response")
 
             return@withContext response
         }

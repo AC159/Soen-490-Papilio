@@ -3,9 +3,12 @@ package com.soen490chrysalis.papilio.viewModel
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.soen490chrysalis.papilio.repository.activities.ActivityRepository
+import com.soen490chrysalis.papilio.repository.activities.IActivityRepository
 import com.soen490chrysalis.papilio.repository.users.CheckActivityMember
 import com.soen490chrysalis.papilio.repository.users.IUserRepository
 import com.soen490chrysalis.papilio.repository.users.UserRepository
+import com.soen490chrysalis.papilio.services.network.IActivityApiService
 import com.soen490chrysalis.papilio.services.network.IUserApiService
 import com.soen490chrysalis.papilio.services.network.responses.CheckFavoriteResponse
 import com.soen490chrysalis.papilio.services.network.responses.FavoriteResponse
@@ -35,15 +38,18 @@ class ActivityInfoViewModelTest
 {
     private lateinit var activityInfoViewModel : ActivityInfoViewModel
     private lateinit var userRepository : IUserRepository
+    private lateinit var activityRepository : IActivityRepository
 
     private var mockWebServer = MockWebServer()
     private lateinit var mockRetrofitUserService : IUserApiService
+    private lateinit var mockRetrofitActivityService : IActivityApiService
     private val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
     private val mockFirebaseAuth = Mockito.mock(FirebaseAuth::class.java)
     private val mockFirebaseUser = Mockito.mock(FirebaseUser::class.java)
     private val mockFirebaseUserUid = "aset23q45346457sdfhrtu5r"
 
     private val activity_id = "160"
+
     // first value is defines the success of the operation, second term is the message value
     private val success = Pair(true, "")
     private val error = Pair(false, "Oops, something went wrong!")
@@ -81,6 +87,12 @@ class ActivityInfoViewModelTest
                 .build()
                 .create(IUserApiService::class.java)
 
+        mockRetrofitActivityService = Retrofit.Builder()
+                .addConverterFactory(MoshiConverterFactory.create(moshi).asLenient())
+                .baseUrl(mockWebServer.url("/")) // note the URL is different from production one
+                .build()
+                .create(IActivityApiService::class.java)
+
         println("Instantiated mockRetrofitUserService for ActivityInfoViewModelTest test!")
 
         Mockito.`when`(mockFirebaseAuth.currentUser).thenReturn(mockFirebaseUser)
@@ -88,7 +100,14 @@ class ActivityInfoViewModelTest
 
         // Important to initialize the user repository here since the mockRetrofitUserService needs to be create beforehand
         userRepository = Mockito.spy(UserRepository(mockFirebaseAuth, mockRetrofitUserService))
-        activityInfoViewModel = ActivityInfoViewModel(userRepository)
+        activityRepository = Mockito.spy(
+            ActivityRepository(
+                mockFirebaseAuth,
+                mockRetrofitUserService,
+                mockRetrofitActivityService
+            )
+        )
+        activityInfoViewModel = ActivityInfoViewModel(userRepository, activityRepository)
 
         println("Setup method is done!")
     }
@@ -182,7 +201,8 @@ class ActivityInfoViewModelTest
     fun addFavoriteActivityTest() = runTest {
         val res = Triple(true, "", favResponse)
         val successResponse = MockResponse().setResponseCode(200).setBody(res.toString())
-        Mockito.doReturn(successResponse).`when`(userRepository).addFavoriteActivity(Integer.parseInt(activity_id))
+        Mockito.doReturn(successResponse).`when`(userRepository)
+                .addFavoriteActivity(Integer.parseInt(activity_id))
 
         activityInfoViewModel.addFavoriteActivity(Integer.parseInt(activity_id))
         advanceUntilIdle()
@@ -199,7 +219,8 @@ class ActivityInfoViewModelTest
     fun removeFavoriteActivityTest() = runTest {
         val res = Triple(true, "", favResponse)
         val successResponse = MockResponse().setResponseCode(200).setBody(res.toString())
-        Mockito.doReturn(successResponse).`when`(userRepository).removeFavoriteActivity(Integer.parseInt(activity_id))
+        Mockito.doReturn(successResponse).`when`(userRepository)
+                .removeFavoriteActivity(Integer.parseInt(activity_id))
 
         activityInfoViewModel.removeFavoriteActivity(Integer.parseInt(activity_id))
         advanceUntilIdle()
@@ -208,6 +229,39 @@ class ActivityInfoViewModelTest
             println("Result: $it")
             assert(it!!.success == true && it.update == favResponse.update)
         }
-        Mockito.verify(userRepository, times(1)).removeFavoriteActivity(Integer.parseInt(activity_id))
+        Mockito.verify(userRepository, times(1))
+                .removeFavoriteActivity(Integer.parseInt(activity_id))
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun setActivityEntryOpenTest() = runTest {
+        val res = Pair(200, "OK")
+        val successResponse = MockResponse().setResponseCode(200).setBody(res.toString())
+        Mockito.doReturn(successResponse).`when`(activityRepository).open(1)
+
+        activityInfoViewModel.SetActivityEntry(1, true)
+        advanceUntilIdle()
+
+        activityInfoViewModel.activityEntryResponse.observeForever {
+            assert(it!!.first == 200 && it.second == "OK")
+        }
+        Mockito.verify(activityRepository, times(1)).open(1)
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun setActivityEntryCloseTest() = runTest {
+        val res = Pair(200, "OK")
+        val successResponse = MockResponse().setResponseCode(200).setBody(res.toString())
+        Mockito.doReturn(successResponse).`when`(activityRepository).close(1)
+
+        activityInfoViewModel.SetActivityEntry(1, false)
+        advanceUntilIdle()
+
+        activityInfoViewModel.activityEntryResponse.observeForever {
+            assert(it!!.first == 200 && it.second == "OK")
+        }
+        Mockito.verify(activityRepository, times(1)).close(1)
     }
 }

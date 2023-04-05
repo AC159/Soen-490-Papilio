@@ -1,18 +1,9 @@
 package com.soen490chrysalis.papilio.repository
 
 import android.util.Log
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.tasks.Task
-import com.google.android.gms.tasks.TaskCompletionSource
-import com.google.firebase.auth.AuthResult
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.soen490chrysalis.papilio.repository.genre.GenreRepository
 import com.soen490chrysalis.papilio.repository.genre.IGenreRepository
-import com.soen490chrysalis.papilio.repository.users.IUserRepository
-import com.soen490chrysalis.papilio.repository.users.UserRepository
 import com.soen490chrysalis.papilio.services.network.IGenreApiService
-import com.soen490chrysalis.papilio.services.network.IUserApiService
 import com.soen490chrysalis.papilio.services.network.responses.GenreObject
 import com.soen490chrysalis.papilio.testUtils.MainCoroutineRule
 import com.squareup.moshi.Moshi

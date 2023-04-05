@@ -33,6 +33,7 @@ class UpcomingActivitiesViewModel(private val userRepository : IUserRepository) 
 
                 val getActivityResponse = userRepository.getJoinedActivities()
                 val secondResponse = JoinedActivitiesResponse(
+                    getActivityResponse.third.userId,
                     getActivityResponse.third.count,
                     getActivityResponse.third.row
                 )
@@ -41,7 +42,7 @@ class UpcomingActivitiesViewModel(private val userRepository : IUserRepository) 
                 val tempList = mutableListOf<ActivityObject>()
                 for (activity in secondResponse.row)
                 {
-                    tempList.add(activity.activity)
+                    tempList.add(activity)
                 }
 
                 activitiesResponse.value = FavoriteActivitiesResponse(
@@ -49,7 +50,10 @@ class UpcomingActivitiesViewModel(private val userRepository : IUserRepository) 
                     activities = firstResponse.activities.plus(tempList)
                 )
 
-                Log.d(logTag, " response from getFirstActivityResponse() --> $getFirstActivityResponse")
+                Log.d(
+                    logTag,
+                    " response from getFirstActivityResponse() --> $getFirstActivityResponse"
+                )
                 Log.d(logTag, " response from getJoinedActivities() --> $getActivityResponse")
             }
             catch (e : Exception)

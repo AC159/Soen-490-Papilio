@@ -7,31 +7,35 @@ import com.soen490chrysalis.papilio.view.dialogs.EventTime
 import retrofit2.Response
 import java.io.InputStream
 
-class MockActivityRepository : IActivityRepository {
+class MockActivityRepository : IActivityRepository
+{
     private val simpleUser = SimpleUserObject("somefirebaseid", "validEmail@gmail.com")
 
     override suspend fun postNewUserActivity(
-        activityTitle: String,
-        description: String,
-        costPerIndividualCost: Int,
-        costPerGroupCost: Int,
-        groupSize: Int,
-        pictures: List<Pair<String, InputStream>>,
-        activityDate: EventDate,
-        startTime: EventTime,
-        endTime: EventTime,
-        activityAddress: String
-    ): Response<Void> {
+        activityTitle : String,
+        description : String,
+        costPerIndividualCost : Int,
+        costPerGroupCost : Int,
+        groupSize : Int,
+        pictures : List<Pair<String, InputStream>>,
+        activityDate : EventDate,
+        startTime : EventTime,
+        endTime : EventTime,
+        activityAddress : String
+    ) : Response<Void>
+    {
         return Response.success(null)
     }
 
     override suspend fun getAllActivities(
-        page: String,
-        size: String
-    ): Triple<Boolean, String, ActivityResponse> {
+        page : String,
+        size : String
+    ) : Triple<Boolean, String, ActivityResponse>
+    {
 
-        val activityList: MutableList<ActivityObject> = mutableListOf()
-        for (i in 1..size.toInt()) {
+        val activityList : MutableList<ActivityObject> = mutableListOf()
+        for (i in 1..size.toInt())
+        {
             val activityObject = ActivityObject(
                 i.toString(),
                 "Activity $i Title",
@@ -43,6 +47,7 @@ class MockActivityRepository : IActivityRepository {
                 "1500",
                 "2000",
                 "Activity $i Address",
+                false,
                 "A$i Creation Time",
                 "A$i Update Time",
                 null,
@@ -62,24 +67,26 @@ class MockActivityRepository : IActivityRepository {
         return Triple(true, "", activityResponse)
     }
 
-    override suspend fun getActivity(activityId: Number): Triple<Boolean, String, SingleActivityResponse> {
+    override suspend fun getActivity(activityId : Number) : Triple<Boolean, String, SingleActivityResponse>
+    {
 
-            val activityObject = ActivityObject(
-                activityId.toString(),
-                "Activity 1 Title",
-                "This is Activity 1",
-                "0",
-                "0",
-                "4",
-                listOf("a" + 1 + "image1", "a" + 2 + "image1"),
-                "1500",
-                "2000",
-                "Activity 1 Address",
-                "A1 Creation Time",
-                "A1 Update Time",
-                null,
-                simpleUser
-            )
+        val activityObject = ActivityObject(
+            activityId.toString(),
+            "Activity 1 Title",
+            "This is Activity 1",
+            "0",
+            "0",
+            "4",
+            listOf("a" + 1 + "image1", "a" + 2 + "image1"),
+            "1500",
+            "2000",
+            "Activity 1 Address",
+            false,
+            "A1 Creation Time",
+            "A1 Update Time",
+            null,
+            simpleUser
+        )
 
 
         val activityResponse = SingleActivityResponse(
@@ -90,10 +97,12 @@ class MockActivityRepository : IActivityRepository {
         return Triple(true, "", activityResponse)
     }
 
-    override suspend fun searchActivities(query: String): Triple<Boolean, String, SearchActivityResponse> {
+    override suspend fun searchActivities(query : String) : Triple<Boolean, String, SearchActivityResponse>
+    {
 
-        val activityList: MutableList<ActivityObjectLight> = mutableListOf()
-        for (i in 1..5) {
+        val activityList : MutableList<ActivityObjectLight> = mutableListOf()
+        for (i in 1..5)
+        {
             val activityObject = ActivityObjectLight(
                 i.toString(),
                 "Activity $i Title",
@@ -112,5 +121,15 @@ class MockActivityRepository : IActivityRepository {
 
         return Triple(true, "", activityResponse)
 
+    }
+
+    override suspend fun open(activityId : Number) : Pair<Int, String>
+    {
+        return Pair(200, "OK")
+    }
+
+    override suspend fun close(activityId : Number) : Pair<Int, String>
+    {
+        return Pair(200, "OK")
     }
 }

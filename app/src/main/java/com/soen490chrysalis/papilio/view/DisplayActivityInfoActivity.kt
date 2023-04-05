@@ -119,8 +119,8 @@ class DisplayActivityInfoActivity : AppCompatActivity()
             activityInfoViewModel.checkActivityMember(activityId.toString())
             if(closed)
             {
-                binding.joinButton.visibility = View.GONE
-                binding.favoriteButton.visibility = View.GONE
+                binding.mainButtons.visibility = View.GONE
+                binding.turnOffMessage.visibility = View.VISIBLE
             }
         }
         else
@@ -205,50 +205,53 @@ class DisplayActivityInfoActivity : AppCompatActivity()
 
         if (idOfActivityOwner != userId)
         {
-            if (fav)
+            if(!closed)
             {
-                isActivityFavorited = fav
-                changeFavoriteButton()
-                favoriteButton.visibility = View.VISIBLE
-                canFavorite = true
-            }
-            else
-            {
-                if (activityId != null)
+                if (fav)
                 {
-                    activityInfoViewModel.checkActivityFavorited(activityId)
+                    isActivityFavorited = fav
+                    changeFavoriteButton()
+                    favoriteButton.visibility = View.VISIBLE
+                    canFavorite = true
                 }
-                activityInfoViewModel.checkActivityFavoritedResponse.observe(
-                    this,
-                    androidx.lifecycle.Observer {
-                        isActivityFavorited = it.isActivityFound
-                        changeFavoriteButton()
-                        favoriteButton.visibility = View.VISIBLE
-                        canFavorite = true
-                    })
-            }
-
-            favoriteButton.setOnClickListener {
-                if (canFavorite)
+                else
                 {
-                    if (!isActivityFavorited)
+                    if (activityId != null)
                     {
-                        if (activityId != null)
-                        {
-                            canFavorite = false
-                            isActivityFavorited = true
-                            activityInfoViewModel.addFavoriteActivity(activityId)
-                            changeFavoriteButton()
-                        }
+                        activityInfoViewModel.checkActivityFavorited(activityId)
                     }
-                    else
-                    {
-                        if (activityId != null)
-                        {
-                            canFavorite = false
-                            isActivityFavorited = false
-                            activityInfoViewModel.removeFavoriteActivity(activityId)
+                    activityInfoViewModel.checkActivityFavoritedResponse.observe(
+                        this,
+                        androidx.lifecycle.Observer {
+                            isActivityFavorited = it.isActivityFound
                             changeFavoriteButton()
+                            favoriteButton.visibility = View.VISIBLE
+                            canFavorite = true
+                        })
+                }
+
+                favoriteButton.setOnClickListener {
+                    if (canFavorite)
+                    {
+                        if (!isActivityFavorited)
+                        {
+                            if (activityId != null)
+                            {
+                                canFavorite = false
+                                isActivityFavorited = true
+                                activityInfoViewModel.addFavoriteActivity(activityId)
+                                changeFavoriteButton()
+                            }
+                        }
+                        else
+                        {
+                            if (activityId != null)
+                            {
+                                canFavorite = false
+                                isActivityFavorited = false
+                                activityInfoViewModel.removeFavoriteActivity(activityId)
+                                changeFavoriteButton()
+                            }
                         }
                     }
                 }

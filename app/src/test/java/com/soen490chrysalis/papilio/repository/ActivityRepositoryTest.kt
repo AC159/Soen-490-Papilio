@@ -271,4 +271,47 @@ class ActivityRepositoryTest
         assert(response.third.keyword == queryString)
         assert(response.third.count.toInt() == response.third.rows.count())
     }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun open() = runTest {
+
+        val mockServerResponse = MockResponse()
+                .setResponseCode(200)
+                .setBody(
+                    "{\n" +
+                    "    \"success\": true,\n" +
+                    "}"
+                )
+
+        mockWebServer.enqueue(mockServerResponse)
+
+        val response = activityRepository.open(Mockito.anyInt())
+
+        advanceUntilIdle()
+
+        assert(response.first == 200 && response.second == "OK")
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun close() = runTest {
+
+        val mockServerResponse = MockResponse()
+                .setResponseCode(200)
+                .setBody(
+                    "{\n" +
+                            "    \"success\": true,\n" +
+                    "}"
+                )
+
+        mockWebServer.enqueue(mockServerResponse)
+
+        val response = activityRepository.close(Mockito.anyInt())
+
+        advanceUntilIdle()
+
+        assert(response.first == 200 && response.second == "OK")
+    }
+
 }

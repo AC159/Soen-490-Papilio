@@ -222,4 +222,36 @@ class ActivityInfoViewModelTest
         }
         Mockito.verify(userRepository, times(1)).removeFavoriteActivity(Integer.parseInt(activity_id))
     }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun setActivityEntryOpenTest() = runTest {
+        val res = Pair(200, "OK")
+        val successResponse = MockResponse().setResponseCode(200).setBody(res.toString())
+        Mockito.doReturn(successResponse).`when`(activityRepository).open(1)
+
+        activityInfoViewModel.SetActivityEntry(1, true)
+        advanceUntilIdle()
+
+        activityInfoViewModel.activityEntryResponse.observeForever {
+            assert(it!!.first == 200 && it.second == "OK")
+        }
+        Mockito.verify(activityRepository, times(1)).open(1)
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun setActivityEntryCloseTest() = runTest {
+        val res = Pair(200, "OK")
+        val successResponse = MockResponse().setResponseCode(200).setBody(res.toString())
+        Mockito.doReturn(successResponse).`when`(activityRepository).close(1)
+
+        activityInfoViewModel.SetActivityEntry(1, false)
+        advanceUntilIdle()
+
+        activityInfoViewModel.activityEntryResponse.observeForever {
+            assert(it!!.first == 200 && it.second == "OK")
+        }
+        Mockito.verify(activityRepository, times(1)).close(1)
+    }
 }

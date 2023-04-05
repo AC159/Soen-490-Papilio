@@ -170,6 +170,7 @@ class DisplayActivityInfoActivity : AppCompatActivity()
             if (it.isSuccess)
             {
                 binding.joinButton.text = "Leave"
+                displaySnackBar("You successfully joined!")
 
                 if (businessId != null && userId != null)
                 {
@@ -187,8 +188,7 @@ class DisplayActivityInfoActivity : AppCompatActivity()
                     }
                 }
             }
-
-            displaySnackBar(it.errorMessage)
+            else displaySnackBar(it.errorMessage)
         }
 
         // Listen to the API response when the user wants to leave an activity
@@ -196,9 +196,12 @@ class DisplayActivityInfoActivity : AppCompatActivity()
             EnableButtonAndRemoveProgressIndicator(binding.joinButton as MaterialButton)
 
             // Change the text of the button if the user successfully left the activity
-            if (it.isSuccess) binding.joinButton.text = "Join"
-
-            displaySnackBar(it.errorMessage)
+            if (it.isSuccess)
+            {
+                binding.joinButton.text = "Join"
+                displaySnackBar("You successfully left!")
+            }
+            else displaySnackBar(it.errorMessage)
         }
 
         val infoContact : Button = binding.infoContact

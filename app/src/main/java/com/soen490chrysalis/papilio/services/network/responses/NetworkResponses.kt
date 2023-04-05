@@ -77,8 +77,9 @@ data class JoinedActivityObject(
 )
 
 data class JoinedActivitiesResponse(
+    val userId: String,
     val count: String,
-    val row: List<JoinedActivityObject>
+    val row: List<ActivityObject>
 )
 
 data class SingleActivityResponse(

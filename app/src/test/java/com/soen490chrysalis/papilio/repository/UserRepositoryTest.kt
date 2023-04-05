@@ -823,17 +823,13 @@ class UserRepositoryTest
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun getJoinedActivities() = runTest {
-        val activities : MutableList<JoinedActivityObject> = mutableListOf()
+        val activities : MutableList<ActivityObject> = mutableListOf()
         val images : MutableList<String> = mutableListOf()
         images.add("http://first-image-url.jpg")
         images.add("http://second-image-url.jpg")
         images.add("http://third-image-url.jpg")
 
         activities.add(
-            JoinedActivityObject(
-                "1234",
-                "userId1234",
-                "activityId_1234",
                 ActivityObject(
                     "1234",
                     "Karting activity",
@@ -850,21 +846,17 @@ class UserRepositoryTest
                     "2022-11-14T02:07:02.585Z",
                     null,
                     null
-                )
             )
         )
 
-        val expectedResponse = JoinedActivitiesResponse(activities.size.toString(), activities)
+        val expectedResponse = JoinedActivitiesResponse("userId1234", activities.size.toString(), activities)
 
         val mockServerResponse = MockResponse().setResponseCode(200).setBody(
             "{\n" +
+                    "    \"userId\": \"userId1234\",\n" +
                     "    \"count\": 1,\n" +
                     "    \"row\": [" +
-                    "       {\n" +
-                    "        \"id\": \"1234\",\n" +
-                    "        \"userId\": \"userId1234\",\n" +
-                    "        \"activityId\": \"activityId_1234\",\n" +
-                    "        \"activity\": {\n" +
+                    "        {\n" +
                     "               \"id\": \"1234\",\n" +
                     "               \"title\": \"Karting activity\",\n" +
                     "               \"description\": \"Go race with your friends!\",\n" +
@@ -880,8 +872,7 @@ class UserRepositoryTest
                     "               \"updatedAt\": \"2022-11-14T02:07:02.585Z\",\n" +
                     "               \"business\": null,\n" +
                     "               \"user\": null\n" +
-                    "           }\n" +
-                    "       }\n" +
+                "           }\n" +
                     "   ]\n" +
                     "}"
         )

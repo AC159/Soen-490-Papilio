@@ -77,8 +77,7 @@ class MockUserRepository : IUserRepository
 
     override suspend fun getJoinedActivities() : Triple<Boolean, String, JoinedActivitiesResponse>
     {
-        val activityObject1 = JoinedActivityObject(
-            "1", "wer232f23f", "thy2563tyj", ActivityObject(
+        val activityObject1 = ActivityObject(
                 "1",
                 "Activity Title",
                 "This is Activity 1",
@@ -94,11 +93,9 @@ class MockUserRepository : IUserRepository
                 "A1 Update Time",
                 null,
                 simpleUser
-            )
         )
 
-        val activityObject2 = JoinedActivityObject(
-            "2", "wer23w2f23f", "thy25163tyj", ActivityObject(
+        val activityObject2 = ActivityObject(
                 "2",
                 "Activity Title",
                 "This is Activity 2",
@@ -114,13 +111,12 @@ class MockUserRepository : IUserRepository
                 "A1 Update Time",
                 null,
                 simpleUser
-            )
         )
 
         val activityList = listOf(activityObject1, activityObject2)
 
         return Triple(
-            true, "", JoinedActivitiesResponse(activityList.count().toString(), activityList)
+            true, "", JoinedActivitiesResponse("userId1234", activityList.count().toString(), activityList)
         )
     }
 

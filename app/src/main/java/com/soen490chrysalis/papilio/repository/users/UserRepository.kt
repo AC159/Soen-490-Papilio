@@ -359,7 +359,7 @@ class UserRepository(
                 Triple(
                     false,
                     e.message.toString(),
-                    JoinedActivitiesResponse("0", listOf<JoinedActivityObject>())
+                    JoinedActivitiesResponse("userId1234", "0", listOf<ActivityObject>())
                 )
             }
 

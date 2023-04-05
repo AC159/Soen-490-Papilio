@@ -4,7 +4,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.FirebaseUser
 import com.soen490chrysalis.papilio.repository.users.CheckActivityMember
 import com.soen490chrysalis.papilio.repository.users.IUserRepository
-import com.soen490chrysalis.papilio.services.network.requests.SubmitQuiz
 import com.soen490chrysalis.papilio.services.network.responses.*
 import org.mockito.Mockito
 import retrofit2.Response
@@ -78,45 +77,47 @@ class MockUserRepository : IUserRepository
     override suspend fun getJoinedActivities() : Triple<Boolean, String, JoinedActivitiesResponse>
     {
         val activityObject1 = ActivityObject(
-                "1",
-                "Activity Title",
-                "This is Activity 1",
-                "0",
-                "0",
-                "4",
-                listOf("a" + 1 + "image1", "a" + 2 + "image1"),
-                "2023-3-22T",
-                "2023-3-22T",
-                "Activity 1 Address",
-                false,
-                "A1 Creation Time",
-                "A1 Update Time",
-                null,
-                simpleUser
+            "1",
+            "Activity Title",
+            "This is Activity 1",
+            "0",
+            "0",
+            "4",
+            listOf("a" + 1 + "image1", "a" + 2 + "image1"),
+            "2023-3-22T",
+            "2023-3-22T",
+            "Activity 1 Address",
+            false,
+            "A1 Creation Time",
+            "A1 Update Time",
+            null,
+            simpleUser
         )
 
         val activityObject2 = ActivityObject(
-                "2",
-                "Activity Title",
-                "This is Activity 2",
-                "0",
-                "0",
-                "4",
-                listOf("a" + 1 + "image1", "a" + 2 + "image1"),
-                "2023-3-25T",
-                "2023-3-25T",
-                "Activity 1 Address",
-                false,
-                "A1 Creation Time",
-                "A1 Update Time",
-                null,
-                simpleUser
+            "2",
+            "Activity Title",
+            "This is Activity 2",
+            "0",
+            "0",
+            "4",
+            listOf("a" + 1 + "image1", "a" + 2 + "image1"),
+            "2023-3-25T",
+            "2023-3-25T",
+            "Activity 1 Address",
+            false,
+            "A1 Creation Time",
+            "A1 Update Time",
+            null,
+            simpleUser
         )
 
         val activityList = listOf(activityObject1, activityObject2)
 
         return Triple(
-            true, "", JoinedActivitiesResponse("userId1234", activityList.count().toString(), activityList)
+            true,
+            "",
+            JoinedActivitiesResponse("userId1234", activityList.count().toString(), activityList)
         )
     }
 
@@ -220,7 +221,11 @@ class MockUserRepository : IUserRepository
         return CheckActivityMember(true, "", true, false)
     }
 
-    override suspend fun submitQuiz(indoor : Boolean, outdoor : Boolean, genres : IntArray) : Pair<Int, String>
+    override suspend fun submitQuiz(
+        indoor : Boolean,
+        outdoor : Boolean,
+        genres : IntArray
+    ) : Pair<Int, String>
     {
         return Pair(200, "Created")
     }

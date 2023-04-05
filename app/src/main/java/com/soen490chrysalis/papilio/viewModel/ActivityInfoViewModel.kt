@@ -14,7 +14,10 @@ import kotlinx.coroutines.launch
 
 data class APIResponse(var isSuccess : Boolean, var errorMessage : String)
 
-class ActivityInfoViewModel(private val userRepository : IUserRepository, private val activityRepository : IActivityRepository) : ViewModel()
+class ActivityInfoViewModel(
+    private val userRepository : IUserRepository,
+    private val activityRepository : IActivityRepository
+) : ViewModel()
 {
     private val logTag = ActivityInfoViewModel::class.java.simpleName
     var checkActivityMemberResponse = MutableLiveData<CheckActivityMember>()
@@ -124,7 +127,7 @@ class ActivityInfoViewModel(private val userRepository : IUserRepository, privat
     fun SetActivityEntry(activityId : Number, closed : Boolean)
     {
         viewModelScope.launch {
-            if(closed)
+            if (closed)
             {
                 val routeResult = activityRepository.open(activityId)
                 activityEntryResponse.value = Pair(routeResult.first, routeResult.second)

@@ -49,6 +49,7 @@ class ActivityInfoViewModelTest
     private val mockFirebaseUserUid = "aset23q45346457sdfhrtu5r"
 
     private val activity_id = "160"
+
     // first value is defines the success of the operation, second term is the message value
     private val success = Pair(true, "")
     private val error = Pair(false, "Oops, something went wrong!")
@@ -99,7 +100,13 @@ class ActivityInfoViewModelTest
 
         // Important to initialize the user repository here since the mockRetrofitUserService needs to be create beforehand
         userRepository = Mockito.spy(UserRepository(mockFirebaseAuth, mockRetrofitUserService))
-        activityRepository = Mockito.spy(ActivityRepository(mockFirebaseAuth, mockRetrofitUserService, mockRetrofitActivityService))
+        activityRepository = Mockito.spy(
+            ActivityRepository(
+                mockFirebaseAuth,
+                mockRetrofitUserService,
+                mockRetrofitActivityService
+            )
+        )
         activityInfoViewModel = ActivityInfoViewModel(userRepository, activityRepository)
 
         println("Setup method is done!")
@@ -194,7 +201,8 @@ class ActivityInfoViewModelTest
     fun addFavoriteActivityTest() = runTest {
         val res = Triple(true, "", favResponse)
         val successResponse = MockResponse().setResponseCode(200).setBody(res.toString())
-        Mockito.doReturn(successResponse).`when`(userRepository).addFavoriteActivity(Integer.parseInt(activity_id))
+        Mockito.doReturn(successResponse).`when`(userRepository)
+                .addFavoriteActivity(Integer.parseInt(activity_id))
 
         activityInfoViewModel.addFavoriteActivity(Integer.parseInt(activity_id))
         advanceUntilIdle()
@@ -211,7 +219,8 @@ class ActivityInfoViewModelTest
     fun removeFavoriteActivityTest() = runTest {
         val res = Triple(true, "", favResponse)
         val successResponse = MockResponse().setResponseCode(200).setBody(res.toString())
-        Mockito.doReturn(successResponse).`when`(userRepository).removeFavoriteActivity(Integer.parseInt(activity_id))
+        Mockito.doReturn(successResponse).`when`(userRepository)
+                .removeFavoriteActivity(Integer.parseInt(activity_id))
 
         activityInfoViewModel.removeFavoriteActivity(Integer.parseInt(activity_id))
         advanceUntilIdle()
@@ -220,7 +229,8 @@ class ActivityInfoViewModelTest
             println("Result: $it")
             assert(it!!.success == true && it.update == favResponse.update)
         }
-        Mockito.verify(userRepository, times(1)).removeFavoriteActivity(Integer.parseInt(activity_id))
+        Mockito.verify(userRepository, times(1))
+                .removeFavoriteActivity(Integer.parseInt(activity_id))
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)

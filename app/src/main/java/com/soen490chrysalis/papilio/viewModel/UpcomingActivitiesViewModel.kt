@@ -50,7 +50,10 @@ class UpcomingActivitiesViewModel(private val userRepository : IUserRepository) 
                     activities = firstResponse.activities.plus(tempList)
                 )
 
-                Log.d(logTag, " response from getFirstActivityResponse() --> $getFirstActivityResponse")
+                Log.d(
+                    logTag,
+                    " response from getFirstActivityResponse() --> $getFirstActivityResponse"
+                )
                 Log.d(logTag, " response from getJoinedActivities() --> $getActivityResponse")
             }
             catch (e : Exception)

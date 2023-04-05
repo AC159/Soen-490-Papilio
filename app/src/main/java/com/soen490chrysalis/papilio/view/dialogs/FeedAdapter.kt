@@ -1,5 +1,6 @@
 package com.soen490chrysalis.papilio.view.dialogs
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -40,6 +41,7 @@ class FeedAdapter(
     override fun onBindViewHolder(holder : FeedViewHolder, position : Int)
     {
         val currentItem = feedList[position]
+        Log.d(FeedAdapter::class.simpleName, "Current item: $currentItem")
         holder.boxTitle.text = currentItem.title!!.replace("\"", "")
 
         holder.boxAddress.text = currentItem.address!!.replace("\"", "")

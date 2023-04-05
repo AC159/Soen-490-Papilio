@@ -95,7 +95,8 @@ class HomeFragment : Fragment()
                 Log.d(
                     "NOTIFYING RECYCLER VIEW OF NEWLY INSERTED DATA", activityList.size.toString()
                 )
-                adapter.notifyItemRangeInserted(index - 1, addActivityList.size)
+                // adapter.notifyItemRangeInserted(index - 1, addActivityList.size)
+                adapter.notifyDataSetChanged()
                 isLoading = false
                 progressBar.visibility = View.GONE
             }

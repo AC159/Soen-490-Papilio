@@ -662,6 +662,7 @@ class UserRepositoryTest
                     "        \"startTime\": \"19h00\",\n" +
                     "        \"endTime\": \"21h00\",\n" +
                     "        \"address\": \"200 Nowhere street, Quebec, Canada\",\n" +
+                    "        \"closed\": false,\n" +
                     "        \"createdAt\": \"2022-11-14T02:07:02.585Z\",\n" +
                     "        \"updatedAt\": \"2022-11-14T02:07:02.585Z\",\n" +
                     "        \"business\": null,\n" +
@@ -678,6 +679,7 @@ class UserRepositoryTest
                     "        \"startTime\": \"19h00\",\n" +
                     "        \"endTime\": \"21h00\",\n" +
                     "        \"address\": \"200 Nowhere street, Quebec, Canada\",\n" +
+                    "        \"closed\": false,\n" +
                     "        \"createdAt\": \"2022-11-14T02:07:02.585Z\",\n" +
                     "        \"updatedAt\": \"2022-11-14T02:07:02.585Z\",\n" +
                     "        \"business\": null,\n" +
@@ -772,6 +774,7 @@ class UserRepositoryTest
                     "        \"startTime\": \"19h00\",\n" +
                     "        \"endTime\": \"21h00\",\n" +
                     "        \"address\": \"200 Nowhere street, Quebec, Canada\",\n" +
+                    "        \"closed\": false,\n" +
                     "        \"createdAt\": \"2022-11-14T02:07:02.585Z\",\n" +
                     "        \"updatedAt\": \"2022-11-14T02:07:02.585Z\",\n" +
                     "        \"business\": null,\n" +
@@ -788,6 +791,7 @@ class UserRepositoryTest
                     "        \"startTime\": \"19h00\",\n" +
                     "        \"endTime\": \"21h00\",\n" +
                     "        \"address\": \"200 Nowhere street, Quebec, Canada\",\n" +
+                    "        \"closed\": false,\n" +
                     "        \"createdAt\": \"2022-11-14T02:07:02.585Z\",\n" +
                     "        \"updatedAt\": \"2022-11-14T02:07:02.585Z\",\n" +
                     "        \"business\": null,\n" +
@@ -871,6 +875,7 @@ class UserRepositoryTest
                     "               \"startTime\": \"19h00\",\n" +
                     "               \"endTime\": \"21h00\",\n" +
                     "               \"address\": \"200 Nowhere street, Quebec, Canada\",\n" +
+                    "               \"closed\": false,\n" +
                     "               \"createdAt\": \"2022-11-14T02:07:02.585Z\",\n" +
                     "               \"updatedAt\": \"2022-11-14T02:07:02.585Z\",\n" +
                     "               \"business\": null,\n" +
